@@ -1,0 +1,142 @@
+{
+  "personalInfo": {
+    "name": "Sachit",
+    "title": "ASPIRING SOFTWARE DEVELOPER & PROMPT ENGINEER",
+    "phone": "7042846390",
+    "phoneHref": "tel:7042846390",
+    "email": "sachit1751@gmail.com",
+    "emailHref": "mailto:sachit1751@gmail.com",
+    "github": "github.com/sachit1751-art",
+    "githubUrl": "https://github.com/sachit1751-art",
+    "portfolio": "sachin-portfoli.vercel.app",
+    "portfolioUrl": "https://sachin-portfoli.vercel.app",
+    "educationSummary": "Graduation Year: 2028 (Class 12 PCMB)"
+  },
+  "professionalSummary": "A recent Class 12 graduate (PCMB, 2028) with a strong technical foundation in Python programming, web development fundamentals, and modern AI tool integration. Having completed all Anthropic Skill Jar developer courses, possess practical knowledge of Claude API deployment, advanced prompt caching, and structured system prompt engineering. Seeking an entry-level technical role, internship, or hackathon team alignment to apply programming foundations and build robust, functional software solutions.",
+  "technicalSkills": [
+    {
+      "category": "Programming",
+      "skills": "Python, JavaScript, TypeScript, HTML5, CSS3"
+    },
+    {
+      "category": "AI Tools & Automation",
+      "skills": "Anthropic Claude API, Prompt Engineering (System Prompts, Prompt Caching), OpenAI API, Cursor, Model Context Protocol (MCP)"
+    },
+    {
+      "category": "Web & Backend",
+      "skills": "React, Vite, Supabase, PostgreSQL, Node.js, REST APIs"
+    },
+    {
+      "category": "Development & Version Control",
+      "skills": "Git, GitHub, VS Code, Command Line, Vercel, Capacitor, Android Studio"
+    },
+    {
+      "category": "Operating Systems",
+      "skills": "Windows, Linux (Ubuntu)"
+    }
+  ],
+  "projects": [
+    {
+      "id": "sky-roms",
+      "title": "SKY ROMs — Android Custom ROM Discovery & Management Platform",
+      "liveUrl": "https://sky-roms.vercel.app",
+      "liveUrlLabel": "sky-roms.vercel.app",
+      "technologies": "React, TypeScript, Vite, Supabase, PostgreSQL, Vercel, Capacitor, Android Studio, Git/GitHub",
+      "bullets": [
+        "Built and deployed a full-stack React and TypeScript platform for discovering and managing Android custom ROM information, hosted on Vercel with automated routing, SEO sitemaps, and Google Search Console verification.",
+        "Developed a secure Supabase and PostgreSQL backend featuring user authentication, role-based authorization, CRUD operations, and persistent cloud storage, ensuring administrative controls and role assignments are enforced strictly server-side.",
+        "Synchronized the production web application into a native mobile experience using Capacitor and Android Studio, maintaining version control through Git branching workflows."
+      ]
+    },
+    {
+      "id": "moneypal",
+      "title": "MoneyPal — Android Application",
+      "technologies": "Kotlin, Jetpack Compose, Android SDK, Room Database, Git",
+      "bullets": [
+        "Engineered MoneyPal as a native Android budget tracker application featuring calculator-style expense entry, flexible budget periods, and automated recurring expense tracking.",
+        "Integrated interactive home screen widgets and a Wear OS companion app for rapid, wrist-based expense logging and real-time budget monitoring.",
+        "Utilized modern Android architecture components including Jetpack Compose for fluid UI design and local Room database persistence for offline-first financial data management."
+      ]
+    },
+    {
+      "id": "audify",
+      "title": "Audify — Modern Audio Streaming Application",
+      "technologies": "React, TypeScript, Tailwind CSS, Web Audio API, Vite, Git",
+      "bullets": [
+        "Developed Audify as a feature-rich, responsive web audio streaming and music player application with fluid playlist controls and real-time track searching.",
+        "Implemented custom audio playback hooks utilizing the Web Audio API for smooth track handling, volume management, and dynamic progress bar scrubbing.",
+        "Configured local storage caching and responsive UI styling to maintain user listening preferences and seamless layout adaptation across desktop and mobile devices."
+      ]
+    },
+    {
+      "id": "doc-summarizer",
+      "title": "Claude-Powered Document Summarizer",
+      "technologies": "Python, Streamlit, Anthropic Claude API, Git",
+      "bullets": [
+        "Built a web interface using Streamlit to allow users to seamlessly upload PDF and TXT files for real-time text extraction and analysis.",
+        "Integrated Anthropic's Claude API using structured system instructions and clear contextual boundaries to eliminate factual hallucinations.",
+        "Implemented prompt caching strategies for recurring document formats, reducing API response times by up to 40% and lowering token consumption costs."
+      ]
+    },
+    {
+      "id": "web-music",
+      "title": "Open-Source Web Music Streaming Application",
+      "technologies": "JavaScript, HTML5, CSS3, REST APIs, Git",
+      "bullets": [
+        "Developed a responsive web audio player capable of streaming tracks smoothly across desktop and mobile browsers.",
+        "Implemented dynamic playlist controls, search filtering, and volume management for an intuitive user experience.",
+        "Integrated modern UI styling and local storage caching to save user preferences and recent playback states."
+      ]
+    },
+    {
+      "id": "mcp-tool",
+      "title": "AI-Powered Model Context Protocol (MCP) Integration Tool",
+      "technologies": "Python, Anthropic Claude API, MCP Servers, JSON-RPC",
+      "bullets": [
+        "Configured Model Context Protocol (MCP) server endpoints to allow large language models to securely query local resources and system datasets.",
+        "Implemented clean JSON-RPC messaging handlers to streamline communication between client interfaces and modular backend tools.",
+        "Developed structured context-injection pipelines that give AI assistants direct, real-time access to file systems and development workspaces."
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "role": "Open Source Contributor & AI Developer",
+      "organization": "Independent / Developer Communities",
+      "period": "2024 - Present",
+      "location": "Remote",
+      "technologies": "Python, Claude API, MCP, TypeScript, React, Supabase",
+      "bullets": [
+        "Architecting open-source developer tooling, MCP server endpoints, and LLM context-injection workflows.",
+        "Built and maintained full-stack production applications hosted on Vercel with Supabase and PostgreSQL backends.",
+        "Implemented advanced prompt caching pipelines and structured system prompt engineering to optimize API latencies."
+      ]
+    }
+  ],
+  "education": {
+    "institution": "Central Board of Secondary Education (CBSE)",
+    "degree": "Class 12",
+    "stream": "Stream: PCMB (Physics, Chemistry, Mathematics, Biology)",
+    "graduationYear": "Graduation Year: 2028"
+  },
+  "certifications": [
+    "Anthropic Skill Jar – Full Developer Curriculum Completion (Prompt Engineering, Claude API Architecture, Advanced Workflows)"
+  ],
+  "achievements": [
+    "Successfully mastered 100% of the Anthropic Skill Jar coursework, acquiring verified competencies in advanced generative AI integration.",
+    "Established and maintained an active open-source GitHub footprint containing standalone utilities, MCP integrations, and documented software projects."
+  ],
+  "leadershipAndActivities": [
+    "Participant, Coding and Technology Hackathons – Collaborated with peers to conceptualize and prototype functional web applications under tight deadlines.",
+    "Active contributor to online technical and developer communities, focusing on optimizing LLM interactions, MCP tool setups, and context window utilization."
+  ],
+  "languages": [
+    { "name": "English", "fluency": "Fluent" },
+    { "name": "Hindi", "fluency": "Native" }
+  ],
+  "interests": [
+    "Generative AI Architectures",
+    "Open-Source Development",
+    "Technical Hackathons"
+  ]
+}

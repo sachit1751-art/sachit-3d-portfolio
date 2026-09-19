@@ -1,0 +1,27 @@
+# Robots.txt for Sachit Developer Portfolio (sachin-portfoli.vercel.app)
+User-agent: *
+
+# Allow public indexable pages and visual assets
+Allow: /
+Allow: /resume
+Allow: /privacy
+Allow: /terms
+Allow: /og-image.svg
+Allow: /mascots/
+Allow: /favicon.png
+Allow: /sitemap.xml
+Allow: /sitemap.xml.js
+Allow: /llms.txt
+
+# Disallow internal system, private, or test routes
+Disallow: /api/private/
+Disallow: /admin/
+Disallow: /test/
+Disallow: /draft/
+Disallow: /private/
+Disallow: /src/
+Disallow: /node_modules/
+
+# XML Sitemap Link
+Sitemap: https://sachin-portfoli.vercel.app/sitemap.xml
+
