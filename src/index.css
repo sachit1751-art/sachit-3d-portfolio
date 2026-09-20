@@ -417,8 +417,14 @@
   scrollbar-color: var(--c-muted) transparent;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
-  transform: translateZ(0);
-  will-change: transform;
+}
+
+#content-scroll-container > *,
+#resume-scroll-container > *,
+#privacy-scroll-container > *,
+#terms-scroll-container > * {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 #content-scroll-container::-webkit-scrollbar,
@@ -495,7 +501,6 @@
 
 .animate-portfolio-enter {
   animation: portfolioFadeEnter 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: opacity, transform;
 }
 
 /* Typewriter animation */
@@ -737,6 +742,18 @@ section[id] {
 #hero {
   content-visibility: visible;
 }
+
+#about { contain-intrinsic-size: 0 450px; }
+#philosophy { contain-intrinsic-size: 0 500px; }
+#projects { contain-intrinsic-size: 0 1100px; }
+#skills { contain-intrinsic-size: 0 750px; }
+#github { contain-intrinsic-size: 0 380px; }
+#experience { contain-intrinsic-size: 0 950px; }
+#education { contain-intrinsic-size: 0 450px; }
+#strengths { contain-intrinsic-size: 0 550px; }
+#building-in-public { contain-intrinsic-size: 0 700px; }
+#chat-about-me { contain-intrinsic-size: 0 650px; }
+#contact { contain-intrinsic-size: 0 800px; }
 
 /* ═══════════════════════════════════════════════
    DOOM EASTER EGG — Floating Paper Pieces
@@ -3834,7 +3851,9 @@ section[id] {
   p { orphans: 3; widows: 3; }
 
   /* 5. PROJECT DETAILS & LIST ITEMS: Prevent splitting across pages */
+  .project-card-aspect-container,
   .gsap-project-card,
+  [data-project-card="true"],
   .project-detail-section,
   .experience-card,
   .education-card,
@@ -3846,28 +3865,62 @@ section[id] {
     break-inside: avoid !important;
   }
 
-  .gsap-project-card {
-    border: 1px solid #ddd !important;
-    border-radius: 4px !important;
-    margin-bottom: 1.5rem !important;
-    padding: 1rem !important;
+  .project-card-aspect-container {
+    height: auto !important;
+    min-height: 0 !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .gsap-project-card,
+  [data-project-card="true"] {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    margin-bottom: 0 !important;
+    padding: 1.25rem !important;
     display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  .gsap-project-card h3 {
+    color: #000000 !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    font-size: 1.25rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .gsap-project-card p {
+    color: #334155 !important;
+    font-size: 10pt !important;
+    line-height: 1.5 !important;
+    orphans: 3;
+    widows: 3;
   }
 
   .gsap-project-card button,
-  .gsap-project-card .quick-details-trigger {
+  .gsap-project-card .quick-details-trigger,
+  .gsap-project-card [role="button"] svg {
     display: none !important;
   }
 
-  /* Ensure tech tags are visible but clean */
+  /* Ensure tech tags are visible, high-contrast, and clean */
   .gsap-project-card .flex-wrap {
-    gap: 0.5rem !important;
+    gap: 0.35rem !important;
+    margin-top: 0.75rem !important;
   }
 
   .gsap-project-card .flex-wrap span {
-    border: 1px solid #eee !important;
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
     padding: 2px 6px !important;
     font-size: 8pt !important;
+    border-radius: 4px !important;
   }
 
   /* 6. RESUME SPECIFIC: Full document rendering */

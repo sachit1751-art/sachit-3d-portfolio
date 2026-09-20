@@ -89,9 +89,9 @@ export const Hero = memo<HeroProps>(({
         <p className="gsap-hero-subtitle font-handwriting text-lg sm:text-xl mb-3" style={{ color: 'var(--c-subtle)' }}>
           Independent Developer
         </p>
-        <h1 className="gsap-hero-title text-[2.2rem] xs:text-[2.8rem] sm:text-6xl md:text-[72px] lg:text-[88px] leading-[1.1] font-handwriting font-bold tracking-tight my-4 py-2 min-h-[2.3em] lg:min-h-[2.2em] xl:min-h-[1.25em] flex flex-col justify-start" style={{ color: 'var(--c-heading)' }}>
+        <h1 className="gsap-hero-title text-[2.2rem] xs:text-[2.8rem] sm:text-6xl md:text-[72px] lg:text-[88px] leading-[1.1] font-handwriting font-bold tracking-tight my-2" style={{ color: 'var(--c-heading)' }}>
           <span className="sr-only">Sachit — AI &amp; Web Developer</span>
-          <span className="block w-full" aria-hidden="true">
+          <span className="inline-block" aria-hidden="true">
             <DepthFlipText
               phrases={[
                 "AI & Web Developer",

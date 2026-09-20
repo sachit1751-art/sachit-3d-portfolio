@@ -3,9 +3,7 @@ import { useState, useEffect, useCallback, useRef, memo } from 'react';
 import { PaperTheme } from '../../types';
 import { RotateCcw, ArrowUpRight, Sparkles, Compass, Volume2, VolumeX, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { AnimatedMenuIcon } from '../UI/AnimatedMenuIcon';
 import { useSound } from '../../utils/soundManager';
-import { MobileEditorialNav } from './MobileEditorialNav';
 
 interface HeaderProps {
   theme: PaperTheme;
@@ -15,8 +13,6 @@ interface HeaderProps {
   isViewingResume?: boolean;
   onNavigateSection?: (id: string) => void;
   onOpenSiteMap?: () => void;
-  isMobileNavOpen?: boolean;
-  onMobileNavOpenChange?: (open: boolean) => void;
 }
 
 const THEMES: { id: PaperTheme; label: string; color: string }[] = [
@@ -60,29 +56,14 @@ export const Header = memo<HeaderProps>(({
   isViewingResume = false,
   onNavigateSection,
   onOpenSiteMap,
-  isMobileNavOpen: isMobileNavOpenProp,
-  onMobileNavOpenChange,
 }) => {
   const { isMuted, toggleMute } = useSound();
   const [activeSection, setActiveSection] = useState('hero');
   const [scrolled, setScrolled] = useState(false);
-  const [internalMobileOpen, setInternalMobileOpen] = useState(false);
-  const lastFocusedRef = useRef<HTMLElement | null>(null);
   const isScrollingRef = useRef(false);
   const navBtns = useRef<Record<string, HTMLButtonElement | null>>({});
   const navContainerRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
-
-  const isControlled = isMobileNavOpenProp !== undefined;
-  const mobileOpen = isControlled ? isMobileNavOpenProp : internalMobileOpen;
-
-  const setMobileOpenState = useCallback((open: boolean) => {
-    if (isControlled && onMobileNavOpenChange) {
-      onMobileNavOpenChange(open);
-    } else {
-      setInternalMobileOpen(open);
-    }
-  }, [isControlled, onMobileNavOpenChange]);
 
   const currentActive = isViewingResume ? 'resume' : activeSection;
 
@@ -100,21 +81,10 @@ export const Header = memo<HeaderProps>(({
     });
   }, [currentActive]);
 
-  const openMobile = useCallback(() => {
-    lastFocusedRef.current = document.activeElement as HTMLElement;
-    setMobileOpenState(true);
-  }, [setMobileOpenState]);
-
-  const closeMobile = useCallback(() => {
-    setMobileOpenState(false);
-    lastFocusedRef.current?.focus();
-  }, [setMobileOpenState]);
-
   // ── Scroll to section & update URL hash ────────────────────────────
   const handleNavClick = useCallback((id: string, isResume?: boolean) => {
     if (isResume) {
       if (onViewResume) onViewResume();
-      closeMobile();
       return;
     }
 
@@ -147,9 +117,8 @@ export const Header = memo<HeaderProps>(({
       }
     }
 
-    closeMobile();
     setTimeout(() => { isScrollingRef.current = false; }, 800);
-  }, [onViewResume, onNavigateSection, closeMobile]);
+  }, [onViewResume, onNavigateSection]);
 
   // ── Intersection Observer — detect active section & update URL hash ───
   useEffect(() => {
@@ -260,38 +229,6 @@ export const Header = memo<HeaderProps>(({
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, [onNavigateSection]);
 
-  // ── Mobile menu: focus trap + escape ───────────────────────────────
-  useEffect(() => {
-    if (!mobileOpen) return;
-
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setMobileOpenState(false);
-      }
-    };
-
-    const scrollContainer = document.getElementById('content-scroll-container');
-    if (scrollContainer) scrollContainer.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.removeEventListener('keydown', handleKey);
-      document.body.style.overflow = '';
-      if (scrollContainer) scrollContainer.style.overflow = '';
-    };
-  }, [mobileOpen, setMobileOpenState]);
-
-  // Auto-close mobile menu when viewport expands to desktop width (>= 768px)
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768 && mobileOpen) {
-        setMobileOpenState(false);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [mobileOpen, setMobileOpenState]);
-
   // ── Render ─────────────────────────────────────────────────────────
   return (
     <>
@@ -382,41 +319,9 @@ export const Header = memo<HeaderProps>(({
           </nav>
 
           {/* Right Spacer for Desktop (Centers navigation) */}
-          <div className="hidden md:flex md:flex-1 items-center justify-end" />
-
-          {/* Mobile Right Controls */}
-          <div className="flex md:hidden items-center gap-1.5 sm:gap-2">
-            {/* Hamburger Button */}
-            <button
-              className="w-9 h-9 rounded-[var(--radius-md)] cursor-pointer transition-all active:scale-95 flex items-center justify-center"
-              style={{
-                color: 'var(--c-heading)',
-                border: mobileOpen ? '1px solid var(--c-border-focus)' : '1px solid var(--c-border)',
-                backgroundColor: 'var(--c-input-bg)',
-              }}
-              onClick={mobileOpen ? closeMobile : openMobile}
-              aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
-              aria-expanded={mobileOpen}
-              aria-controls="mobile-fullscreen-menu"
-            >
-              <AnimatedMenuIcon isOpen={mobileOpen} size={18} />
-            </button>
-          </div>
+          <div className="flex flex-1 items-center justify-end" />
         </div>
       </motion.header>
-
-      {/* Fullscreen Editorial Mobile Navigation Overlay */}
-      <MobileEditorialNav
-        isOpen={mobileOpen}
-        onClose={closeMobile}
-        activeSection={currentActive}
-        theme={theme}
-        setTheme={setTheme}
-        onNavigateSection={handleNavClick}
-        onViewResume={onViewResume}
-        onRecrumple={onRecrumple}
-        onOpenSiteMap={onOpenSiteMap}
-      />
     </>
   );
 });

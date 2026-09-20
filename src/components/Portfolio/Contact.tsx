@@ -501,15 +501,6 @@ export const Contact = memo(() => {
           <div className="md:col-span-5 flex flex-col justify-between space-y-6">
             {/* Live Payload Preview */}
             <LineReveal delay={0.3} className="p-5 sm:p-6 rounded-[var(--radius-lg)] space-y-3 shadow-sm" style={{ border: '1px solid var(--c-border)', backgroundColor: 'var(--c-card)' }}>
-              <div className="flex items-center justify-between pb-2" style={{ borderBottom: '1px solid var(--c-border)' }}>
-                <span className="font-mono text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--c-heading)' }}>
-                  LIVE_DISPATCH_PAYLOAD
-                </span>
-                <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded" style={{ backgroundColor: 'var(--c-input-bg)', color: 'var(--c-subtle)', border: '1px solid var(--c-border)' }}>
-                  REAL-TIME PREVIEW
-                </span>
-              </div>
-
               <div className="font-mono text-xs space-y-2" style={{ color: 'var(--c-body)' }}>
                 <div><span className="font-bold" style={{ color: 'var(--c-heading)' }}>SENDER: </span>{formData.name || '<UNSPECIFIED>'}</div>
                 <div><span className="font-bold" style={{ color: 'var(--c-heading)' }}>EMAIL : </span>{formData.email || '<UNSPECIFIED>'}</div>

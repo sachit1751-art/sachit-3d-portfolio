@@ -1,7 +1,5 @@
 export const DEV_QUOTES = [
   '"First, solve the problem. Then, write the code." — John Johnson',
-  '"Programs must be written for people to read, and only incidentally for machines to execute." — Harold Abelson',
-  '"Any fool can write code that a computer can understand. Good programmers write code that humans can understand." — Martin Fowler',
   '"Experience is the name everyone gives to their mistakes." — Oscar Wilde',
   '"Simplicity is prerequisite for reliability." — Edsger W. Dijkstra',
   '"Make it work, make it right, make it fast." — Kent Beck',
@@ -11,3 +9,4 @@ export const DEV_QUOTES = [
   '"Deleted code is debugged code." — Jeff Sickel',
   '"Talk is cheap. Show me the code." — Linus Torvalds',
 ];
+

@@ -10,6 +10,7 @@ interface ScrollRevealProps {
   direction?: 'up' | 'down' | 'left' | 'right';
   duration?: number;
   distance?: number;
+  initialScale?: number;
 }
 
 // ﻿watermark:sachit-2026﻿
@@ -18,8 +19,9 @@ export const ScrollReveal = memo<ScrollRevealProps>(({
   className = '',
   delay = 0,
   direction = 'up',
-  duration = 0.8,
-  distance = 40,
+  duration = 0.45,
+  distance = 25,
+  initialScale = 0.97,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const { simplify } = usePerformance();
@@ -41,22 +43,24 @@ export const ScrollReveal = memo<ScrollRevealProps>(({
       (isIntersecting) => {
         if (isIntersecting) setVisible(true);
       },
-      { root: scroller, threshold: 0, rootMargin: '0px 0px -5% 0px' }
+      { root: scroller, threshold: 0, rootMargin: '0px 0px 150px 0px' }
     );
   }, [simplify]);
 
   const getTransform = () => {
     if (simplify) return 'none';
+    const scale = visible ? 1 : initialScale;
+    let translate = 'translateY(0)';
     if (!visible) {
       switch (direction) {
-        case 'up': return `translateY(${distance}px)`;
-        case 'down': return `translateY(-${distance}px)`;
-        case 'left': return `translateX(${distance}px)`;
-        case 'right': return `translateX(-${distance}px)`;
-        default: return `translateY(${distance}px)`;
+        case 'up': translate = `translateY(${distance}px)`; break;
+        case 'down': translate = `translateY(-${distance}px)`; break;
+        case 'left': translate = `translateX(${distance}px)`; break;
+        case 'right': translate = `translateX(-${distance}px)`; break;
+        default: translate = `translateY(${distance}px)`; break;
       }
     }
-    return 'translateY(0) translateX(0)';
+    return `${translate} scale(${scale})`;
   };
 
   return (

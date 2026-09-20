@@ -13,6 +13,7 @@ import { Strengths } from './Strengths';
 import { BuildingInPublic } from './BuildingInPublic';
 import { ChatAboutMe } from './ChatAboutMe';
 import { Contact } from './Contact';
+import { ScrollReveal } from '../UI/ScrollReveal';
 
 interface PortfolioContainerProps {
   theme: PaperTheme;
@@ -105,17 +106,39 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
 
           <ScrollTextPath text="Coding • Building • Creating • Designing" className="-my-8" />
 
-          <About />
-          <Philosophy />
-          <Projects />
-          <Skills />
-          <GitHubSection theme={theme} />
-          <Experience />
-          <Education />
-          <Strengths />
-          <BuildingInPublic />
-          <ChatAboutMe theme={theme} paperState={paperState} />
-          <Contact />
+          <ScrollReveal>
+            <About />
+          </ScrollReveal>
+          <ScrollReveal>
+            <Philosophy />
+          </ScrollReveal>
+          <ScrollReveal>
+            <Projects />
+          </ScrollReveal>
+          <ScrollReveal>
+            <Skills />
+          </ScrollReveal>
+          <ScrollReveal>
+            <GitHubSection theme={theme} />
+          </ScrollReveal>
+          <ScrollReveal>
+            <Experience />
+          </ScrollReveal>
+          <ScrollReveal>
+            <Education />
+          </ScrollReveal>
+          <ScrollReveal>
+            <Strengths />
+          </ScrollReveal>
+          <ScrollReveal>
+            <BuildingInPublic />
+          </ScrollReveal>
+          <ScrollReveal>
+            <ChatAboutMe theme={theme} paperState={paperState} />
+          </ScrollReveal>
+          <ScrollReveal>
+            <Contact />
+          </ScrollReveal>
         </div>
       </div>
     </main>

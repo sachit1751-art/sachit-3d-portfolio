@@ -375,68 +375,76 @@ export const GitHubContributions: React.FC<GitHubContributionsProps> = ({
                 WebkitOverflowScrolling: 'touch',
               }}
             >
-              <div className="flex flex-col min-w-max pb-2">
-                {/* Months Row */}
-                <div className="flex h-5 relative select-none" style={{ paddingLeft: 'var(--offset-left)' }}>
-                  {monthLabels.map((lbl, idx) => {
-                    return (
-                      <span
-                        key={idx}
-                        className="absolute text-[9px] sm:text-[10px] font-mono"
-                        style={{
-                          left: `calc(${lbl.colIndex} * var(--col-width) + var(--offset-left))`,
-                          transform: 'translateX(0)',
-                          color: 'var(--c-muted)',
-                        }}
-                      >
-                        {lbl.text}
-                      </span>
-                    );
-                  })}
+              {!hasIntersected ? (
+                <div className="h-32 flex items-center justify-center font-mono text-xs" style={{ color: 'var(--c-muted)' }}>
+                  Loading contribution matrix...
                 </div>
-
-                {/* Calendar Grid Section */}
-                <div className="flex">
-                  {/* Day of Week Labels */}
-                  <div className="grid grid-rows-7 gap-[3px] sm:gap-[4px] text-[9px] sm:text-[10px] font-mono select-none pr-2 text-right" style={{ color: 'var(--c-muted)', width: 'var(--offset-left)' }}>
-                    <div className="h-[11px] sm:h-[13px] flex items-center justify-end">Sun</div>
-                    <div className="h-[11px] sm:h-[13px] flex items-center justify-end"></div>
-                    <div className="h-[11px] sm:h-[13px] flex items-center justify-end">Tue</div>
-                    <div className="h-[11px] sm:h-[13px] flex items-center justify-end"></div>
-                    <div className="h-[11px] sm:h-[13px] flex items-center justify-end">Thu</div>
-                    <div className="h-[11px] sm:h-[13px] flex items-center justify-end"></div>
-                    <div className="h-[11px] sm:h-[13px] flex items-center justify-end">Sat</div>
+              ) : (
+                <div className="flex flex-col min-w-max pb-2">
+                  {/* Months Row */}
+                  <div className="flex h-5 relative select-none" style={{ paddingLeft: 'var(--offset-left)' }}>
+                    {monthLabels.map((lbl, idx) => {
+                      return (
+                        <span
+                          key={idx}
+                          className="absolute text-[9px] sm:text-[10px] font-mono"
+                          style={{
+                            left: `calc(${lbl.colIndex} * var(--col-width) + var(--offset-left))`,
+                            transform: 'translateX(0)',
+                            color: 'var(--c-muted)',
+                          }}
+                        >
+                          {lbl.text}
+                        </span>
+                      );
+                    })}
                   </div>
 
-                  {/* Grid of Weeks */}
-                  <div className="flex gap-[3px] sm:gap-[4px]">
-                    {weeks.map((week, weekIdx) => (
-                      <div key={weekIdx} className="grid grid-rows-7 gap-[3px] sm:gap-[4px]">
-                        {week.map((day, dayIdx) => {
-                          const cellStyle: React.CSSProperties = {
-                            backgroundColor: `var(--c-git-${day.level})`,
-                            border: day.level === 0 ? '1px solid var(--c-border)' : '1px solid var(--c-git-border, transparent)',
-                            transition: 'background-color 0.4s ease, border-color 0.4s ease, transform 0.15s ease',
-                          };
+                  {/* Calendar Grid Section */}
+                  <div className="flex">
+                    {/* Day of Week Labels */}
+                    <div className="grid grid-rows-7 gap-[3px] sm:gap-[4px] text-[9px] sm:text-[10px] font-mono select-none pr-2 text-right" style={{ color: 'var(--c-muted)', width: 'var(--offset-left)' }}>
+                      <div className="h-[11px] sm:h-[13px] flex items-center justify-end">Sun</div>
+                      <div className="h-[11px] sm:h-[13px] flex items-center justify-end"></div>
+                      <div className="h-[11px] sm:h-[13px] flex items-center justify-end">Tue</div>
+                      <div className="h-[11px] sm:h-[13px] flex items-center justify-end"></div>
+                      <div className="h-[11px] sm:h-[13px] flex items-center justify-end">Thu</div>
+                      <div className="h-[11px] sm:h-[13px] flex items-center justify-end"></div>
+                      <div className="h-[11px] sm:h-[13px] flex items-center justify-end">Sat</div>
+                    </div>
 
-                          return (
-                            <button
-                              key={dayIdx}
-                              className="w-[11px] h-[11px] sm:w-[13px] sm:h-[13px] rounded-[3px] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--c-border-focus)] hover:scale-125 hover:z-10 relative"
-                              style={cellStyle}
-                              aria-label={`${day.count} contributions on ${formatDate(day.date)}`}
-                              onMouseEnter={() => !simplify && setHoveredCell(day)}
-                              onMouseLeave={() => !simplify && setHoveredCell(null)}
-                              onTouchStart={() => !simplify && setHoveredCell(day)}
-                              onClick={() => setHoveredCell(day)}
-                            />
-                          );
-                        })}
-                      </div>
-                    ))}
+                    {/* Grid of Weeks */}
+                    <div className="flex gap-[3px] sm:gap-[4px]">
+                      {weeks.map((week, weekIdx) => (
+                        <div key={weekIdx} className="grid grid-rows-7 gap-[3px] sm:gap-[4px]">
+                          {week.map((day, dayIdx) => {
+                            const cellStyle: React.CSSProperties = {
+                              backgroundColor: `var(--c-git-${day.level})`,
+                              border: day.level === 0 ? '1px solid var(--c-border)' : '1px solid var(--c-git-border, transparent)',
+                              transition: 'background-color 0.4s ease, border-color 0.4s ease, transform 0.15s ease',
+                              willChange: 'transform',
+                              transform: 'translateZ(0)',
+                            };
+
+                            return (
+                              <button
+                                key={dayIdx}
+                                className="w-[11px] h-[11px] sm:w-[13px] sm:h-[13px] rounded-[3px] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--c-border-focus)] hover:scale-110 hover:z-10 relative transform-gpu"
+                                style={cellStyle}
+                                aria-label={`${day.count} contributions on ${formatDate(day.date)}`}
+                                onMouseEnter={() => !simplify && setHoveredCell(day)}
+                                onMouseLeave={() => !simplify && setHoveredCell(null)}
+                                onTouchStart={() => !simplify && setHoveredCell(day)}
+                                onClick={() => setHoveredCell(day)}
+                              />
+                            );
+                          })}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Bottom info row */}

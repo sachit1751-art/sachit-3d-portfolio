@@ -69,7 +69,6 @@ export default function App() {
   const [isViewingResume, setIsViewingResume] = useState(false);
   const [isViewingPrivacy, setIsViewingPrivacy] = useState(false);
   const [isViewingTerms, setIsViewingTerms] = useState(false);
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   useEffect(() => {
     initFontLoader();
@@ -78,7 +77,6 @@ export default function App() {
       const path = window.location.pathname;
       const hash = window.location.hash;
       console.log('[App checkRoute] Path:', path, 'Hash:', hash);
-      setIsMobileNavOpen(false);
       if (hash.startsWith('#structure') || hash.startsWith('#/structure') || path.startsWith('/structure')) {
         setShowStructureRoom(true);
         setIsViewingResume(false);
@@ -126,12 +124,10 @@ export default function App() {
     checkRoute();
 
     const handlePopState = () => {
-      setIsMobileNavOpen(false);
       checkRoute();
     };
 
     const handleOpenPrivacy = () => {
-      setIsMobileNavOpen(false);
       setIsViewingPrivacy(true);
       setIsViewingResume(false);
       setIsViewingTerms(false);
@@ -146,7 +142,6 @@ export default function App() {
     };
 
     const handleOpenTerms = () => {
-      setIsMobileNavOpen(false);
       setIsViewingTerms(true);
       setIsViewingResume(false);
       setIsViewingPrivacy(false);
@@ -161,7 +156,6 @@ export default function App() {
     };
 
     const handleOpen404 = () => {
-      setIsMobileNavOpen(false);
       setIs404(true);
       setIsViewingResume(false);
       setIsViewingPrivacy(false);
@@ -259,7 +253,6 @@ export default function App() {
 
   const handleOpenResume = useCallback(() => {
     console.log('[App] handleOpenResume: Setting flags to skip intro');
-    setIsMobileNavOpen(false);
     setIsViewingResume(true);
     setShowContent(true);
     setIntroCompleted(true);
@@ -272,7 +265,6 @@ export default function App() {
   }, []);
 
   const handleCloseResume = useCallback(() => {
-    setIsMobileNavOpen(false);
     setIsViewingResume(false);
     try {
       if (window.location.pathname === '/resume') {
@@ -282,7 +274,6 @@ export default function App() {
   }, []);
 
   const handleOpenPrivacy = useCallback(() => {
-    setIsMobileNavOpen(false);
     setIsViewingPrivacy(true);
     setIsViewingResume(false);
     setIsViewingTerms(false);
@@ -297,7 +288,6 @@ export default function App() {
   }, []);
 
   const handleOpenTerms = useCallback(() => {
-    setIsMobileNavOpen(false);
     setIsViewingTerms(true);
     setIsViewingResume(false);
     setIsViewingPrivacy(false);
@@ -312,7 +302,6 @@ export default function App() {
   }, []);
 
   const handleNavigateSection = useCallback((id: string) => {
-    setIsMobileNavOpen(false);
     // Prevent navigation if intro isn't finished and we're not explicitly bypassing it
     if (!introCompleted && paperState !== 'opened') {
       console.warn('[App] handleNavigateSection: Navigation suppressed (intro active)');
@@ -347,30 +336,6 @@ export default function App() {
       }
     });
   }, [introCompleted, paperState]);
-
-  // Lock body and scroll container when mobile navigation is open
-  useEffect(() => {
-    if (isMobileNavOpen) {
-      const prevBodyOverflow = document.body.style.overflow;
-      const prevHtmlOverflow = document.documentElement.style.overflow;
-      const scrollContainer = document.getElementById('content-scroll-container');
-      const prevContainerOverflow = scrollContainer?.style.overflow;
-
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-      if (scrollContainer) {
-        scrollContainer.style.overflow = 'hidden';
-      }
-
-      return () => {
-        document.body.style.overflow = prevBodyOverflow;
-        document.documentElement.style.overflow = prevHtmlOverflow;
-        if (scrollContainer) {
-          scrollContainer.style.overflow = prevContainerOverflow || 'auto';
-        }
-      };
-    }
-  }, [isMobileNavOpen]);
 
   // Preload ResumeViewer module once portfolio is revealed to ensure instantaneous transitions
   useEffect(() => {
@@ -418,7 +383,6 @@ export default function App() {
 
   const handleRecrumple = useCallback(() => {
     console.log('[App] handleRecrumple: Resetting session and states');
-    setIsMobileNavOpen(false);
     try {
       sessionStorage.removeItem(SESSION_CACHE_KEY);
     } catch {}
@@ -621,7 +585,7 @@ export default function App() {
       {/* Portfolio Content */}
       {showContent && introCompleted && !showStructureRoom && !showMoodGame && (
         <div
-          className="fixed inset-0 z-20 animate-portfolio-enter"
+          className="fixed inset-0 z-20 animate-portfolio-enter flex flex-col"
           data-theme={theme}
         >
           {headerReady && (
@@ -636,14 +600,12 @@ export default function App() {
                 setSiteMapInitialTab('all');
                 setIsSiteMapOpen(true);
               }}
-              isMobileNavOpen={isMobileNavOpen}
-              onMobileNavOpenChange={setIsMobileNavOpen}
             />
           )}
           {/* Main Portfolio Scroll Container - kept mounted to preserve scroll position and eliminate remount lag */}
           <div
             id="content-scroll-container"
-            className={`w-full h-full overflow-y-auto overflow-x-hidden pt-[72px] ${
+            className={`flex-1 min-h-0 w-full overflow-y-auto overflow-x-hidden ${
               isViewingResume || isViewingPrivacy || isViewingTerms
                 ? 'invisible pointer-events-none'
                 : 'visible pointer-events-auto'
@@ -651,8 +613,6 @@ export default function App() {
             style={{
               WebkitOverflowScrolling: 'touch',
               overscrollBehaviorY: 'contain',
-              transform: 'translateZ(0)',
-              willChange: 'transform',
             }}
             aria-hidden={isViewingResume || isViewingPrivacy || isViewingTerms}
             tabIndex={isViewingResume || isViewingPrivacy || isViewingTerms ? -1 : undefined}
