@@ -108,32 +108,7 @@ const projects: Project[] = [
     tags: ['React', 'TypeScript', 'Tailwind CSS', 'Web Audio API', 'Vite', 'Git'],
     featured: true,
   },
-  {
-    id: 'doc-summarizer',
-    title: 'Claude-Powered Document Summarizer',
-    category: 'AI Tool',
-    filterCategories: ['AI', 'WEB'],
-    year: '2025',
-    description:
-      'High-speed document analysis platform using Anthropic Claude API, Streamlit web interface, and prompt caching.',
-    longDescription:
-      'Built a web interface using Streamlit to allow users to seamlessly upload PDF and TXT files for real-time text extraction and analysis.\n\nIntegrated Anthropic\'s Claude API using structured system instructions and clear contextual boundaries to eliminate factual hallucinations.\n\nImplemented prompt caching strategies for recurring document formats, reducing API response times by up to 40% and lowering token consumption costs.',
-    tags: ['Python', 'Streamlit', 'Claude API', 'Prompt Engineering', 'Prompt Caching', 'Git'],
-    featured: true,
-  },
-  {
-    id: 'web-music',
-    title: 'Open-Source Web Music Streaming Application',
-    category: 'Web Audio',
-    filterCategories: ['WEB'],
-    year: '2025',
-    description:
-      'Responsive web audio player capable of streaming tracks smoothly across desktop and mobile browsers with local caching.',
-    longDescription:
-      'Developed a responsive web audio player capable of streaming tracks smoothly across desktop and mobile browsers.\n\nImplemented dynamic playlist controls, search filtering, and volume management for an intuitive user experience.\n\nIntegrated modern UI styling and local storage caching to save user preferences and recent playback states.',
-    tags: ['JavaScript', 'HTML5', 'CSS3', 'REST APIs', 'Web Audio', 'Git'],
-    featured: true,
-  },
+
   {
     id: 'mcp-tool',
     title: 'AI-Powered Model Context Protocol (MCP) Tool',

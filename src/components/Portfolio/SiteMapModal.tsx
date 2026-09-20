@@ -421,34 +421,7 @@ export const SiteMapModal: React.FC<SiteMapModalProps> = ({
           onClose();
         },
       },
-      {
-        id: 'project-claude-summarizer',
-        title: 'Claude Document Summarizer',
-        subtitle: 'Prompt Caching architecture for high-token documents & analysis',
-        category: 'project',
-        categoryLabel: 'Project',
-        icon: FileText,
-        keywords: ['claude', 'anthropic', 'caching', 'pdf', 'summarizer'],
-        badge: 'AI Tool',
-        action: () => {
-          onNavigateSection('projects');
-          onClose();
-        },
-      },
-      {
-        id: 'project-web-music',
-        title: 'Open-Source Web Music Streaming',
-        subtitle: 'Responsive browser audio player with dynamic playlist controls & caching',
-        category: 'project',
-        categoryLabel: 'Project',
-        icon: Code2,
-        keywords: ['music', 'audio', 'streaming', 'web audio', 'javascript'],
-        badge: 'Web App',
-        action: () => {
-          onNavigateSection('projects');
-          onClose();
-        },
-      },
+
       {
         id: 'project-sentience-os',
         title: 'Sentience OS',

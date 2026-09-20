@@ -4,7 +4,6 @@ import { Hero } from './Hero';
 import { ScrollTextPath } from '../UI/ScrollTextPath';
 import { About } from './About';
 import { Philosophy } from './Philosophy';
-import { QuotesSection } from './QuotesSection';
 import { Projects } from './Projects';
 import { Skills } from './Skills';
 import { GitHubSection } from './GitHub';
@@ -52,7 +51,7 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
       const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
 
       if (Math.abs(deltaX) > 65 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
-        const sections = ['hero', 'about', 'philosophy', 'quotes', 'projects', 'skills', 'github', 'experience', 'education', 'strengths', 'building-in-public', 'chat', 'contact'];
+        const sections = ['hero', 'about', 'philosophy', 'projects', 'skills', 'github', 'experience', 'education', 'strengths', 'building-in-public', 'chat', 'contact'];
         
         let currentIndex = 0;
         let minDistance = Infinity;
@@ -108,7 +107,6 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
 
           <About />
           <Philosophy />
-          <QuotesSection />
           <Projects />
           <Skills />
           <GitHubSection theme={theme} />

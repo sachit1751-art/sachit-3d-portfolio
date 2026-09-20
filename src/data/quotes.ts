@@ -10,6 +10,4 @@ export const DEV_QUOTES = [
   '"Before software can be reusable it first has to be usable." — Ralph Johnson',
   '"Deleted code is debugged code." — Jeff Sickel',
   '"Talk is cheap. Show me the code." — Linus Torvalds',
-  '"Simplicity is the ultimate sophistication." — Leonardo da Vinci',
-  '"Code is read much more often than it is written." — Guido van Rossum',
 ];

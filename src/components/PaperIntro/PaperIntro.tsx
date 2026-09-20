@@ -294,7 +294,10 @@ export const PaperIntro = memo<PaperIntroProps>(({
               </div>
               <button
                 type="button"
-                onClick={toggleMute}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMute();
+                }}
                 className="w-8 h-8 rounded-[var(--radius-md)] cursor-pointer transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
                 style={{
                   color: isMuted ? 'var(--c-muted)' : 'var(--c-heading)',
@@ -320,7 +323,10 @@ export const PaperIntro = memo<PaperIntroProps>(({
             <button
               ref={btnRef}
               id="unfold-paper-btn"
-              onClick={handleButtonClick}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleButtonClick();
+              }}
               className="group relative px-7 py-3.5 transition-colors duration-300 flex items-center gap-4 cursor-pointer backdrop-blur-md rounded-[var(--radius-md)] shadow-md hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[var(--c-border-focus)]"
               style={{
                 backgroundColor: 'var(--c-btn-bg)',

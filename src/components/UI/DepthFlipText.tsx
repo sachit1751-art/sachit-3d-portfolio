@@ -34,7 +34,7 @@ export const DepthFlipText = memo<DepthFlipTextProps>(({
 
   // Pre-calculate phrase text widths using Pretext for smooth bounding stability
   const phraseWidth = useMemo(() => {
-    return measureTextWidth(currentPhrase, '800 64px sans-serif');
+    return measureTextWidth(currentPhrase, '700 64px Kalam, sans-serif');
   }, [currentPhrase]);
 
   // Next phrase trigger

@@ -796,12 +796,27 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
     }
   }, [theme]);
 
+  const handleContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+
+    if ((e.target as HTMLElement)?.closest('button, a, [role="button"]')) {
+      return;
+    }
+
+    if (paperStateRef.current !== 'crumpled') return;
+
+    if (interactionRef.current.dragDistance > 12) return;
+
+    onPaperClick?.();
+  };
+
   return (
     <div
       ref={containerRef}
       id="paper-3d-scene"
-      className="w-full h-full cursor-pointer select-none"
+      className="paper-ball-container w-full h-full cursor-pointer select-none"
       aria-label="3D Crumpled Paper Canvas"
+      onClick={handleContainerClick}
     />
   );
 });

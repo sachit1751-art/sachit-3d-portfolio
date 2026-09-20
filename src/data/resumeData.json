@@ -69,26 +69,6 @@
       ]
     },
     {
-      "id": "doc-summarizer",
-      "title": "Claude-Powered Document Summarizer",
-      "technologies": "Python, Streamlit, Anthropic Claude API, Git",
-      "bullets": [
-        "Built a web interface using Streamlit to allow users to seamlessly upload PDF and TXT files for real-time text extraction and analysis.",
-        "Integrated Anthropic's Claude API using structured system instructions and clear contextual boundaries to eliminate factual hallucinations.",
-        "Implemented prompt caching strategies for recurring document formats, reducing API response times by up to 40% and lowering token consumption costs."
-      ]
-    },
-    {
-      "id": "web-music",
-      "title": "Open-Source Web Music Streaming Application",
-      "technologies": "JavaScript, HTML5, CSS3, REST APIs, Git",
-      "bullets": [
-        "Developed a responsive web audio player capable of streaming tracks smoothly across desktop and mobile browsers.",
-        "Implemented dynamic playlist controls, search filtering, and volume management for an intuitive user experience.",
-        "Integrated modern UI styling and local storage caching to save user preferences and recent playback states."
-      ]
-    },
-    {
       "id": "mcp-tool",
       "title": "AI-Powered Model Context Protocol (MCP) Integration Tool",
       "technologies": "Python, Anthropic Claude API, MCP Servers, JSON-RPC",
