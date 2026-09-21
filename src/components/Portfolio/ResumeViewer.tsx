@@ -79,9 +79,7 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
   const [zoomLevel, setZoomLevel] = useState<number>(100);
   const toastTimeoutRef = useRef<number | null>(null);
 
-  // Split projects across two printable sheets for optimal page distribution (3 on Page 1, 3 on Page 2)
-  const page1Projects = resumeData.projects.slice(0, 3);
-  const page2Projects = resumeData.projects.slice(3);
+  const allProjects = resumeData.projects;
 
   useEffect(() => {
     return () => {
@@ -162,9 +160,9 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
       <motion.div variants={resumeContentVariants} className="max-w-5xl mx-auto flex flex-col gap-6 relative z-10">
         {/* Top Control Bar */}
         <div
-          className="resume-controls no-print flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-5 rounded-[var(--radius-lg)] shadow-xs backdrop-blur-md"
+          className="resume-controls no-print flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-5 rounded-[var(--radius-lg)]"
           style={{
-            backgroundColor: 'var(--c-card)',
+            backgroundColor: 'transparent',
             border: '1px solid var(--c-border)',
           }}
         >
@@ -297,7 +295,7 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
                   color: 'var(--c-heading)',
                 }}
               >
-                2 Pages • Verified Decoupled Data Source
+                1 Page • Verified Decoupled Data Source
               </span>
             </div>
             <div
@@ -316,21 +314,21 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
             }}
           >
             {/* ============================================================ */}
-            {/* PAGE 1: Header, Summary, Technical Skills, Projects, Education */}
+            {/* UNIFIED SINGLE SHEET RESUME                                  */}
             {/* ============================================================ */}
             <article
-              className="resume-page-card resume-sheet w-full max-w-[850px] rounded-[var(--radius-lg)] p-6 sm:p-10 md:p-12 transition-all select-text backdrop-blur-md"
+              className="resume-page-card resume-sheet w-full max-w-[850px] p-2 sm:p-4 transition-all select-text"
               style={{
-                backgroundColor: 'var(--c-card)',
-                border: '1px solid var(--c-border)',
+                backgroundColor: 'transparent',
+                border: 'none',
                 color: 'var(--c-body)',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)',
+                boxShadow: 'none',
               }}
             >
-              {/* Top Banner Page Indicator (Screen Only) */}
+              {/* Top Banner (Screen Only) */}
               <div className="no-print flex items-center justify-between text-[11px] font-mono pb-4 mb-6 border-b border-[var(--c-border)] opacity-60">
-                <span>Page 1 of 2</span>
-                <span>{resumeData.personalInfo.name} — Curriculum Vitae</span>
+                <span>Curriculum Vitae</span>
+                <span>{resumeData.personalInfo.name}</span>
               </div>
 
               {/* Resume Header */}
@@ -445,7 +443,7 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
                 </div>
               </section>
 
-              {/* 3. PROJECTS (Page 1 Subset) */}
+              {/* 3. PROJECTS */}
               <section className="mb-8">
                 <div className="flex items-center gap-2 pb-2 mb-4 border-b border-[var(--c-border)]">
                   <Code2 className="w-4 h-4" style={{ color: 'var(--c-heading)' }} />
@@ -458,7 +456,7 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
                 </div>
 
                 <div className="flex flex-col gap-5">
-                  {page1Projects.map((project) => (
+                  {allProjects.map((project) => (
                     <div key={project.id} className="flex flex-col gap-1.5">
                       <div className="flex flex-wrap items-baseline justify-between gap-1">
                         <h3 className="font-heading font-bold text-sm sm:text-base" style={{ color: 'var(--c-heading)' }}>
@@ -489,112 +487,51 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
                 </div>
               </section>
 
-              {/* 4. EDUCATION & CERTIFICATIONS (Bottom of Page 1) */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 border-t border-[var(--c-border)]">
-                <div>
-                  <div className="flex items-center gap-2 pb-2 mb-2 border-b border-[var(--c-border)]">
-                    <GraduationCap className="w-4 h-4" style={{ color: 'var(--c-heading)' }} />
-                    <h2
-                      className="font-heading text-xs font-bold uppercase tracking-wider"
-                      style={{ color: 'var(--c-heading)' }}
-                    >
-                      Education
-                    </h2>
-                  </div>
-                  <p className="font-heading font-bold text-sm" style={{ color: 'var(--c-heading)' }}>
-                    {resumeData.education.institution}
-                  </p>
-                  <p className="text-xs font-mono mt-0.5" style={{ color: 'var(--c-subtle)' }}>
-                    {resumeData.education.degree} | {resumeData.education.stream}
-                  </p>
-                  <p className="text-xs font-mono mt-0.5" style={{ color: 'var(--c-subtle)' }}>
-                    {resumeData.education.graduationYear}
-                  </p>
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-2 pb-2 mb-2 border-b border-[var(--c-border)]">
-                    <Award className="w-4 h-4" style={{ color: 'var(--c-heading)' }} />
-                    <h2
-                      className="font-heading text-xs font-bold uppercase tracking-wider"
-                      style={{ color: 'var(--c-heading)' }}
-                    >
-                      Certifications
-                    </h2>
-                  </div>
-                  <p className="font-heading font-bold text-sm" style={{ color: 'var(--c-heading)' }}>
-                    Anthropic Skill Jar
-                  </p>
-                  <p className="text-xs font-mono mt-0.5" style={{ color: 'var(--c-subtle)' }}>
-                    {resumeData.certifications[0]}
-                  </p>
-                </div>
-              </div>
-            </article>
-
-            {/* ============================================================ */}
-            {/* PAGE 2: Additional Projects, Achievements, Activities, Langs */}
-            {/* ============================================================ */}
-            <article
-              className="resume-page-card resume-sheet w-full max-w-[850px] rounded-[var(--radius-lg)] p-6 sm:p-10 md:p-12 transition-all select-text backdrop-blur-md"
-              style={{
-                backgroundColor: 'var(--c-card)',
-                border: '1px solid var(--c-border)',
-                color: 'var(--c-body)',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)',
-              }}
-            >
-              {/* Top Banner Page Indicator (Screen Only) */}
-              <div className="no-print flex items-center justify-between text-[11px] font-mono pb-4 mb-6 border-b border-[var(--c-border)] opacity-60">
-                <span>Page 2 of 2</span>
-                <span>{resumeData.personalInfo.name} — Curriculum Vitae (Continued)</span>
-              </div>
-
-              {/* Continued Projects */}
+              {/* 4. EDUCATION & CERTIFICATIONS */}
               <section className="mb-8">
-                <div className="flex items-center gap-2 pb-2 mb-4 border-b border-[var(--c-border)]">
-                  <Code2 className="w-4 h-4" style={{ color: 'var(--c-heading)' }} />
-                  <h2
-                    className="font-heading text-sm font-bold uppercase tracking-wider"
-                    style={{ color: 'var(--c-heading)' }}
-                  >
-                    Projects (Continued)
-                  </h2>
-                </div>
-
-                <div className="flex flex-col gap-6">
-                  {page2Projects.map((project) => (
-                    <div key={project.id} className="flex flex-col gap-1.5">
-                      <div className="flex flex-wrap items-baseline justify-between gap-1">
-                        <h3 className="font-heading font-bold text-sm sm:text-base" style={{ color: 'var(--c-heading)' }}>
-                          {project.title}
-                        </h3>
-                        {project.liveUrl && (
-                          <a
-                            href={project.liveUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs font-mono underline hover:text-[var(--c-heading)]"
-                            style={{ color: 'var(--c-heading)' }}
-                          >
-                            {project.liveUrlLabel || 'live demo'}
-                          </a>
-                        )}
-                      </div>
-                      <p className="text-xs font-mono" style={{ color: 'var(--c-subtle)' }}>
-                        <strong className="text-[var(--c-heading)]">Technologies:</strong> {project.technologies}
-                      </p>
-                      <ul className="list-disc list-outside pl-4 space-y-1 text-xs sm:text-sm font-body leading-relaxed" style={{ color: 'var(--c-body)' }}>
-                        {project.bullets.map((bullet, bIdx) => (
-                          <li key={bIdx}>{bullet}</li>
-                        ))}
-                      </ul>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                  <div>
+                    <div className="flex items-center gap-2 pb-2 mb-2 border-b border-[var(--c-border)]">
+                      <GraduationCap className="w-4 h-4" style={{ color: 'var(--c-heading)' }} />
+                      <h2
+                        className="font-heading text-xs font-bold uppercase tracking-wider"
+                        style={{ color: 'var(--c-heading)' }}
+                      >
+                        Education
+                      </h2>
                     </div>
-                  ))}
+                    <p className="font-heading font-bold text-sm" style={{ color: 'var(--c-heading)' }}>
+                      {resumeData.education.institution}
+                    </p>
+                    <p className="text-xs font-mono mt-0.5" style={{ color: 'var(--c-subtle)' }}>
+                      {resumeData.education.degree} | {resumeData.education.stream}
+                    </p>
+                    <p className="text-xs font-mono mt-0.5" style={{ color: 'var(--c-subtle)' }}>
+                      {resumeData.education.graduationYear}
+                    </p>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center gap-2 pb-2 mb-2 border-b border-[var(--c-border)]">
+                      <Award className="w-4 h-4" style={{ color: 'var(--c-heading)' }} />
+                      <h2
+                        className="font-heading text-xs font-bold uppercase tracking-wider"
+                        style={{ color: 'var(--c-heading)' }}
+                      >
+                        Certifications
+                      </h2>
+                    </div>
+                    <p className="font-heading font-bold text-sm" style={{ color: 'var(--c-heading)' }}>
+                      Anthropic Skill Jar
+                    </p>
+                    <p className="text-xs font-mono mt-0.5" style={{ color: 'var(--c-subtle)' }}>
+                      {resumeData.certifications[0]}
+                    </p>
+                  </div>
                 </div>
               </section>
 
-              {/* ACHIEVEMENTS */}
+              {/* 5. ACHIEVEMENTS */}
               <section className="mb-8">
                 <div className="flex items-center gap-2 pb-2 mb-3 border-b border-[var(--c-border)]">
                   <Sparkles className="w-4 h-4" style={{ color: 'var(--c-heading)' }} />
@@ -612,7 +549,7 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
                 </ul>
               </section>
 
-              {/* LEADERSHIP / EXTRACURRICULAR ACTIVITIES */}
+              {/* 6. LEADERSHIP & EXTRACURRICULAR ACTIVITIES */}
               <section className="mb-8">
                 <div className="flex items-center gap-2 pb-2 mb-3 border-b border-[var(--c-border)]">
                   <Layers className="w-4 h-4" style={{ color: 'var(--c-heading)' }} />
@@ -630,32 +567,34 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
                 </ul>
               </section>
 
-              {/* LANGUAGES & INTERESTS */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-[var(--c-border)]">
-                <div>
-                  <h3
-                    className="font-mono text-xs font-bold uppercase tracking-wider mb-1.5"
-                    style={{ color: 'var(--c-heading)' }}
-                  >
-                    Languages
-                  </h3>
-                  <p className="text-xs sm:text-sm font-body" style={{ color: 'var(--c-body)' }}>
-                    {resumeData.languages.map((l) => `${l.name} (${l.fluency})`).join(', ')}
-                  </p>
-                </div>
+              {/* 7. LANGUAGES & INTERESTS */}
+              <section className="pt-4 border-t border-[var(--c-border)]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <h3
+                      className="font-mono text-xs font-bold uppercase tracking-wider mb-1.5"
+                      style={{ color: 'var(--c-heading)' }}
+                    >
+                      Languages
+                    </h3>
+                    <p className="text-xs sm:text-sm font-body" style={{ color: 'var(--c-body)' }}>
+                      {resumeData.languages.map((l) => `${l.name} (${l.fluency})`).join(', ')}
+                    </p>
+                  </div>
 
-                <div>
-                  <h3
-                    className="font-mono text-xs font-bold uppercase tracking-wider mb-1.5"
-                    style={{ color: 'var(--c-heading)' }}
-                  >
-                    Interests
-                  </h3>
-                  <p className="text-xs sm:text-sm font-body" style={{ color: 'var(--c-body)' }}>
-                    {resumeData.interests.join(', ')}
-                  </p>
+                  <div>
+                    <h3
+                      className="font-mono text-xs font-bold uppercase tracking-wider mb-1.5"
+                      style={{ color: 'var(--c-heading)' }}
+                    >
+                      Interests
+                    </h3>
+                    <p className="text-xs sm:text-sm font-body" style={{ color: 'var(--c-body)' }}>
+                      {resumeData.interests.join(', ')}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </section>
             </article>
           </div>
 

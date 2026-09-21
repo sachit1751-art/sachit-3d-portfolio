@@ -13,8 +13,8 @@ export interface SEOMetadataProps {
 
 const SECTION_SEO_MAP: Record<string, { title: string; description: string; keywords: string[] }> = {
   hero: {
-    title: 'Sachit — AI Automation & Web Developer',
-    description: 'Portfolio of Sachit, AI Automation & Web Developer building full-stack web applications, custom platforms, and automated workflows.',
+    title: 'Sachit',
+    description: 'Portfolio of Sachit, a Software Developer and Prompt Engineer focusing on full-stack web applications, AI tools, custom Android platforms, and automation.',
     keywords: ['Sachit', 'Sachit developer', 'Sachit web developer', 'Sachit AI developer', 'AI automation developer', 'React', 'TypeScript', 'Next.js', 'Python'],
   },
   about: {
@@ -81,8 +81,8 @@ export const SEOMetadata = ({
       description = description || sectionInfo.description;
       keywords = [...keywords, ...sectionInfo.keywords];
     } else {
-      title = title || 'Sachit — AI Automation & Web Developer';
-      description = description || 'Official portfolio of Sachit, featuring full-stack applications, AI automation tools, and developer projects.';
+      title = title || 'Sachit';
+      description = description || 'Portfolio of Sachit, a Software Developer and Prompt Engineer focusing on full-stack web applications, AI tools, custom Android platforms, and automation.';
     }
 
     const fullTitle = title.includes('Sachit') ? title : `${title} — Sachit`;

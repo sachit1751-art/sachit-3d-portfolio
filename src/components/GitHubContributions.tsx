@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { PaperTheme } from '../types';
 import { usePerformance } from '../hooks/usePerformance';
 import { HoneycombLoader } from './UI/HoneycombLoader';
+import { observeElement } from '../utils/observer';
 
 interface ContributionDay {
   date: string;
@@ -129,22 +130,19 @@ export const GitHubContributions: React.FC<GitHubContributionsProps> = ({
 
   // Load data progressively using IntersectionObserver
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting) {
+    const el = containerRef.current;
+    if (!el) return;
+
+    return observeElement(
+      el,
+      (isIntersecting) => {
+        if (isIntersecting) {
           setHasIntersected(true);
-          observer.disconnect();
         }
       },
-      { rootMargin: '100px' }
+      { rootMargin: '100px' },
+      true // once
     );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
-    return () => observer.disconnect();
   }, []);
 
   // Fetch from Express proxy with fallback

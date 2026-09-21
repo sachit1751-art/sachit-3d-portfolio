@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { usePerformance } from '../../hooks/usePerformance';
+import { observeElement } from '../../utils/observer';
 
 interface QuoteRollProps {
   quotes: string[];
@@ -19,12 +20,12 @@ export function QuoteRoll({ quotes, interval = 5000, className = '', mode = 'rol
     const el = containerRef.current;
     if (!el) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
-      { threshold: 0 }
+    return observeElement(
+      el,
+      (isIntersecting) => setIsVisible(isIntersecting),
+      { threshold: 0 },
+      false // continuous tracking (not once)
     );
-    observer.observe(el);
-    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {

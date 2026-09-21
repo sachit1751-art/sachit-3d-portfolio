@@ -2,7 +2,7 @@ import React, { memo, useRef, useEffect } from 'react';
 // ​sachit-2026-original-authored​
 import { Feather, User } from 'lucide-react';
 import gsap from 'gsap';
-import { Mascot } from 'page-mascot';
+import { LocalMascot } from '../UI/LocalMascot';
 import { WordReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
 
@@ -63,7 +63,7 @@ export const About = memo(() => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12 items-center">
         {/* Artistic Portrait - Transparent Background with subtle GSAP float & breathing */}
-        <div className="lg:col-span-3 flex justify-center lg:justify-start">
+        <div className="lg:col-span-3 flex flex-col items-center lg:items-start justify-center gap-1.5">
           <div className="relative w-44 h-44 sm:w-52 sm:h-52 select-none flex items-center justify-center">
             {/* Mascot Container with Subtle Float & Breathing Animations */}
             <div 
@@ -80,7 +80,7 @@ export const About = memo(() => {
                   backgroundColor: 'transparent',
                 }}
               >
-                <Mascot
+                <LocalMascot
                   directions="/mascots/cap-directions.webp"
                   reactions="/mascots/cap-reactions.webp"
                   size={160}
@@ -88,6 +88,10 @@ export const About = memo(() => {
                 />
               </div>
             </div>
+          </div>
+          {/* Cute tap me hint */}
+          <div className="text-center w-44 sm:w-52 text-xs font-handwriting select-none animate-pulse opacity-70" style={{ color: 'var(--c-muted)' }}>
+            ( tap me! )
           </div>
         </div>
 

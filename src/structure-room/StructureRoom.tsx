@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 // ​‌sachit-2026-original-authored‌​
 import { AnimatedMenuIcon } from '../components/UI/AnimatedMenuIcon';
 import { motion, AnimatePresence } from 'motion/react';
@@ -34,7 +34,7 @@ const TABS = [
 ];
 
 // ﻿watermark:sachit-portfolio-2026﻿
-export const StructureRoom: React.FC<StructureRoomProps> = ({ theme, setTheme, onExit }) => {
+export const StructureRoom: React.FC<StructureRoomProps> = memo(({ theme, setTheme, onExit }) => {
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash;
@@ -193,4 +193,6 @@ export const StructureRoom: React.FC<StructureRoomProps> = ({ theme, setTheme, o
       />
     </div>
   );
-};
+});
+
+StructureRoom.displayName = 'StructureRoom';

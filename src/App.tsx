@@ -7,8 +7,6 @@ import { HoneycombLoader } from './components/UI/HoneycombLoader';
 import { SEOHead } from './components/SEO/SEOHead';
 import { SEOMetadata } from './components/SEO/SEOMetadata';
 import { TelemetryTracker } from './components/SEO/TelemetryTracker';
-import { StickyMobileCTA } from './components/UI/StickyMobileCTA';
-import { SiteMapModal } from './components/Portfolio/SiteMapModal';
 import { ShortcutHUD } from './components/UI/ShortcutHUD';
 import { useDoomSequence } from './hooks/useDoomSequence';
 import { usePerformance } from './hooks/usePerformance';
@@ -54,6 +52,7 @@ const LazyMoodTransition = lazyWithRetry<typeof import('./components/MoodGame/Mo
 const LazyResumeViewer = lazyWithRetry<typeof import('./components/Portfolio/ResumeViewer').ResumeViewer>(() => import('./components/Portfolio/ResumeViewer'), 'ResumeViewer');
 const LazyPrivacyPolicy = lazyWithRetry<typeof import('./components/Portfolio/PrivacyPolicy').PrivacyPolicy>(() => import('./components/Portfolio/PrivacyPolicy'), 'PrivacyPolicy');
 const LazyTermsOfService = lazyWithRetry<typeof import('./components/Portfolio/TermsOfService').TermsOfService>(() => import('./components/Portfolio/TermsOfService'), 'TermsOfService');
+const LazySiteMapModal = lazyWithRetry<typeof import('./components/Portfolio/SiteMapModal').SiteMapModal>(() => import('./components/Portfolio/SiteMapModal'), 'SiteMapModal');
 
 function HeavyFallback() {
   return (
@@ -337,6 +336,54 @@ export default function App() {
     });
   }, [introCompleted, paperState]);
 
+  const handleClosePrivacy = useCallback(() => {
+    setIsViewingPrivacy(false);
+    try { if (window.location.pathname !== '/') window.history.pushState({}, '', '/'); } catch {}
+  }, []);
+
+  const handleCloseTerms = useCallback(() => {
+    setIsViewingTerms(false);
+    try { if (window.location.pathname !== '/') window.history.pushState({}, '', '/'); } catch {}
+  }, []);
+
+  const handleOpenSiteMap = useCallback(() => {
+    setSiteMapInitialTab('all');
+    setIsSiteMapOpen(true);
+  }, []);
+
+  const handleCloseSiteMap = useCallback(() => {
+    setIsSiteMapOpen(false);
+  }, []);
+
+  const handleDoomTransitionComplete = useCallback(() => {
+    setShowTransition(false);
+    setShowStructureRoom(true);
+  }, []);
+
+  const handleExitStructureRoom = useCallback(() => {
+    exitStructureRoom();
+    setShowStructureRoom(false);
+  }, [exitStructureRoom]);
+
+  const handleMoodTransitionComplete = useCallback(() => {
+    setShowMoodTransition(false);
+    moodTransitionFiredRef.current = false;
+    setShowMoodGame(true);
+  }, []);
+
+  const handlePaperOpenComplete = useCallback(() => {
+    try {
+      sessionStorage.setItem(SESSION_CACHE_KEY, 'true');
+    } catch {}
+    setIntroCompleted(true);
+    setShowContent(true);
+    setHeaderReady(true);
+    requestAnimationFrame(() => {
+      const container = document.getElementById('content-scroll-container');
+      if (container) container.scrollTop = 0;
+    });
+  }, []);
+
   // Preload ResumeViewer module once portfolio is revealed to ensure instantaneous transitions
   useEffect(() => {
     if (showContent && introCompleted) {
@@ -485,6 +532,14 @@ export default function App() {
     setShowMoodTransition(true);
   }, []);
 
+  const handleSetPaperState = useCallback((state: PaperState) => {
+    setPaperState(state);
+  }, []);
+
+  const handleSetShowMoodGame = useCallback((v: boolean) => {
+    setShowMoodGame(v);
+  }, []);
+
   return (
     <div data-theme={theme} className="relative min-h-screen bg-[var(--c-bg)] font-sans antialiased overflow-x-hidden transition-colors duration-500">
       {/* Route-Aware & Crawler-Optimized SEO Metadata */}
@@ -560,23 +615,12 @@ export default function App() {
         <Suspense fallback={null}>
           <LazyPaperIntro
             paperState={paperState}
-            setPaperState={setPaperState}
+            setPaperState={handleSetPaperState}
             theme={theme}
             setTheme={handleThemeChange}
-            onOpenComplete={() => {
-              try {
-                sessionStorage.setItem(SESSION_CACHE_KEY, 'true');
-              } catch {}
-              setIntroCompleted(true);
-              setShowContent(true);
-              setHeaderReady(true);
-              requestAnimationFrame(() => {
-                const container = document.getElementById('content-scroll-container');
-                if (container) container.scrollTop = 0;
-              });
-            }}
+            onOpenComplete={handlePaperOpenComplete}
             showMoodGame={showMoodGame}
-            setShowMoodGame={setShowMoodGame}
+            setShowMoodGame={handleSetShowMoodGame}
             onMoodUnlocked={handleMoodUnlocked}
           />
         </Suspense>
@@ -596,10 +640,7 @@ export default function App() {
               onViewResume={handleOpenResume}
               isViewingResume={isViewingResume}
               onNavigateSection={handleNavigateSection}
-              onOpenSiteMap={() => {
-                setSiteMapInitialTab('all');
-                setIsSiteMapOpen(true);
-              }}
+              onOpenSiteMap={handleOpenSiteMap}
             />
           )}
           {/* Main Portfolio Scroll Container - kept mounted to preserve scroll position and eliminate remount lag */}
@@ -630,7 +671,7 @@ export default function App() {
           {isViewingResume && (
             <div
               id="resume-scroll-container"
-              className="fixed inset-0 top-0 pt-[72px] z-20 w-full h-full overflow-y-auto overflow-x-hidden bg-transparent"
+              className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden bg-transparent"
             >
               <Suspense fallback={<div className="flex items-center justify-center py-24"><HoneycombLoader size="md" label="PREPARING CV CANVAS..." color="var(--c-heading)" /></div>}>
                 <LazyResumeViewer
@@ -646,16 +687,13 @@ export default function App() {
             <div
               id="privacy-scroll-container"
               data-theme={theme}
-              className="fixed inset-0 top-0 pt-[72px] z-20 w-full h-full overflow-y-auto overflow-x-hidden"
+              className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden"
               style={{ backgroundColor: 'var(--c-bg)' }}
             >
               <Suspense fallback={<div className="flex items-center justify-center py-24"><HoneycombLoader size="md" label="LOADING PRIVACY POLICY..." color="var(--c-heading)" /></div>}>
                 <LazyPrivacyPolicy
                   theme={theme}
-                  onBack={() => {
-                    setIsViewingPrivacy(false);
-                    try { if (window.location.pathname !== '/') window.history.pushState({}, '', '/'); } catch {}
-                  }}
+                  onBack={handleClosePrivacy}
                 />
               </Suspense>
             </div>
@@ -666,28 +704,19 @@ export default function App() {
             <div
               id="terms-scroll-container"
               data-theme={theme}
-              className="fixed inset-0 top-0 pt-[72px] z-20 w-full h-full overflow-y-auto overflow-x-hidden"
+              className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden"
               style={{ backgroundColor: 'var(--c-bg)' }}
             >
               <Suspense fallback={<div className="flex items-center justify-center py-24"><HoneycombLoader size="md" label="LOADING TERMS..." color="var(--c-heading)" /></div>}>
                 <LazyTermsOfService
                   theme={theme}
-                  onBack={() => {
-                    setIsViewingTerms(false);
-                    try { if (window.location.pathname !== '/') window.history.pushState({}, '', '/'); } catch {}
-                  }}
+                  onBack={handleCloseTerms}
                 />
               </Suspense>
             </div>
           )}
 
-          {/* Sticky Mobile CTA */}
-          {!isViewingResume && !isViewingPrivacy && !isViewingTerms && (
-            <StickyMobileCTA
-              onNavigate={handleNavigateSection}
-              onViewResume={handleOpenResume}
-            />
-          )}
+
         </div>
       )}
 
@@ -695,10 +724,7 @@ export default function App() {
       {showTransition && (
         <Suspense fallback={<HeavyFallback />}>
           <LazyDoomTransition
-            onComplete={() => {
-              setShowTransition(false);
-              setShowStructureRoom(true);
-            }}
+            onComplete={handleDoomTransitionComplete}
           />
         </Suspense>
       )}
@@ -713,10 +739,7 @@ export default function App() {
             <LazyStructureRoom
               theme={theme}
               setTheme={handleThemeChange}
-              onExit={() => {
-                exitStructureRoom();
-                setShowStructureRoom(false);
-              }}
+              onExit={handleExitStructureRoom}
             />
           </Suspense>
         </div>
@@ -726,11 +749,7 @@ export default function App() {
       {showMoodTransition && (
         <Suspense fallback={<HeavyFallback />}>
           <LazyMoodTransition
-            onComplete={() => {
-              setShowMoodTransition(false);
-              moodTransitionFiredRef.current = false;
-              setShowMoodGame(true);
-            }}
+            onComplete={handleMoodTransitionComplete}
           />
         </Suspense>
       )}
@@ -739,18 +758,22 @@ export default function App() {
       <ShortcutHUD />
 
       {/* Global Site Map & Command Palette Modal (Cmd+K) */}
-      <SiteMapModal
-        isOpen={isSiteMapOpen}
-        onClose={() => setIsSiteMapOpen(false)}
-        onNavigateSection={handleNavigateSection}
-        onOpenResume={handleOpenResume}
-        onOpenPrivacy={handleOpenPrivacy}
-        onOpenTerms={handleOpenTerms}
-        onRecrumple={handleRecrumple}
-        theme={theme}
-        setTheme={handleThemeChange}
-        initialCategory={siteMapInitialTab}
-      />
+      {isSiteMapOpen && (
+        <Suspense fallback={null}>
+          <LazySiteMapModal
+            isOpen={isSiteMapOpen}
+            onClose={handleCloseSiteMap}
+            onNavigateSection={handleNavigateSection}
+            onOpenResume={handleOpenResume}
+            onOpenPrivacy={handleOpenPrivacy}
+            onOpenTerms={handleOpenTerms}
+            onRecrumple={handleRecrumple}
+            theme={theme}
+            setTheme={handleThemeChange}
+            initialCategory={siteMapInitialTab}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

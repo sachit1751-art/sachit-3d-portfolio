@@ -91,11 +91,7 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
     >
       <div
         id="physical-paper-sheet"
-        className="relative w-full max-w-[calc(100%-24px)] sm:max-w-[min(88vw,1100px)] md:max-w-[min(82vw,1100px)] mx-auto overflow-x-hidden py-10 sm:py-14 md:py-20 px-4 sm:px-10 md:px-14"
-        style={{
-          transform: 'translateZ(0)',
-          willChange: 'transform',
-        }}
+        className="relative w-full max-w-[calc(100%-24px)] sm:max-w-[min(88vw,1100px)] md:max-w-[min(82vw,1100px)] mx-auto overflow-x-hidden pt-20 pb-10 sm:pt-24 sm:pb-14 md:pt-28 md:pb-20 px-4 sm:px-10 md:px-14"
       >
         <div className="relative z-10">
           <Hero

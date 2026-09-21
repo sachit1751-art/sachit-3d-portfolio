@@ -3,11 +3,31 @@
   <!-- ​‌‍sachit-portfolio-2026-original-authored-by-sachit‍‌​ -->
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Suppress benign Vite WebSocket connection/HMR closed without opened exceptions in proxy environments
+      window.addEventListener('unhandledrejection', function(event) {
+        var reason = event.reason;
+        if (reason) {
+          var msg = reason.message || String(reason);
+          if (msg && (msg.indexOf('WebSocket') !== -1 || msg.indexOf('websocket') !== -1 || msg.indexOf('opened') !== -1)) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        }
+      }, true);
+      window.addEventListener('error', function(event) {
+        var msg = event.message || '';
+        if (msg && (msg.indexOf('WebSocket') !== -1 || msg.indexOf('websocket') !== -1 || msg.indexOf('opened') !== -1)) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }, true);
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
     <!-- Primary SEO -->
-    <title>Sachit — AI Automation &amp; Web Developer</title>
-    <meta name="description" content="Portfolio of Sachit, an AI Automation &amp; Web Developer specializing in full-stack web applications, AI integrations, and automated workflows." />
+    <title>Sachit</title>
+    <meta name="description" content="Portfolio of Sachit, a Software Developer and Prompt Engineer focusing on full-stack web applications, AI tools, custom Android platforms, and automation." />
     <meta name="keywords" content="Sachit, Sachit developer, Sachit web developer, Sachit AI developer, AI automation developer, web developer India, Next.js developer, Python developer, JavaScript developer, AI automation, developer portfolio" />
     <meta name="author" content="Sachit" />
     <!-- watermark:fingerprint:sachit-2026:original -->
@@ -17,16 +37,16 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://sachin-portfoli.vercel.app/" />
-    <meta property="og:title" content="Sachit — AI Automation &amp; Web Developer" />
-    <meta property="og:description" content="Explore full-stack web applications, AI tools, and automated workflows built by Sachit." />
+    <meta property="og:title" content="Sachit" />
+    <meta property="og:description" content="Portfolio of Sachit, a Software Developer and Prompt Engineer focusing on full-stack web applications, AI tools, custom Android platforms, and automation." />
     <meta property="og:image" content="https://sachin-portfoli.vercel.app/og-image.svg" />
     <meta property="og:site_name" content="Sachit Portfolio" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@sachit" />
-    <meta name="twitter:title" content="Sachit — AI Automation &amp; Web Developer" />
-    <meta name="twitter:description" content="Full-stack web applications and AI automation tools showcasing technical depth and creative engineering." />
+    <meta name="twitter:title" content="Sachit" />
+    <meta name="twitter:description" content="Portfolio of Sachit, a Software Developer and Prompt Engineer focusing on full-stack web applications, AI tools, custom Android platforms, and automation." />
     <meta name="twitter:image" content="https://sachin-portfoli.vercel.app/og-image.svg" />
 
     <!-- Google Search Console -->
@@ -141,8 +161,8 @@
           "@type": "WebSite",
           "@id": "https://sachin-portfoli.vercel.app/#website",
           "url": "https://sachin-portfoli.vercel.app/",
-          "name": "Sachit — Software Developer Portfolio",
-          "description": "Portfolio of Sachit featuring full-stack web applications, AI integrations, Android custom platforms, and automation tools.",
+          "name": "Sachit",
+          "description": "Portfolio of Sachit, a Software Developer and Prompt Engineer focusing on full-stack web applications, AI tools, custom Android platforms, and automation.",
           "publisher": {
             "@id": "https://sachin-portfoli.vercel.app/#person"
           },
@@ -152,7 +172,7 @@
           "@type": "ProfilePage",
           "@id": "https://sachin-portfoli.vercel.app/#webpage",
           "url": "https://sachin-portfoli.vercel.app/",
-          "name": "Sachit — Software Developer & Prompt Engineer Portfolio",
+          "name": "Sachit",
           "isPartOf": {
             "@id": "https://sachin-portfoli.vercel.app/#website"
           },
@@ -162,7 +182,7 @@
           "mainEntity": {
             "@id": "https://sachin-portfoli.vercel.app/#person"
           },
-          "description": "Explore full-stack web applications, AI tools, Android custom platforms, and automation projects built with precision and intent."
+          "description": "Portfolio of Sachit, a Software Developer and Prompt Engineer focusing on full-stack web applications, AI tools, custom Android platforms, and automation."
         },
         {
           "@type": "Person",

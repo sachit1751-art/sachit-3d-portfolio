@@ -77,6 +77,10 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  section, [id] {
+    scroll-margin-top: 85px;
+  }
+
   #content-scroll-container,
   .custom-scrollbar {
     overflow-anchor: auto;
@@ -104,12 +108,55 @@
     font-family: inherit;
   }
 
-  /* Performance Optimizations & Mobile Blur Adjustments */
-  @media (max-width: 768px) {
-    .backdrop-blur-xl, .backdrop-blur-lg, .backdrop-blur-md, .backdrop-blur-2xl {
-      backdrop-filter: blur(8px) !important;
-      -webkit-backdrop-filter: blur(8px) !important;
-    }
+  /* Performance Optimizations — Global Blur to Gradient/Opaque Replacement */
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .backdrop-blur,
+  .backdrop-blur-sm,
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  .backdrop-blur-3xl {
+    background-color: rgba(248, 246, 240, 0.96) !important;
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%) !important;
+  }
+
+  /* Ensure dark themes use dark glassmorphism substitute */
+  [data-theme="dark"] .backdrop-blur,
+  [data-theme="dark"] .backdrop-blur-sm,
+  [data-theme="dark"] .backdrop-blur-md,
+  [data-theme="dark"] .backdrop-blur-lg,
+  [data-theme="dark"] .backdrop-blur-xl,
+  [data-theme="dark"] .backdrop-blur-2xl,
+  [data-theme="dark"] .backdrop-blur-3xl {
+    background-color: rgba(30, 31, 35, 0.96) !important;
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0) 100%) !important;
+  }
+
+  [data-theme="cool"] .backdrop-blur,
+  [data-theme="cool"] .backdrop-blur-sm,
+  [data-theme="cool"] .backdrop-blur-md,
+  [data-theme="cool"] .backdrop-blur-lg,
+  [data-theme="cool"] .backdrop-blur-xl,
+  [data-theme="cool"] .backdrop-blur-2xl,
+  [data-theme="cool"] .backdrop-blur-3xl {
+    background-color: rgba(20, 40, 62, 0.96) !important;
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0) 100%) !important;
+  }
+
+  [data-theme="newsprint"] .backdrop-blur,
+  [data-theme="newsprint"] .backdrop-blur-sm,
+  [data-theme="newsprint"] .backdrop-blur-md,
+  [data-theme="newsprint"] .backdrop-blur-lg,
+  [data-theme="newsprint"] .backdrop-blur-xl,
+  [data-theme="newsprint"] .backdrop-blur-2xl,
+  [data-theme="newsprint"] .backdrop-blur-3xl {
+    background-color: rgba(239, 230, 213, 0.96) !important;
+    background-image: linear-gradient(135deg, rgba(0, 0, 0, 0.01) 0%, rgba(0, 0, 0, 0) 100%) !important;
   }
 
   .perf-simplify *, .perf-simplify *::before, .perf-simplify *::after {
@@ -417,6 +464,7 @@
   scrollbar-color: var(--c-muted) transparent;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
+  will-change: transform;
 }
 
 #content-scroll-container > *,
@@ -501,6 +549,7 @@
 
 .animate-portfolio-enter {
   animation: portfolioFadeEnter 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
 }
 
 /* Typewriter animation */
@@ -3980,4 +4029,30 @@ section[id] {
   z-index: 99999 !important;
   will-change: transform, opacity;
   backface-visibility: hidden;
+}
+
+/* Mascot touch target enhancement */
+.mascot-touch-target::after {
+  content: '';
+  position: absolute;
+  top: -24px;
+  left: -24px;
+  right: -24px;
+  bottom: -24px;
+  background: transparent;
+  pointer-events: auto;
+}
+
+/* Structure Room Performance Optimizations */
+.sr-decision,
+.sr-timeline-item {
+  content-visibility: auto;
+}
+
+.sr-decision {
+  contain-intrinsic-size: 0 100px;
+}
+
+.sr-timeline-item {
+  contain-intrinsic-size: 0 150px;
 }

@@ -1,6 +1,7 @@
 import React, { memo, useRef, useEffect, useMemo, useCallback } from 'react';
 import { usePerformance } from '../../hooks/usePerformance';
 import { measureTextWidth } from '../../utils/pretext';
+import { observeElement } from '../../utils/observer';
 
 interface ScrollTextPathProps {
   text: string;
@@ -94,10 +95,12 @@ export const ScrollTextPath = memo(({ text, className = '' }: ScrollTextPathProp
       animFrameRef.current = requestAnimationFrame(tick);
     };
 
-    // IntersectionObserver: Only animate when element is visible in viewport
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const isIntersecting = entry.isIntersecting;
+    // Centralized IntersectionObserver: Only animate when element is visible in viewport
+    if (!containerRef.current) return;
+
+    const unobserve = observeElement(
+      containerRef.current,
+      (isIntersecting) => {
         isVisibleRef.current = isIntersecting;
 
         if (isIntersecting) {
@@ -112,15 +115,12 @@ export const ScrollTextPath = memo(({ text, className = '' }: ScrollTextPathProp
           }
         }
       },
-      { threshold: 0 }
+      { threshold: 0 },
+      false // continuous tracking (not once)
     );
 
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
     return () => {
-      observer.disconnect();
+      unobserve();
       if (animFrameRef.current !== null) {
         cancelAnimationFrame(animFrameRef.current);
         animFrameRef.current = null;

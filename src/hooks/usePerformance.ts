@@ -14,10 +14,10 @@ export function usePerformance() {
     const handleMotionChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     motionQuery.addEventListener('change', handleMotionChange);
 
-    // Only flag ultra low-spec devices (1 core or <= 1GB memory) or saveData mode
+    // Flag low-spec/throttled mobile devices (<= 4 cores or <= 4GB memory) or saveData mode
     const isLowSpec = 
-      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 1) ||
-      ((navigator as any).deviceMemory && (navigator as any).deviceMemory <= 1);
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+      ((navigator as any).deviceMemory && (navigator as any).deviceMemory <= 4);
     
     // Check connection speed
     const conn = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;

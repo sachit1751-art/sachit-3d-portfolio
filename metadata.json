@@ -1,6 +1,6 @@
 {
-  "name": "Sachit — AI Automation & Web Developer",
-  "description": "Explore the portfolio of Sachit, an AI Automation & Web Developer specializing in full-stack web applications, AI tools, custom platforms, and automated workflows.",
+  "name": "Sachit",
+  "description": "Portfolio of Sachit, a Software Developer and Prompt Engineer focusing on full-stack web applications, AI tools, custom Android platforms, and automation.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

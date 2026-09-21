@@ -48,6 +48,14 @@ export const PaperIntro = memo<PaperIntroProps>(({
   const { simplify } = usePerformance();
   const touchStartDistRef = useRef<number | null>(null);
 
+  const formattedDate = React.useMemo(() => {
+    const today = new Date();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const yyyy = today.getFullYear();
+    return `${mm}/${dd}/${yyyy}`;
+  }, []);
+
   const handlePaperSound = useCallback((type: 'unfold' | 'crumple') => {
     if (type === 'unfold') playUnfold();
     else playCrumple();
@@ -285,7 +293,7 @@ export const PaperIntro = memo<PaperIntroProps>(({
               </div>
               <div className="font-mono text-[10px] tracking-[0.25em] uppercase flex items-center gap-2" style={{ color: 'var(--c-subtle)' }}>
                 <span className="w-1.5 h-1.5" style={{ backgroundColor: 'var(--c-heading)' }} />
-                PHYSICAL CANVAS &bull; 01/2026
+                PHYSICAL CANVAS &bull; {formattedDate}
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -298,20 +306,15 @@ export const PaperIntro = memo<PaperIntroProps>(({
                   e.stopPropagation();
                   toggleMute();
                 }}
-                className="w-8 h-8 rounded-[var(--radius-md)] cursor-pointer transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
-                style={{
-                  color: isMuted ? 'var(--c-muted)' : 'var(--c-heading)',
-                  border: `1px solid ${isMuted ? 'var(--c-border)' : 'var(--c-border-focus)'}`,
-                  backgroundColor: isMuted ? 'transparent' : 'var(--c-input-bg)',
-                }}
+                className="w-9 h-9 rounded-full cursor-pointer transition-all hover:scale-105 active:scale-95 flex items-center justify-center pointer-events-auto bg-stone-200/60 dark:bg-stone-800/60 hover:bg-stone-300/80 text-stone-700 dark:text-stone-300 shadow-sm border border-stone-300/40"
                 title={isMuted ? 'Unmute audio effects' : 'Mute audio effects'}
                 aria-label={isMuted ? 'Unmute audio effects' : 'Mute audio effects'}
                 aria-pressed={!isMuted}
               >
                 {isMuted ? (
-                  <VolumeX className="w-3.5 h-3.5 opacity-60" />
+                  <VolumeX className="w-4 h-4 opacity-60" />
                 ) : (
-                  <Volume2 className="w-3.5 h-3.5" />
+                  <Volume2 className="w-4 h-4" />
                 )}
               </button>
             </div>
@@ -319,7 +322,7 @@ export const PaperIntro = memo<PaperIntroProps>(({
 
           <div className="flex-grow" /> {/* Spacer to push the CTA below the center paper ball */}
 
-          <div className="flex flex-col items-center gap-4 text-center mb-16 pointer-events-auto">
+          <div className="flex flex-col items-center gap-3 text-center mb-12 pointer-events-auto">
             <button
               ref={btnRef}
               id="unfold-paper-btn"
@@ -327,51 +330,42 @@ export const PaperIntro = memo<PaperIntroProps>(({
                 e.stopPropagation();
                 handleButtonClick();
               }}
-              className="group relative px-7 py-3.5 transition-colors duration-300 flex items-center gap-4 cursor-pointer backdrop-blur-md rounded-[var(--radius-md)] shadow-md hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[var(--c-border-focus)]"
+              className="group relative px-8 py-4 transition-all duration-300 flex items-center gap-4 cursor-pointer rounded-xl shadow-xl hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-white/50"
               style={{
-                backgroundColor: 'var(--c-btn-bg)',
-                color: 'var(--c-btn-text)',
-                border: '1px solid var(--c-border-focus)',
+                backgroundColor: '#1E1D1B',
+                color: '#FFFFFF',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--c-btn-bg-hover)';
+                e.currentTarget.style.backgroundColor = '#2C2B29';
                 gsap.to(e.currentTarget, { scale: 1.05, duration: 0.2, ease: 'power2.out' });
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--c-btn-bg)';
+                e.currentTarget.style.backgroundColor = '#1E1D1B';
                 gsap.to(e.currentTarget, { scale: 1, duration: 0.25, ease: 'power2.out' });
               }}
               aria-label="Click to unfold the crumpled portfolio sheet"
             >
-              <span className="font-handwriting text-2xl font-bold tracking-wide" style={{ color: 'var(--c-btn-text)' }}>
+              <span className="font-handwriting text-2xl font-bold tracking-wide text-white">
                 click to unfold
               </span>
               
-              <div className="hidden sm:flex items-center gap-1.5 ml-1">
+              <div className="hidden sm:flex items-center gap-1.5 ml-2">
                 <span
-                  className="inline-flex items-center justify-center px-2.5 py-1 min-w-[28px] rounded-[var(--radius-sm)] border font-mono text-[10px] font-bold uppercase tracking-normal shadow-sm"
-                  style={{
-                    backgroundColor: 'rgba(255,255,255,0.15)',
-                    borderColor: 'rgba(255,255,255,0.25)',
-                    color: 'var(--c-btn-text)',
-                  }}
+                  className="inline-flex items-center justify-center px-2 py-1 min-w-[28px] rounded border font-mono text-[10px] font-bold uppercase tracking-normal shadow-sm bg-black/30 border-white/20 text-white/90"
                 >
-                  Space
+                  SPACE
                 </span>
-                <span className="text-[11px] font-mono opacity-60" style={{ color: 'var(--c-btn-text)' }}>/</span>
+                <span className="text-[11px] font-mono text-white/50">/</span>
                 <span
-                  className="inline-flex items-center justify-center px-2.5 py-1 min-w-[28px] rounded-[var(--radius-sm)] border font-mono text-[10px] font-bold uppercase tracking-normal shadow-sm"
-                  style={{
-                    backgroundColor: 'rgba(255,255,255,0.15)',
-                    borderColor: 'rgba(255,255,255,0.25)',
-                    color: 'var(--c-btn-text)',
-                  }}
+                  className="inline-flex items-center justify-center px-2 py-1 min-w-[28px] rounded border font-mono text-[10px] font-bold uppercase tracking-normal shadow-sm bg-black/30 border-white/20 text-white/90"
                 >
-                  Enter
+                  ENTER
                 </span>
               </div>
             </button>
-            <p className="text-base font-handwriting tracking-wider" style={{ color: 'var(--c-heading)', opacity: 0.8 }}>
+            <p className="text-lg font-handwriting tracking-wide font-normal text-[#1A1917] opacity-80">
               Tactile portfolio exploration
             </p>
           </div>

@@ -36,8 +36,8 @@ export function getSharedObserver(options: IntersectionObserverInit = {}) {
     (entries) => {
       entries.forEach((entry) => {
         const callback = observerCallbacks.get(entry.target);
-        if (callback && entry.isIntersecting) {
-          callback(true);
+        if (callback) {
+          callback(entry.isIntersecting);
         }
       });
     },
@@ -51,7 +51,8 @@ export function getSharedObserver(options: IntersectionObserverInit = {}) {
 export function observeElement(
   el: Element,
   callback: (isIntersecting: boolean) => void,
-  options: IntersectionObserverInit = {}
+  options: IntersectionObserverInit = {},
+  once: boolean = true
 ) {
   if (typeof IntersectionObserver === 'undefined') {
     callback(true);
@@ -73,13 +74,17 @@ export function observeElement(
   let isTriggered = false;
 
   const wrappedCallback = (isIntersecting: boolean) => {
-    if (isIntersecting && !isTriggered) {
-      isTriggered = true;
-      callback(true);
-      try {
-        observer.unobserve(el);
-      } catch {}
-      observerCallbacks.delete(el);
+    if (once) {
+      if (isIntersecting && !isTriggered) {
+        isTriggered = true;
+        callback(true);
+        try {
+          observer.unobserve(el);
+        } catch {}
+        observerCallbacks.delete(el);
+      }
+    } else {
+      callback(isIntersecting);
     }
   };
 
@@ -90,19 +95,24 @@ export function observeElement(
     wrappedCallback(true);
   }
 
-  // Safety fallback: ensure text/content is never stuck hidden if intersection is missed
-  const fallbackTimer = setTimeout(() => {
-    if (!isTriggered && el.isConnected) {
-      const rect = el.getBoundingClientRect();
-      const inView = rect.top < window.innerHeight * 1.5 && rect.bottom > -200;
-      if (inView) {
-        wrappedCallback(true);
+  // Safety fallback: ensure text/content is never stuck hidden if intersection is missed (only for one-shot)
+  let fallbackTimer: any = null;
+  if (once) {
+    fallbackTimer = setTimeout(() => {
+      if (!isTriggered && el.isConnected) {
+        const rect = el.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight * 1.5 && rect.bottom > -200;
+        if (inView) {
+          wrappedCallback(true);
+        }
       }
-    }
-  }, 400);
+    }, 400);
+  }
 
   return () => {
-    clearTimeout(fallbackTimer);
+    if (fallbackTimer) {
+      clearTimeout(fallbackTimer);
+    }
     try {
       observer.unobserve(el);
     } catch {}

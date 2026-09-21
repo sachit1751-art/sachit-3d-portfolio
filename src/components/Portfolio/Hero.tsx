@@ -90,7 +90,7 @@ export const Hero = memo<HeroProps>(({
           Independent Developer
         </p>
         <h1 className="gsap-hero-title text-[2.2rem] xs:text-[2.8rem] sm:text-6xl md:text-[72px] lg:text-[88px] leading-[1.1] font-handwriting font-bold tracking-tight my-2" style={{ color: 'var(--c-heading)' }}>
-          <span className="sr-only">Sachit — AI &amp; Web Developer</span>
+          <span className="sr-only">Sachit — AI Automation & Web Developer</span>
           <span className="inline-block" aria-hidden="true">
             <DepthFlipText
               phrases={[
