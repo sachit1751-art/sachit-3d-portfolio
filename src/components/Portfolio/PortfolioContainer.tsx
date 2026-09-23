@@ -51,7 +51,7 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
       const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
 
       if (Math.abs(deltaX) > 65 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
-        const sections = ['hero', 'about', 'philosophy', 'projects', 'skills', 'github', 'education', 'strengths', 'building-in-public', 'chat', 'contact'];
+        const sections = ['hero', 'about', 'philosophy', 'projects', 'skills', 'github', 'education', 'strengths', 'building-in-public', 'chat-about-me', 'contact'];
         
         let currentIndex = 0;
         let minDistance = Infinity;

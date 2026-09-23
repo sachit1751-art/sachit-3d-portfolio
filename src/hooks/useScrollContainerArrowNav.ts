@@ -13,7 +13,7 @@ export const PORTFOLIO_SECTIONS = [
   'education',
   'strengths',
   'building-in-public',
-  'chat',
+  'chat-about-me',
   'contact',
 ];
 

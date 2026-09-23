@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, memo } from 'react';
 // ​provenance:sachit-2026-original​
 import { PaperTheme } from '../../types';
-import { RotateCcw, ArrowUpRight, Sparkles, Compass, Search, FolderClosed } from 'lucide-react';
+import { ArrowUpRight, Sparkles, Compass, Search, FolderClosed, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface HeaderProps {
@@ -58,6 +58,7 @@ export const Header = memo<HeaderProps>(({
 }) => {
   const [activeSection, setActiveSection] = useState('hero');
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isScrollingRef = useRef(false);
   const navBtns = useRef<Record<string, HTMLButtonElement | null>>({});
   const navContainerRef = useRef<HTMLDivElement>(null);
@@ -81,6 +82,7 @@ export const Header = memo<HeaderProps>(({
 
   // ── Scroll to section & update URL hash ────────────────────────────
   const handleNavClick = useCallback((id: string, isResume?: boolean) => {
+    setMobileMenuOpen(false);
     if (isResume) {
       if (onViewResume) onViewResume();
       return;
@@ -316,22 +318,67 @@ export const Header = memo<HeaderProps>(({
             />
           </nav>
 
-          {/* Right Area: Fold Paper button (Crumple back) */}
+          {/* Right Area: Mobile Menu Toggle */}
           <div className="flex flex-1 items-center justify-end gap-2">
+            {/* Mobile Menu Toggle Button */}
             <button
-              onClick={onRecrumple}
-              className="group flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono font-medium border border-[var(--c-border)] hover:border-[var(--c-border-hover)] hover:bg-[rgba(0,0,0,0.03)] dark:hover:bg-[rgba(255,255,255,0.05)] transition-all cursor-pointer shadow-xs select-none"
-              style={{
-                color: 'var(--c-subtle)',
-              }}
-              title="Fold paper back into 3D crumpled ball"
-              aria-label="Fold paper back into 3D crumpled ball"
+              onClick={() => setMobileMenuOpen(prev => !prev)}
+              className="md:hidden p-2 rounded-md border border-[var(--c-border)] hover:border-[var(--c-border-hover)] transition-all cursor-pointer"
+              style={{ color: 'var(--c-heading)', backgroundColor: 'var(--c-card)' }}
+              aria-label={mobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
             >
-              <RotateCcw className="w-3.5 h-3.5 transition-transform group-hover:-rotate-45" style={{ color: 'var(--c-dot)' }} />
+              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
           </div>
         </div>
       </motion.header>
+
+      {/* Mobile Menu Drawer */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="fixed inset-x-0 top-[60px] z-40 md:hidden border-b shadow-2xl p-6"
+            style={{
+              backgroundColor: 'var(--c-card)',
+              borderColor: 'var(--c-border)',
+              backdropFilter: 'blur(16px)',
+            }}
+          >
+            <div className="flex flex-col space-y-3">
+              {NAV_ITEMS.map(({ id, label, subtitle, isResume }) => {
+                const isActive = currentActive === id;
+                return (
+                  <button
+                    key={id}
+                    onClick={() => handleNavClick(id, isResume)}
+                    className="flex flex-col items-start px-4 py-3 rounded-xl transition-all text-left"
+                    style={{
+                      backgroundColor: isActive ? 'var(--c-input-bg)' : 'transparent',
+                      border: isActive ? '1px solid var(--c-border-hover)' : '1px solid transparent',
+                    }}
+                  >
+                    <span 
+                      className="text-base font-handwriting font-bold tracking-wide"
+                      style={{ color: isActive ? 'var(--c-heading)' : 'var(--c-body)' }}
+                    >
+                      {label}
+                    </span>
+                    {subtitle && (
+                      <span className="text-[11px] font-mono opacity-60 tracking-wider">
+                        {subtitle}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 });

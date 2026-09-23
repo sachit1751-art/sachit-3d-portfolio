@@ -22,7 +22,7 @@ interface ChatAboutMeProps {
 
 const INITIAL_MESSAGE: Message = { 
   role: 'model', 
-  content: "Hi! I'm Sachit's AI assistant powered by his latest portfolio context and `/llms.txt`. Ask me anything about his full-stack projects, AI tooling, Android developments, or development philosophy!" 
+  content: "Hi! I'm Sachit's AI portfolio assistant. Ask me anything about his full-stack projects, AI tooling, web and mobile development, or software engineering philosophy!" 
 };
 
 const SUGGESTIONS: Record<string, string[]> = {
@@ -137,17 +137,20 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
 
   useEffect(() => {
     localStorage.setItem('portfolio-chat-history', JSON.stringify(messages));
+    userScrolledAwayRef.current = false;
+    setIsUserScrolledUp(false);
     if (isInitialMount.current) {
       isInitialMount.current = false;
-      // Rule 11: Reopen where the reader left off
       scrollToBottom(true);
-    } else if (!userScrolledAwayRef.current) {
+    } else {
       scrollToBottom();
     }
   }, [messages]);
 
   useEffect(() => {
-    if ((isLoading || isStreaming) && !userScrolledAwayRef.current) {
+    if (isLoading || isStreaming) {
+      userScrolledAwayRef.current = false;
+      setIsUserScrolledUp(false);
       scrollToBottom();
     }
   }, [isLoading, isStreaming]);
@@ -528,7 +531,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
 
   return (
     <ScrollReveal>
-      <section id="chat" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
+      <section id="chat-about-me" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
         <div className="mb-10 text-center">
           <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block mb-3" style={{ color: 'var(--c-muted)' }}>
             [ 09 / INTERACTIVE ASSISTANT ]
@@ -545,7 +548,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
         </div>
 
         <div 
-          className="max-w-3xl mx-auto rounded-[var(--radius-xl)] overflow-hidden flex flex-col h-[550px] relative"
+          className="mx-3 sm:mx-auto max-w-3xl rounded-[var(--radius-xl)] overflow-hidden flex flex-col h-[480px] sm:h-[550px] relative"
           style={{ 
             backgroundColor: 'var(--c-card)',
             border: '1px solid var(--c-border)',
@@ -557,7 +560,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
           <div 
             ref={scrollRef}
             onScroll={handleScrollContainer}
-            className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 custom-scrollbar relative"
+            className="sr-editorial-content flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar relative"
             style={{ 
               backgroundImage: 'radial-gradient(var(--c-dot) 0.5px, transparent 0.5px)', 
               backgroundSize: '32px 32px',
@@ -570,39 +573,37 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
                 <motion.div
                   key={i}
                   layout
-                  initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 20, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ 
                     type: "spring",
-                    damping: 20,
-                    stiffness: 150,
-                    opacity: { duration: 0.4 },
-                    scale: { duration: 0.4 },
-                    layout: { duration: 0.3 }
+                    damping: 22,
+                    stiffness: 160,
+                    opacity: { duration: 0.3 },
+                    scale: { duration: 0.3 },
+                    layout: { duration: 0.25 }
                   }}
-                  className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex w-full ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`flex max-w-[90%] sm:max-w-[80%] gap-4 ${m.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                  <div className={`flex w-full sm:max-w-[85%] gap-3 sm:gap-4 ${m.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                     <div 
-                      className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-1 shadow-sm"
+                      className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-1 shadow-xs"
                       style={{ 
                         backgroundColor: m.role === 'user' ? 'var(--c-btn-bg)' : 'var(--c-input-bg)',
-                        border: '1px solid var(--c-border)',
                         color: m.role === 'user' ? 'var(--c-btn-text)' : 'var(--c-heading)'
                       }}
                     >
-                      {m.role === 'user' ? <User size={16} /> : <Bot size={16} />}
+                      {m.role === 'user' ? <User size={15} /> : <Bot size={15} />}
                     </div>
                     <div 
-                      className={`p-4 rounded-2xl shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] text-sm sm:text-base ${
+                      className={`p-3.5 sm:p-4 rounded-2xl w-full text-sm sm:text-base ${
                         m.role === 'user' 
-                          ? 'rounded-tr-none font-body' 
-                          : 'rounded-tl-none font-body'
+                          ? 'rounded-tr-none font-body shadow-xs' 
+                          : 'rounded-tl-none font-body shadow-xs'
                       }`}
                       style={{ 
                         backgroundColor: m.role === 'user' ? 'var(--c-btn-bg)' : 'var(--c-bg)',
                         color: m.role === 'user' ? 'var(--c-btn-text)' : 'var(--c-body)',
-                        border: '1px solid var(--c-border)',
                         lineHeight: '1.7'
                       }}
                     >
@@ -617,7 +618,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
                           </div>
                           <button
                             onClick={() => handleCopy(m.content, i)}
-                            className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md shadow-sm text-xs font-mono flex items-center gap-1 cursor-pointer"
+                            className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md shadow-xs text-xs font-mono flex items-center gap-1 cursor-pointer"
                             style={{
                               backgroundColor: 'var(--c-surface)',
                               border: '1px solid var(--c-border)',
@@ -636,25 +637,25 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
             </AnimatePresence>
             {isLoading && (
               <motion.div
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                initial={{ opacity: 0, y: 15, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ 
                   type: "spring",
-                  damping: 20,
-                  stiffness: 150
+                  damping: 22,
+                  stiffness: 160
                 }}
-                className="flex justify-start pb-4"
+                className="flex justify-start pb-4 w-full"
               >
-                <div className="flex gap-4">
+                <div className="flex gap-3 sm:gap-4 w-full sm:max-w-[85%]">
                   <div 
-                    className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: 'var(--c-input-bg)', border: '1px solid var(--c-border)' }}
+                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: 'var(--c-input-bg)' }}
                   >
-                    <Bot size={16} className="animate-spin" />
+                    <Bot size={15} className="animate-spin" />
                   </div>
                   <div 
-                    className="p-4 rounded-2xl rounded-tl-none flex items-center gap-4"
-                    style={{ backgroundColor: 'var(--c-bg)', border: '1px solid var(--c-border)' }}
+                    className="p-3.5 sm:p-4 rounded-2xl rounded-tl-none flex items-center gap-3 w-full shadow-xs"
+                    style={{ backgroundColor: 'var(--c-bg)' }}
                   >
                     <div className="flex gap-1.5">
                       <motion.span 

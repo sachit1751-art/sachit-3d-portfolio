@@ -272,28 +272,28 @@ export const PaperIntro = memo<PaperIntroProps>(({
       {/* Intro overlay UI */}
       {paperState === 'crumpled' && !showMoodGame && (
         <div
-          className="relative z-20 pointer-events-none flex flex-col items-center justify-between w-full h-full p-8 md:p-12"
+          className="relative z-20 pointer-events-none flex flex-col items-center justify-between w-full h-full p-4 sm:p-8 md:p-12"
           style={{ animation: 'fadeIn 0.5s ease-out' }}
         >
-          <header className="flex items-center justify-between w-full max-w-5xl">
-            <div className="relative">
+          <header className="flex items-center justify-between w-full max-w-5xl pt-2 sm:pt-0">
+            <div className="relative flex flex-col sm:flex-row sm:items-center gap-2">
               <div 
-                className="absolute -top-7 -left-1 font-handwriting text-sm font-bold select-none flex items-center gap-1.5 px-2.5 py-0.5 rounded-sm"
+                className="font-handwriting text-xs sm:text-sm font-bold select-none inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm self-start"
                 style={{
                   color: 'var(--c-heading)',
-                  backgroundColor: 'rgba(255, 253, 249, 0.85)',
+                  backgroundColor: 'rgba(255, 253, 249, 0.9)',
                   border: '1px solid var(--c-border)',
                   boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
-                  transform: 'rotate(-4deg)',
+                  transform: 'rotate(-2deg)',
                 }}
               >
                 <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'var(--c-heading)' }} />
                 <span className="sm:hidden">pinch to unfold</span>
                 <span className="hidden sm:inline">click to unfold</span>
               </div>
-              <div className="font-mono text-[10px] tracking-[0.25em] uppercase flex items-center gap-2" style={{ color: 'var(--c-subtle)' }}>
+              <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.25em] uppercase flex items-center gap-2" style={{ color: 'var(--c-subtle)' }}>
                 <span className="w-1.5 h-1.5" style={{ backgroundColor: 'var(--c-heading)' }} />
-                PHYSICAL CANVAS &bull; {formattedDate}
+                PHYSICAL CANVAS
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -306,7 +306,7 @@ export const PaperIntro = memo<PaperIntroProps>(({
                   e.stopPropagation();
                   toggleMute();
                 }}
-                className="w-10 h-10 rounded-full cursor-pointer transition-all hover:scale-105 active:scale-95 flex items-center justify-center pointer-events-auto shadow-md border"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full cursor-pointer transition-all hover:scale-105 active:scale-95 flex items-center justify-center pointer-events-auto shadow-md border"
                 style={{
                   backgroundColor: 'var(--c-btn-bg)',
                   color: 'var(--c-btn-text)',
@@ -326,7 +326,7 @@ export const PaperIntro = memo<PaperIntroProps>(({
 
           <div className="flex-grow" /> {/* Spacer to push the CTA below the center paper ball */}
 
-          <div className="flex flex-col items-center gap-3 text-center mb-12 pointer-events-auto">
+          <div className="flex flex-col items-center gap-2 sm:gap-3 text-center mb-6 sm:mb-12 pointer-events-auto">
             <button
               ref={btnRef}
               id="unfold-paper-btn"
@@ -334,7 +334,7 @@ export const PaperIntro = memo<PaperIntroProps>(({
                 e.stopPropagation();
                 handleButtonClick();
               }}
-              className="group relative px-8 py-4 transition-all duration-300 flex items-center gap-4 cursor-pointer rounded-xl shadow-xl hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-white/50"
+              className="group relative px-6 sm:px-8 py-3.5 sm:py-4 transition-all duration-300 flex items-center gap-3 sm:gap-4 cursor-pointer rounded-xl shadow-xl hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-white/50"
               style={{
                 backgroundColor: '#1E1D1B',
                 color: '#FFFFFF',
@@ -351,7 +351,7 @@ export const PaperIntro = memo<PaperIntroProps>(({
               }}
               aria-label="Click to unfold the crumpled portfolio sheet"
             >
-              <span className="font-handwriting text-2xl font-bold tracking-wide text-white">
+              <span className="font-handwriting text-xl sm:text-2xl font-bold tracking-wide text-white">
                 click to unfold
               </span>
               
@@ -369,12 +369,12 @@ export const PaperIntro = memo<PaperIntroProps>(({
                 </span>
               </div>
             </button>
-            <p className="text-lg font-handwriting tracking-wide font-normal text-[#1A1917] opacity-80">
+            <p className="text-base sm:text-lg font-handwriting tracking-wide font-normal text-[#1A1917] opacity-80">
               Tactile portfolio exploration
             </p>
           </div>
 
-          <footer className="w-full max-w-5xl flex items-center justify-between text-[10px] font-mono uppercase tracking-wider" style={{ color: 'var(--c-muted)' }}>
+          <footer className="w-full max-w-5xl flex items-center justify-between text-[9px] sm:text-[10px] font-mono uppercase tracking-wider pb-2 sm:pb-0" style={{ color: 'var(--c-muted)' }}>
             <div className="flex items-center gap-4">
               <span>Vertex Deformation: Active</span>
               <span className="hidden md:inline">&bull;</span>

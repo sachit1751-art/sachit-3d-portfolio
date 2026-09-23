@@ -317,7 +317,7 @@ export const SiteMapModal: React.FC<SiteMapModalProps> = ({
         icon: MessageSquare,
         keywords: ['ai', 'chat', 'bot', 'ask', 'gemini', 'assistant'],
         action: () => {
-          onNavigateSection('chat');
+          onNavigateSection('chat-about-me');
           onClose();
         },
       },
@@ -389,7 +389,7 @@ export const SiteMapModal: React.FC<SiteMapModalProps> = ({
         keywords: ['gemini', 'chat', 'ai', 'streaming', 'sse', 'express'],
         badge: 'AI Engine',
         action: () => {
-          onNavigateSection('chat');
+          onNavigateSection('chat-about-me');
           onClose();
         },
       },
