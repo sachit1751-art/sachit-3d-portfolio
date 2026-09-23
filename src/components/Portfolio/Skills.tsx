@@ -21,10 +21,10 @@ const categories: SkillCategory[] = [
     title: 'AI Tools & Automation',
     description: 'LLM integrations, prompt caching, MCP servers, and agent architectures.',
     skills: [
-      { name: 'Anthropic Claude API', iconName: 'Sparkles' },
+      { name: 'Claude', iconName: 'Sparkles' },
       { name: 'Prompt Engineering', iconName: 'MessageSquare' },
       { name: 'Prompt Caching', iconName: 'Zap' },
-      { name: 'OpenAI API', iconName: 'Bot' },
+      { name: 'Codex', iconName: 'Bot' },
       { name: 'Model Context Protocol (MCP)', iconName: 'Layers' },
       { name: 'Cursor IDE', iconName: 'Code2' },
     ],
@@ -58,7 +58,7 @@ const categories: SkillCategory[] = [
     title: 'Operating Systems',
     description: 'Development environments and server operating systems.',
     skills: [
-      { name: 'Linux (Ubuntu)', iconName: 'Terminal' },
+      { name: 'Linux (ARCH btw)', iconName: 'Terminal' },
       { name: 'Windows', iconName: 'Laptop' },
     ],
   },
@@ -70,15 +70,14 @@ const renderCustomSVG = (name: string): React.ReactNode | null => {
   if (norm.includes('anthropic') || norm.includes('claude')) {
     return (
       <svg viewBox="0 0 24 24" width="12" height="12" className="opacity-85" fill="currentColor">
-        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" />
+        <path d="M13.827 1.996h-3.654L4.476 22.004h3.766l1.398-4.043h5.718l1.398 4.043h3.767L13.827 1.996zm-3.08 13.064l1.753-5.07 1.753 5.07h-3.506z" />
       </svg>
     );
   }
-  if (norm.includes('openai') || norm.includes('gpt')) {
+  if (norm.includes('openai') || norm.includes('gpt') || norm.includes('codex')) {
     return (
-      <svg viewBox="0 0 24 24" width="12" height="12" className="opacity-85" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 3v18M3 12h18" />
+      <svg viewBox="0 0 24 24" width="12" height="12" className="opacity-85" fill="currentColor">
+        <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 10.457.513 6.04 6.04 0 0 0 4.908 3.78a5.98 5.98 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 23.5a6.056 6.056 0 0 0 5.772-3.268 5.99 5.99 0 0 0 3.997-2.901 6.056 6.056 0 0 0-.747-7.51zm-9.022 12.608a4.975 4.975 0 0 1-3.376-1.315l.1-.057 4.254-2.456a.53.53 0 0 0 .265-.46v-5.996l1.802 1.04v4.945a4.994 4.994 0 0 1-3.045 4.283zm-8.82-3.86a4.988 4.988 0 0 1-.616-3.571l.1.06 4.255 2.457a.53.53 0 0 0 .531 0l5.193-2.999v2.08l-4.282 2.472a4.994 4.994 0 0 1-5.181-.5zm-1.848-9.458a4.98 4.98 0 0 1 2.76-2.256v5.03a.53.53 0 0 0 .266.459l5.192 2.998-1.802 1.04-4.283-2.472a5.004 5.004 0 0 1-2.133-4.8zm14.64 2.873-5.193-2.999 1.802-1.04 4.282 2.472a5.004 5.004 0 0 1 2.134 4.8 4.98 4.98 0 0 1-2.76 2.257v-5.031a.53.53 0 0 0-.265-.459zm2.05-3.315l-.1-.06-4.255-2.456a.53.53 0 0 0-.531 0l-5.193 2.999V6.936l4.282-2.472a4.994 4.994 0 0 1 5.181.5 4.988 4.988 0 0 1 .616 3.571zm-9.742 4.148 2.37-1.368 2.37 1.368v2.737l-2.37 1.368-2.37-1.368z"/>
       </svg>
     );
   }

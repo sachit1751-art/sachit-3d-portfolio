@@ -86,9 +86,29 @@ export const Hero = memo<HeroProps>(({
             <span>I CAN BUILD ANYTHING.</span>
           </div>
         </div>
-        <p className="gsap-hero-subtitle font-handwriting text-lg sm:text-xl mb-3" style={{ color: 'var(--c-subtle)' }}>
-          Independent Developer
-        </p>
+        <div className="mb-4">
+          <p className="gsap-hero-subtitle font-handwriting text-lg sm:text-xl mb-2" style={{ color: 'var(--c-subtle)' }}>
+            Independent Developer
+          </p>
+          <div className="flex flex-col gap-1.5 mt-2">
+            <span className="font-mono text-[9px] uppercase tracking-[0.25em]" style={{ color: 'var(--c-muted)' }}>FOCUS AREAS</span>
+            <div className="flex flex-wrap gap-2 pt-1">
+              {['WEB DEVELOPMENT', 'AI INTEGRATIONS', 'DEVELOPER TOOLS', 'UI/UX', 'AUTOMATION', 'BACKEND SYSTEMS', 'EXPERIMENTAL PRODUCTS'].map((area, idx) => (
+                <span
+                  key={idx}
+                  className="px-3 py-1.5 rounded-[var(--radius-sm)] font-mono text-[11px] uppercase tracking-wider"
+                  style={{
+                    backgroundColor: 'var(--c-input-bg)',
+                    border: '1px solid var(--c-border)',
+                    color: 'var(--c-heading)'
+                  }}
+                >
+                  {area}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
         <h1 className="gsap-hero-title text-[2.2rem] xs:text-[2.8rem] sm:text-6xl md:text-[72px] lg:text-[88px] leading-[1.1] font-handwriting font-bold tracking-tight my-2" style={{ color: 'var(--c-heading)' }}>
           <span className="sr-only">Sachit</span>
           <span className="inline-block" aria-hidden="true">

@@ -548,7 +548,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
         </div>
 
         <div 
-          className="mx-3 sm:mx-auto max-w-3xl rounded-[var(--radius-xl)] overflow-hidden flex flex-col h-[480px] sm:h-[550px] relative"
+          className="mx-3 sm:mx-auto max-w-3xl rounded-[var(--radius-xl)] overflow-hidden flex flex-col h-[calc(100vh-220px)] sm:h-[550px] relative"
           style={{ 
             backgroundColor: 'var(--c-card)',
             border: '1px solid var(--c-border)',
