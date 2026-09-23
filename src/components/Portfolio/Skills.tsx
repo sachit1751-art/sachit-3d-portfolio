@@ -67,6 +67,37 @@ const categories: SkillCategory[] = [
 const renderCustomSVG = (name: string): React.ReactNode | null => {
   const norm = name.toLowerCase().trim();
   
+  if (norm.includes('anthropic') || norm.includes('claude')) {
+    return (
+      <svg viewBox="0 0 24 24" width="12" height="12" className="opacity-85" fill="currentColor">
+        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" />
+      </svg>
+    );
+  }
+  if (norm.includes('openai') || norm.includes('gpt')) {
+    return (
+      <svg viewBox="0 0 24 24" width="12" height="12" className="opacity-85" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 3v18M3 12h18" />
+      </svg>
+    );
+  }
+  if (norm.includes('model context protocol') || norm.includes('mcp')) {
+    return (
+      <svg viewBox="0 0 24 24" width="12" height="12" className="opacity-85" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="2" width="8" height="8" rx="1" />
+        <rect x="14" y="14" width="8" height="8" rx="1" />
+        <path d="M10 6h4a2 2 0 0 1 2 2v2M14 18h-4a2 2 0 0 1-2-2v-2" />
+      </svg>
+    );
+  }
+  if (norm.includes('caching') || norm.includes('prompt caching')) {
+    return (
+      <svg viewBox="0 0 24 24" width="12" height="12" className="opacity-85" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+      </svg>
+    );
+  }
   if (norm.includes('python')) {
     return (
       <svg viewBox="0 0 24 24" width="12" height="12" className="opacity-80" fill="currentColor">
@@ -166,20 +197,16 @@ export const Skills = memo(() => {
   return (
     <ScrollReveal>
     <section id="skills" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
-      <div className="mb-12">
-        <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block mb-2" style={{ color: 'var(--c-muted)' }}>
-          [ 03 / CAPABILITIES ]
+      <div className="mb-8">
+        <div className="flex justify-center mb-3">
+          <Sparkles className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
+        </div>
+        <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
+          [ 04 / CAPABILITIES ]
         </span>
-        <div className="flex items-center gap-4">
-          <Sparkles className="w-7 h-7 flex-shrink-0" style={{ color: 'var(--c-dot)' }} />
-          <h2 className="font-sans text-4xl sm:text-5xl font-extrabold whitespace-nowrap tracking-tight" style={{ color: 'var(--c-heading)' }}>
-            <WordReveal text="Skills & Stack" baseDelay={0.1} />
-          </h2>
-          <div className="flex-1 h-[1px]" style={{ backgroundColor: 'var(--c-border)' }} />
-        </div>
-        <div className="text-xs font-mono uppercase tracking-widest mt-2 font-bold" style={{ color: 'var(--c-muted)' }}>
-          <WordReveal text="Technical Proficiencies" baseDelay={0.3} />
-        </div>
+        <h2 className="font-sans text-4xl sm:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
+          <WordReveal text="Skills & Stack" baseDelay={0.1} />
+        </h2>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">

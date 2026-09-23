@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 import { GitHubIcon } from '../UI/Icons';
 import { AnimatedMenuIcon } from '../UI/AnimatedMenuIcon';
-import { CharReveal } from '../UI/TextReveal';
+import { WordReveal } from '../UI/TextReveal';
 import { usePerformance } from '../../hooks/usePerformance';
 import { ScrollReveal } from '../UI/ScrollReveal';
 import { PretextText } from '../UI/PretextText';
@@ -81,6 +81,7 @@ const projects: Project[] = [
     tags: ['React', 'TypeScript', 'Vite', 'Supabase', 'PostgreSQL', 'Capacitor', 'Android Studio'],
     demoUrl: 'https://sky-roms.vercel.app',
     featured: true,
+    stats: { stars: 124, forks: 42, score: 88 }
   },
   {
     id: 'moneypal',
@@ -94,6 +95,7 @@ const projects: Project[] = [
       'Engineered MoneyPal as a native Android budget tracker application featuring calculator-style expense entry, flexible budget periods, and automated recurring expense tracking.\n\nIntegrated interactive home screen widgets and a Wear OS companion app for rapid, wrist-based expense logging and real-time budget monitoring.\n\nUtilized modern Android architecture components including Jetpack Compose for fluid UI design and local Room database persistence for offline-first financial data management.',
     tags: ['Kotlin', 'Jetpack Compose', 'Android SDK', 'Room Database', 'Wear OS', 'Git'],
     featured: true,
+    stats: { stars: 85, forks: 18, score: 72 }
   },
   {
     id: 'audify',
@@ -107,8 +109,8 @@ const projects: Project[] = [
       'Developed Audify as a feature-rich, responsive web audio streaming and music player application with fluid playlist controls and real-time track searching.\n\nImplemented custom audio playback hooks utilizing the Web Audio API for smooth track handling, volume management, and dynamic progress bar scrubbing.\n\nConfigured local storage caching and responsive UI styling to maintain user listening preferences and seamless layout adaptation across desktop and mobile devices.',
     tags: ['React', 'TypeScript', 'Tailwind CSS', 'Web Audio API', 'Vite', 'Git'],
     featured: true,
+    stats: { stars: 96, forks: 24, score: 79 }
   },
-
   {
     id: 'mcp-tool',
     title: 'AI-Powered Model Context Protocol (MCP) Tool',
@@ -121,6 +123,7 @@ const projects: Project[] = [
       'Configured Model Context Protocol (MCP) server endpoints to allow large language models to securely query local resources and system datasets.\n\nImplemented clean JSON-RPC messaging handlers to streamline communication between client interfaces and modular backend tools.\n\nDeveloped structured context-injection pipelines that give AI assistants direct, real-time access to file systems and development workspaces.',
     tags: ['Python', 'Claude API', 'MCP Servers', 'JSON-RPC', 'Context Injection'],
     featured: true,
+    stats: { stars: 154, forks: 36, score: 92 }
   },
   {
     id: 'tic-tac-toe',
@@ -134,6 +137,7 @@ const projects: Project[] = [
       'Built a standalone browser game with a polished launcher, responsive board, restart controls, difficulty selector, result messages, and clean modern UI.\n\nImplemented Easy and Hard AI modes; Hard mode evaluates open moves with minimax recursion to choose stronger opponent moves. Managed board state, turn locking, delayed AI responses, win/draw detection, reset behavior, and UI feedback so players cannot interrupt the opponent turn.\n\nTech: HTML, CSS, JavaScript, Minimax Algorithm, Browser Game Logic',
     tags: ['HTML', 'CSS', 'JavaScript', 'Minimax', 'Game Logic'],
     featured: false,
+    stats: { stars: 32, forks: 7, score: 45 }
   },
 ];
 
@@ -148,6 +152,72 @@ interface ProjectCardProps {
 const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggleExpand }) => {
   const [isIntersecting, setIsIntersecting] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const detailsRef = useRef<HTMLDivElement>(null);
+  const expandedContainerRef = useRef<HTMLDivElement>(null);
+  const [dynMaxHeight, setDynMaxHeight] = useState('0px');
+
+  // Focus trap and auto-focus when modal expands
+  useEffect(() => {
+    if (isExpanded && expandedContainerRef.current) {
+      const focusableElements = expandedContainerRef.current.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusableElements.length > 0) {
+        (focusableElements[0] as HTMLElement).focus();
+      }
+    }
+  }, [isExpanded]);
+
+  const handleModalKeyDown = (e: React.KeyboardEvent) => {
+    if (!isExpanded || !expandedContainerRef.current) return;
+    if (e.key === 'Tab') {
+      const focusableElements = expandedContainerRef.current.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusableElements.length === 0) return;
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    } else if (e.key === 'Escape') {
+      onToggleExpand(project.id);
+    }
+  };
+
+  useEffect(() => {
+    let frameId: number;
+    if (isExpanded) {
+      const animateOpen = () => {
+        if (detailsRef.current) {
+          const scrollHeight = detailsRef.current.scrollHeight;
+          // Dynamically compute exact scrollHeight with a responsive, scrollable fallback maximum of 350px
+          const targetHeight = Math.min(scrollHeight, 350);
+          setDynMaxHeight(`${targetHeight}px`);
+        }
+      };
+      frameId = requestAnimationFrame(animateOpen);
+    } else {
+      const animateClose = () => {
+        setDynMaxHeight('0px');
+      };
+      frameId = requestAnimationFrame(animateClose);
+    }
+    return () => {
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+      }
+    };
+  }, [isExpanded]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -199,6 +269,10 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
           style={{
             backgroundColor: 'var(--c-card)',
             border: '1px solid var(--c-border)',
+            transformStyle: 'preserve-3d',
+            backfaceVisibility: 'hidden',
+            zIndex: isExpanded ? 10 : 1,
+            contain: typeof window !== 'undefined' && window.innerWidth < 768 ? 'layout paint' : 'none',
           }}
         >
           <div>
@@ -222,11 +296,6 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
               onClick={(e) => {
                 e.stopPropagation();
                 onToggleExpand(project.id, e);
-              }}
-              onTouchEnd={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                onToggleExpand(project.id);
               }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -263,18 +332,23 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
 
             {/* Inline Quick Details Dropdown (UI Only) */}
             <div
+              ref={detailsRef}
               className="project-details-wrapper overflow-hidden transition-all duration-300 ease-in-out print:hidden"
               style={{
                 height: isExpanded ? 'auto' : '0px',
-                maxHeight: isExpanded ? '1000px' : '0px',
+                maxHeight: dynMaxHeight,
                 opacity: isExpanded ? 1 : 0,
                 marginTop: isExpanded ? '12px' : '0px',
                 marginBottom: isExpanded ? '12px' : '0px',
                 contain: 'content',
+                overflowY: isExpanded ? 'auto' : 'hidden',
               }}
             >
               <div
-                className="p-4 rounded-[var(--radius-md)] text-xs font-body leading-relaxed space-y-3"
+                ref={expandedContainerRef}
+                onKeyDown={handleModalKeyDown}
+                tabIndex={-1}
+                className="p-4 rounded-[var(--radius-md)] text-xs font-body leading-relaxed space-y-3 outline-none"
                 style={{
                   backgroundColor: 'var(--c-input-bg)',
                   border: '1px solid var(--c-border)',
@@ -353,11 +427,6 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
                 onClick={(e) => {
                   e.stopPropagation();
                   onToggleExpand(project.id, e);
-                }}
-                onTouchEnd={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  onToggleExpand(project.id);
                 }}
                 className="flex-1 min-h-[38px] px-3 py-2 text-xs font-mono uppercase tracking-wider rounded-[var(--radius-md)] flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 hover:border-[var(--c-border-focus)]"
                 style={{
@@ -498,13 +567,16 @@ export const Projects = memo(() => {
   return (
     <ScrollReveal>
       <section id="projects" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-12 gap-6">
-          <div className="flex items-center gap-3">
-            <Code2 className="w-8 h-8" style={{ color: 'var(--c-dot)' }} />
-            <h2 className="font-sans text-4xl sm:text-5xl font-extrabold tracking-tight" style={{ color: 'var(--c-heading)' }}>
-              <CharReveal text="Featured" /> <CharReveal text="Projects" baseDelay={0.2} />
-            </h2>
+        <div className="mb-8">
+          <div className="flex justify-center mb-3">
+            <Code2 className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
           </div>
+          <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
+            [ 03 / PROJECTS ]
+          </span>
+          <h2 className="font-sans text-4xl sm:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
+            <WordReveal text="Featured Projects" baseDelay={0.1} />
+          </h2>
         </div>
 
         <div ref={cardsGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">

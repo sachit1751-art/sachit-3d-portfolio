@@ -20,6 +20,11 @@ export interface Project {
   demoUrl?: string;
   githubUrl?: string;
   featured?: boolean;
+  stats?: {
+    stars: number;
+    forks: number;
+    score: number; // activity score out of 100 for the bar chart
+  };
 }
 
 // watermark:sachit-portfolio-2026

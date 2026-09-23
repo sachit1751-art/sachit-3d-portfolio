@@ -687,8 +687,7 @@ export default function App() {
             <div
               id="privacy-scroll-container"
               data-theme={theme}
-              className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden"
-              style={{ backgroundColor: 'var(--c-bg)' }}
+              className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden bg-transparent"
             >
               <Suspense fallback={<div className="flex items-center justify-center py-24"><HoneycombLoader size="md" label="LOADING PRIVACY POLICY..." color="var(--c-heading)" /></div>}>
                 <LazyPrivacyPolicy
@@ -704,8 +703,7 @@ export default function App() {
             <div
               id="terms-scroll-container"
               data-theme={theme}
-              className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden"
-              style={{ backgroundColor: 'var(--c-bg)' }}
+              className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden bg-transparent"
             >
               <Suspense fallback={<div className="flex items-center justify-center py-24"><HoneycombLoader size="md" label="LOADING TERMS..." color="var(--c-heading)" /></div>}>
                 <LazyTermsOfService

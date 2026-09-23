@@ -228,20 +228,16 @@ export const Contact = memo(() => {
         </div>
 
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-          <div>
-            <div className="flex items-center gap-3 mb-1">
-              <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase" style={{ color: 'var(--c-muted)' }}>
-                [ 05 / DISPATCH ]
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Send className="w-7 h-7" style={{ color: 'var(--c-dot)' }} />
-              <h2 className="font-sans text-4xl sm:text-5xl font-extrabold tracking-tight" style={{ color: 'var(--c-heading)' }}>
-                <CharReveal text="Let's Build Something" baseDelay={0.1} />
-              </h2>
-            </div>
+        <div className="mb-8">
+          <div className="flex justify-center mb-3">
+            <Send className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
           </div>
+          <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
+            [ 10 / CONTACT ]
+          </span>
+          <h2 className="font-sans text-4xl sm:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
+            <WordReveal text="Let's Build Something" baseDelay={0.1} />
+          </h2>
         </div>
 
         {/* ========================================================= */}

@@ -104,7 +104,7 @@ export const GitHubContributions: React.FC<GitHubContributionsProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [hoveredCell, setHoveredCell] = useState<ContributionDay | null>(null);
-  const [hasIntersected, setHasIntersected] = useState<boolean>(false);
+  const [hasIntersected, setHasIntersected] = useState<boolean>(true);
   const [timeframe, setTimeframe] = useState<TimeframeOption>('12M');
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const { simplify } = usePerformance();
@@ -273,18 +273,6 @@ export const GitHubContributions: React.FC<GitHubContributionsProps> = ({
                   {timeframe === '9M' && 'in the last 9 months'}
                   {timeframe === '12M' && 'in the last year'}
                 </div>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="font-mono text-[9px] uppercase tracking-wider opacity-70" style={{ color: 'var(--c-muted)' }}>
-                    Theme Palette:
-                  </span>
-                  <span className="font-mono text-[10px] font-semibold flex items-center gap-1.5" style={{ color: 'var(--c-heading)' }}>
-                    <span 
-                      className="inline-block w-2 h-2 rounded-full transition-colors duration-300 shadow-xs" 
-                      style={{ backgroundColor: `var(--c-git-4)` }}
-                    />
-                    {themeMeta.label}
-                  </span>
-                </div>
               </div>
 
               {/* Right action controls */}
@@ -305,62 +293,6 @@ export const GitHubContributions: React.FC<GitHubContributionsProps> = ({
                       {tf}
                     </button>
                   ))}
-                </div>
-
-                {/* Settings Dropdown Button */}
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setShowSettings((prev) => !prev)}
-                    className="px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider bg-transparent hover:bg-[var(--c-input-bg)] flex items-center gap-1.5 transition-colors cursor-pointer rounded-[var(--radius-sm)]"
-                    style={{ border: '1px solid var(--c-border)', color: 'var(--c-subtle)' }}
-                    aria-expanded={showSettings}
-                    aria-label="Toggle contribution settings"
-                  >
-                    <span>Range: {timeframe}</span>
-                    <span className={`text-[9px] transition-transform duration-200 ${showSettings ? 'rotate-180' : ''}`}>▼</span>
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  {showSettings && (
-                    <div
-                      className="absolute right-0 top-full mt-2 w-48 p-2 z-50 rounded-[var(--radius-md)] shadow-lg backdrop-blur-md animate-in fade-in zoom-in-95 duration-150"
-                      style={{
-                        backgroundColor: 'var(--c-modal-bg, var(--c-bg))',
-                        border: '1px solid var(--c-border)',
-                      }}
-                    >
-                      <div className="font-mono text-[9px] uppercase tracking-wider px-2 py-1 mb-1 font-bold" style={{ color: 'var(--c-muted)' }}>
-                        Select Timeframe
-                      </div>
-                      {(['3M', '6M', '9M', '12M'] as TimeframeOption[]).map((tf) => {
-                        const labels: Record<TimeframeOption, string> = {
-                          '3M': 'Past 3 Months',
-                          '6M': 'Past 6 Months',
-                          '9M': 'Past 9 Months',
-                          '12M': 'Full Year (12M)',
-                        };
-                        return (
-                          <button
-                            key={tf}
-                            type="button"
-                            onClick={() => {
-                              setTimeframe(tf);
-                              setShowSettings(false);
-                            }}
-                            className="w-full text-left px-2.5 py-1.5 font-mono text-[10px] rounded-[var(--radius-sm)] flex items-center justify-between transition-colors hover:bg-[var(--c-input-bg)] cursor-pointer"
-                            style={{
-                              color: timeframe === tf ? 'var(--c-heading)' : 'var(--c-body)',
-                              fontWeight: timeframe === tf ? 600 : 400,
-                            }}
-                          >
-                            <span>{labels[tf]}</span>
-                            {timeframe === tf && <span>✓</span>}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
                 </div>
               </div>
             </div>

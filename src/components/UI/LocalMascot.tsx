@@ -86,6 +86,15 @@ export function LocalMascot(props: LocalMascotProps) {
   const [direction, setDirection] = useState('center');
   const [reaction, setReaction] = useState<string | null>(null);
 
+  // Preload sprite sheet images instantly on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const img1 = new Image();
+    img1.src = directions;
+    const img2 = new Image();
+    img2.src = reactions;
+  }, [directions, reactions]);
+
   useEffect(() => {
     let sector = -1;
     let pointer: { x: number; y: number } | null = null;

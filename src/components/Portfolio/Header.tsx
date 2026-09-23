@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback, useRef, memo } from 'react';
 // ​provenance:sachit-2026-original​
 import { PaperTheme } from '../../types';
-import { RotateCcw, ArrowUpRight, Sparkles, Compass, Volume2, VolumeX, Search, FolderClosed } from 'lucide-react';
+import { RotateCcw, ArrowUpRight, Sparkles, Compass, Search, FolderClosed } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useSound } from '../../utils/soundManager';
 
 interface HeaderProps {
   theme: PaperTheme;
@@ -57,7 +56,6 @@ export const Header = memo<HeaderProps>(({
   onNavigateSection,
   onOpenSiteMap,
 }) => {
-  const { isMuted, toggleMute } = useSound();
   const [activeSection, setActiveSection] = useState('hero');
   const [scrolled, setScrolled] = useState(false);
   const isScrollingRef = useRef(false);
@@ -321,23 +319,6 @@ export const Header = memo<HeaderProps>(({
           {/* Right Area: Fold Paper button (Crumple back) */}
           <div className="flex flex-1 items-center justify-end gap-2">
             <button
-              onClick={toggleMute}
-              className="p-1.5 rounded-md border border-[var(--c-border)] hover:border-[var(--c-border-hover)] hover:bg-[rgba(0,0,0,0.03)] dark:hover:bg-[rgba(255,255,255,0.05)] transition-all cursor-pointer shadow-xs"
-              style={{
-                color: 'var(--c-subtle)',
-              }}
-              title={isMuted ? 'Unmute paper sound effects' : 'Mute paper sound effects'}
-              aria-label={isMuted ? 'Unmute paper sound effects' : 'Mute paper sound effects'}
-              aria-pressed={!isMuted}
-            >
-              {isMuted ? (
-                <VolumeX className="w-3.5 h-3.5 opacity-60" style={{ color: 'var(--c-subtle)' }} />
-              ) : (
-                <Volume2 className="w-3.5 h-3.5" style={{ color: 'var(--c-dot)' }} />
-              )}
-            </button>
-
-            <button
               onClick={onRecrumple}
               className="group flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono font-medium border border-[var(--c-border)] hover:border-[var(--c-border-hover)] hover:bg-[rgba(0,0,0,0.03)] dark:hover:bg-[rgba(255,255,255,0.05)] transition-all cursor-pointer shadow-xs select-none"
               style={{
@@ -347,7 +328,6 @@ export const Header = memo<HeaderProps>(({
               aria-label="Fold paper back into 3D crumpled ball"
             >
               <RotateCcw className="w-3.5 h-3.5 transition-transform group-hover:-rotate-45" style={{ color: 'var(--c-dot)' }} />
-              <span className="hidden sm:inline">Fold Page</span>
             </button>
           </div>
         </div>

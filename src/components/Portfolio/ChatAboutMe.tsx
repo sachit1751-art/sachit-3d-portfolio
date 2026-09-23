@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, memo } from 'react';
-import { Send, User, Bot, Loader2, MessageSquare, Trash2, RotateCcw, FileText, ExternalLink, Minus } from 'lucide-react';
+import { Send, User, Bot, Loader2, MessageSquare, Trash2, RotateCcw, FileText, ExternalLink, Minus, Copy, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -71,7 +71,14 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [isUserScrolledUp, setIsUserScrolledUp] = useState(false);
+
+  const handleCopy = (text: string, idx: number) => {
+    navigator.clipboard.writeText(text);
+    setCopiedIndex(idx);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  };
   const userScrolledAwayRef = useRef(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const compactScrollRef = useRef<HTMLDivElement>(null);
@@ -637,10 +644,24 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
                       {m.role === 'user' ? (
                         <p className="whitespace-pre-wrap break-words">{m.content}</p>
                       ) : (
-                        <div className="markdown-body prose prose-sm max-w-none prose-neutral dark:prose-invert">
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {m.content}
-                          </ReactMarkdown>
+                        <div className="relative group">
+                          <div className="markdown-body prose prose-sm max-w-none prose-neutral dark:prose-invert">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {m.content}
+                            </ReactMarkdown>
+                          </div>
+                          <button
+                            onClick={() => handleCopy(m.content, i)}
+                            className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md shadow-sm text-xs font-mono flex items-center gap-1 cursor-pointer"
+                            style={{
+                              backgroundColor: 'var(--c-surface)',
+                              border: '1px solid var(--c-border)',
+                              color: 'var(--c-heading)'
+                            }}
+                            title="Copy response"
+                          >
+                            {copiedIndex === i ? <Check size={12} className="text-green-500" /> : <Copy size={12} />}
+                          </button>
                         </div>
                       )}
                     </div>
@@ -758,8 +779,9 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Message assistant..."
-                className="w-full py-4 px-6 pr-14 rounded-full border outline-none transition-all font-body text-sm sm:text-base shadow-inner"
+                placeholder="Ask assistant about projects, stack, or philosophy..."
+                autoFocus
+                className="w-full py-4 px-6 pr-14 rounded-full border outline-none transition-all font-body text-sm sm:text-base shadow-inner focus:ring-2 focus:ring-[var(--c-dot)] focus:border-[var(--c-dot)]"
                 style={{ 
                   backgroundColor: 'var(--c-bg)',
                   borderColor: 'var(--c-border)',

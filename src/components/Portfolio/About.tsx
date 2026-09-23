@@ -47,18 +47,15 @@ export const About = memo(() => {
     <ScrollReveal>
     <section id="about" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
       <div className="mb-8">
-        <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block mb-2" style={{ color: 'var(--c-muted)' }}>
+        <div className="flex justify-center mb-3">
+          <User className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
+        </div>
+        <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
           [ 01 / BACKGROUND ]
         </span>
-        <div className="flex items-center justify-center gap-3">
-          <User className="w-7 h-7" style={{ color: 'var(--c-dot)' }} />
-          <h2 className="font-sans text-4xl sm:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
-            <WordReveal text="About Me" baseDelay={0.1} />
-          </h2>
-        </div>
-        <div className="flex justify-center mt-3">
-          <div className="w-16 h-[2px] rounded-full" style={{ backgroundColor: 'var(--c-dot)' }} />
-        </div>
+        <h2 className="font-sans text-4xl sm:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
+          <WordReveal text="About Me" baseDelay={0.1} />
+        </h2>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12 items-center">

@@ -22,18 +22,16 @@ export const Strengths = memo(() => {
   return (
     <ScrollReveal>
       <section id="strengths" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase" style={{ color: 'var(--c-muted)' }}>
-              [ 12 / STRENGTHS ]
-            </span>
-            <div className="flex items-center gap-2.5">
-              <Award className="w-7 h-7" style={{ color: 'var(--c-dot)' }} />
-              <h2 className="font-sans text-4xl sm:text-5xl font-extrabold tracking-tight" style={{ color: 'var(--c-heading)' }}>
-                <WordReveal text="Strengths" baseDelay={0.1} />
-              </h2>
-            </div>
+        <div className="mb-8">
+          <div className="flex justify-center mb-3">
+            <Award className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
           </div>
+          <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
+            [ 09 / STRENGTHS ]
+          </span>
+          <h2 className="font-sans text-4xl sm:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
+            <WordReveal text="Strengths" baseDelay={0.1} />
+          </h2>
         </div>
 
         <div className="space-y-6">
