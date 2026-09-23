@@ -18,7 +18,7 @@ const SECTION_SEO_MAP: Record<string, { title: string; description: string; keyw
     keywords: ['Sachit', 'Sachit developer', 'Sachit web developer', 'Sachit AI developer', 'AI automation developer', 'React', 'TypeScript', 'Next.js', 'Python'],
   },
   about: {
-    title: 'About Sachit — AI Automation & Web Developer',
+    title: 'About Sachit',
     description: 'Learn about Sachit’s engineering background, craftsmanship, and passion for building high-performance web applications and AI automation systems.',
     keywords: ['About Sachit', 'Sachit software developer', 'AI automation developer India', 'Full-Stack Developer Background'],
   },
@@ -38,7 +38,7 @@ const SECTION_SEO_MAP: Record<string, { title: string; description: string; keyw
     keywords: ['Dev Mindset', 'Software Engineering Principles', 'Sachit Portfolio'],
   },
   contact: {
-    title: 'Contact Sachit — AI Automation & Web Developer',
+    title: 'Contact Sachit',
     description: 'Get in touch with Sachit for software development opportunities, AI automation consulting, web application projects, or collaborations.',
     keywords: ['Contact Sachit', 'Hire Sachit', 'AI Automation Developer Contact'],
   },
@@ -171,7 +171,7 @@ export const SEOMetadata = ({
       mainEntity: {
         '@type': 'Person',
         name: 'Sachit',
-        jobTitle: 'AI Automation & Web Developer',
+        jobTitle: 'Software Developer',
         url: 'https://sachin-portfoli.vercel.app/',
         sameAs: [
           'https://github.com/sachit1751-art',

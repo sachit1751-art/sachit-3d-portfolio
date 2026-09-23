@@ -22,7 +22,7 @@ interface ChatAboutMeProps {
 
 const INITIAL_MESSAGE: Message = { 
   role: 'model', 
-  content: "Hi! I'm Sachit's AI assistant powered by machine-readable `/llms.txt` context. Ask me anything about his projects (like SKY ROMs, Claude Document Summarizer, Web Music Streaming, or MCP Tool), tech stack, philosophy, or background!" 
+  content: "Hi! I'm Sachit's AI assistant powered by his latest portfolio context and `/llms.txt`. Ask me anything about his full-stack projects, AI tooling, Android developments, or development philosophy!" 
 };
 
 const SUGGESTIONS: Record<string, string[]> = {
@@ -553,41 +553,6 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
             backdropFilter: 'blur(8px)'
           }}
         >
-          {/* Header Bar */}
-          <div className="px-4 py-3 border-b flex items-center justify-between gap-2" style={{ borderColor: 'var(--c-border)', backgroundColor: 'rgba(255,255,255,0.05)' }}>
-            <div className="flex items-center gap-2.5">
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest opacity-60">Assistant Online</span>
-              <a
-                href="/llms.txt"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold transition-all hover:scale-105"
-                style={{
-                  backgroundColor: 'var(--c-input-bg)',
-                  border: '1px solid var(--c-border)',
-                  color: 'var(--c-heading)'
-                }}
-                title="View machine-readable llms.txt context"
-              >
-                <FileText size={11} className="text-amber-500" />
-                <span>/llms.txt</span>
-                <ExternalLink size={9} className="opacity-50" />
-              </a>
-            </div>
-            <button 
-              onClick={handleClearChat}
-              className={`px-2 py-1 rounded text-xs font-mono transition-colors ${
-                confirmClear 
-                  ? 'bg-red-500/20 text-red-500 font-bold border border-red-500/40' 
-                  : 'opacity-40 hover:opacity-100 hover:bg-red-500/10 hover:text-red-500'
-              }`}
-              title={confirmClear ? "Click again to confirm reset" : "Clear conversation"}
-            >
-              {confirmClear ? "Confirm Reset?" : <RotateCcw size={14} />}
-            </button>
-          </div>
-
           {/* Chat Messages */}
           <div 
             ref={scrollRef}
@@ -717,55 +682,6 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
               </motion.div>
             )}
             <div ref={messagesEndRef} className="h-px" />
-
-            {/* Jump to Live Stream Pill (Screenshot Principle 1 & 2: Follow only while following) */}
-            <AnimatePresence>
-              {isUserScrolledUp && (
-                <motion.button
-                  initial={{ opacity: 0, y: 10, scale: 0.9 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.9 }}
-                  onClick={jumpToLiveStream}
-                  className="sticky bottom-3 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-full text-xs font-mono uppercase tracking-wider flex items-center gap-2 shadow-2xl border cursor-pointer hover:scale-105 transition-all"
-                  style={{
-                    backgroundColor: 'var(--c-card)',
-                    borderColor: 'var(--c-border-hover)',
-                    color: 'var(--c-heading)',
-                    backdropFilter: 'blur(12px)',
-                  }}
-                >
-                  <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
-                  <span>Live stream active · Jump to bottom ↓</span>
-                </motion.button>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Suggested Questions */}
-          <div className="px-4 py-3 bg-[var(--c-bg)] border-t border-b overflow-x-auto custom-scrollbar-hide" style={{ borderColor: 'var(--c-border)' }}>
-            <div className="flex gap-2 min-w-max">
-              <AnimatePresence mode="wait">
-                {(SUGGESTIONS[activeSection] || SUGGESTIONS.hero).map((suggestion, idx) => (
-                  <motion.button
-                    key={`${activeSection}-${idx}`}
-                    initial={{ opacity: 0, scale: 0.9, x: 10 }}
-                    animate={{ opacity: 1, scale: 1, x: 0 }}
-                    exit={{ opacity: 0, scale: 0.9, x: -10 }}
-                    transition={{ delay: idx * 0.1 }}
-                    onClick={() => sendMessage(suggestion)}
-                    className="px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
-                    style={{ 
-                      backgroundColor: 'var(--c-input-bg)',
-                      border: '1px solid var(--c-border)',
-                      color: 'var(--c-muted)'
-                    }}
-                    disabled={isLoading || isStreaming}
-                  >
-                    {suggestion}
-                  </motion.button>
-                ))}
-              </AnimatePresence>
-            </div>
           </div>
 
           {/* Chat Input */}
@@ -802,11 +718,6 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
               >
                 {isLoading || isStreaming ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} />}
               </button>
-            </div>
-            <div className="mt-3 text-center">
-              <span className="text-[9px] font-mono uppercase tracking-[0.2em] opacity-30 flex items-center justify-center gap-2">
-                <MessageSquare size={10} /> GEMINI FLASH • REAL-TIME STREAMING
-              </span>
             </div>
           </form>
         </div>

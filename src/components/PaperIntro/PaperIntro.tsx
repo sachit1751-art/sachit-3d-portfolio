@@ -306,13 +306,17 @@ export const PaperIntro = memo<PaperIntroProps>(({
                   e.stopPropagation();
                   toggleMute();
                 }}
-                className="w-9 h-9 rounded-full cursor-pointer transition-all hover:scale-105 active:scale-95 flex items-center justify-center pointer-events-auto bg-stone-200/60 dark:bg-stone-800/60 hover:bg-stone-300/80 text-stone-700 dark:text-stone-300 shadow-sm border border-stone-300/40"
-                title={isMuted ? 'Unmute audio effects' : 'Mute audio effects'}
-                aria-label={isMuted ? 'Unmute audio effects' : 'Mute audio effects'}
-                aria-pressed={!isMuted}
+                className="w-10 h-10 rounded-full cursor-pointer transition-all hover:scale-105 active:scale-95 flex items-center justify-center pointer-events-auto shadow-md border"
+                style={{
+                  backgroundColor: 'var(--c-btn-bg)',
+                  color: 'var(--c-btn-text)',
+                  borderColor: 'var(--c-border)'
+                }}
+                title="Unfold paper & toggle audio"
+                aria-label="Unfold paper and toggle audio"
               >
                 {isMuted ? (
-                  <VolumeX className="w-4 h-4 opacity-60" />
+                  <VolumeX className="w-4 h-4 opacity-80" />
                 ) : (
                   <Volume2 className="w-4 h-4" />
                 )}

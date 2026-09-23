@@ -295,7 +295,7 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
                   color: 'var(--c-heading)',
                 }}
               >
-                1 Page • Verified Decoupled Data Source
+                2 Pages • Verified Decoupled Data Source
               </span>
             </div>
             <div
@@ -308,26 +308,26 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
 
           {/* Printable Resume Sheets Frame */}
           <div
-            className="resume-pdf-frame flex flex-col items-center gap-8 w-full py-2 transition-all duration-200 origin-top"
+            className="resume-pdf-frame flex flex-col items-center gap-12 w-full py-2 transition-all duration-200 origin-top"
             style={{
               zoom: `${zoomLevel}%`,
             }}
           >
             {/* ============================================================ */}
-            {/* UNIFIED SINGLE SHEET RESUME                                  */}
+            {/* PAGE 1: HEADER, SUMMARY, SKILLS, PROJECTS                    */}
             {/* ============================================================ */}
             <article
-              className="resume-page-card resume-sheet w-full max-w-[850px] p-2 sm:p-4 transition-all select-text"
+              className="resume-page-card resume-sheet w-full max-w-[850px] p-4 sm:p-8 transition-all select-text rounded-[var(--radius-lg)]"
               style={{
-                backgroundColor: 'transparent',
-                border: 'none',
+                backgroundColor: 'var(--c-card)',
+                border: '1px solid var(--c-border)',
                 color: 'var(--c-body)',
-                boxShadow: 'none',
+                boxShadow: '0 20px 40px -15px rgba(0,0,0,0.1)',
               }}
             >
               {/* Top Banner (Screen Only) */}
               <div className="no-print flex items-center justify-between text-[11px] font-mono pb-4 mb-6 border-b border-[var(--c-border)] opacity-60">
-                <span>Curriculum Vitae</span>
+                <span>Curriculum Vitae (Page 1 of 2)</span>
                 <span>{resumeData.personalInfo.name}</span>
               </div>
 
@@ -444,7 +444,7 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
               </section>
 
               {/* 3. PROJECTS */}
-              <section className="mb-8">
+              <section className="mb-2">
                 <div className="flex items-center gap-2 pb-2 mb-4 border-b border-[var(--c-border)]">
                   <Code2 className="w-4 h-4" style={{ color: 'var(--c-heading)' }} />
                   <h2
@@ -486,6 +486,25 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
                   ))}
                 </div>
               </section>
+            </article>
+
+            {/* ============================================================ */}
+            {/* PAGE 2: EDUCATION, CERTIFICATIONS, ACHIEVEMENTS, ACTIVITIES  */}
+            {/* ============================================================ */}
+            <article
+              className="resume-page-card resume-sheet w-full max-w-[850px] p-4 sm:p-8 transition-all select-text rounded-[var(--radius-lg)]"
+              style={{
+                backgroundColor: 'var(--c-card)',
+                border: '1px solid var(--c-border)',
+                color: 'var(--c-body)',
+                boxShadow: '0 20px 40px -15px rgba(0,0,0,0.1)',
+              }}
+            >
+              {/* Top Banner (Screen Only) */}
+              <div className="no-print flex items-center justify-between text-[11px] font-mono pb-4 mb-6 border-b border-[var(--c-border)] opacity-60">
+                <span>Curriculum Vitae (Page 2 of 2)</span>
+                <span>{resumeData.personalInfo.name}</span>
+              </div>
 
               {/* 4. EDUCATION & CERTIFICATIONS */}
               <section className="mb-8">
@@ -600,7 +619,7 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
 
           {/* Direct Fallback Helper Bar */}
           <div
-            className="resume-fallback-bar mt-6 pt-4 border-t border-[var(--c-border)] text-center text-xs font-mono no-print flex flex-wrap items-center justify-center gap-2"
+            className="resume-fallback-bar mt-8 pt-4 border-t border-[var(--c-border)] text-center text-xs font-mono no-print flex flex-wrap items-center justify-center gap-2"
             style={{ color: 'var(--c-subtle)' }}
           >
             <button
