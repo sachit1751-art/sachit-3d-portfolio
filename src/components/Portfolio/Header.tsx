@@ -241,21 +241,21 @@ export const Header = memo<HeaderProps>(({
         }}
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{
-          backgroundColor: scrolled ? 'var(--c-header-bg)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(12px)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'none',
-          borderBottom: scrolled ? '1px solid var(--c-header-border)' : '1px solid transparent',
-          boxShadow: scrolled ? '0 2px 10px rgba(0,0,0,0.05)' : 'none',
+          backgroundColor: (scrolled || mobileMenuOpen) ? 'var(--c-header-bg)' : 'transparent',
+          backdropFilter: (scrolled || mobileMenuOpen) ? 'blur(12px)' : 'none',
+          WebkitBackdropFilter: (scrolled || mobileMenuOpen) ? 'blur(12px)' : 'none',
+          borderBottom: (scrolled || mobileMenuOpen) ? '1px solid var(--c-header-border)' : '1px solid transparent',
+          boxShadow: (scrolled || mobileMenuOpen) ? '0 2px 10px rgba(0,0,0,0.05)' : 'none',
           transform: 'translateZ(0)',
           willChange: 'transform',
         }}
       >
         <div className="max-w-[calc(100%-24px)] sm:max-w-[min(88vw,1100px)] md:max-w-[min(82vw,1100px)] mx-auto px-4 sm:px-10 md:px-14 flex items-center justify-between h-[60px] sm:h-[68px]">
           {/* Logo + Section Indicator */}
-          <div className="flex items-center gap-3 sm:gap-6 md:flex-1 justify-start">
+          <div className="flex items-center gap-3 sm:gap-6 md:flex-1 justify-start min-w-0">
             <button
               onClick={() => handleNavClick('hero')}
-              className="flex items-center gap-3 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] rounded py-1"
+              className="flex-shrink-0 flex items-center gap-3 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] rounded py-1"
               aria-label="Go to top"
             >
               <span className="text-2xl sm:text-3xl font-handwriting font-bold leading-tight" style={{ color: 'var(--c-name)' }}>
@@ -271,10 +271,10 @@ export const Header = memo<HeaderProps>(({
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}
-                  className="sm:hidden flex items-center gap-2"
+                  className="sm:hidden flex items-center gap-1.5 min-w-0"
                 >
-                  <span className="w-1 h-1 rounded-full bg-[var(--c-dot)]" />
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest opacity-60">
+                  <span className="w-1 h-1 rounded-full bg-[var(--c-dot)] flex-shrink-0" />
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest opacity-60 truncate max-w-[110px]">
                     {activeSection.replace('-', ' ')}
                   </span>
                 </motion.div>
@@ -343,9 +343,10 @@ export const Header = memo<HeaderProps>(({
             transition={{ duration: 0.2, ease: 'easeOut' }}
             className="fixed inset-x-0 top-[60px] z-40 md:hidden border-b shadow-2xl p-6"
             style={{
-              backgroundColor: 'var(--c-card)',
+              backgroundColor: 'var(--c-header-bg)',
               borderColor: 'var(--c-border)',
               backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
             }}
           >
             <div className="flex flex-col space-y-3">

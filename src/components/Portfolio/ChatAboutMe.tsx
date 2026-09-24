@@ -697,7 +697,6 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask assistant about projects, stack, or philosophy..."
-                autoFocus
                 className="w-full py-4 px-6 pr-14 rounded-full border outline-none transition-all font-body text-sm sm:text-base shadow-inner focus:ring-2 focus:ring-[var(--c-dot)] focus:border-[var(--c-dot)]"
                 style={{ 
                   backgroundColor: 'var(--c-bg)',

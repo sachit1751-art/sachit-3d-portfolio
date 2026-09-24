@@ -378,6 +378,14 @@ export default function App() {
     setIntroCompleted(true);
     setShowContent(true);
     setHeaderReady(true);
+
+    // Explicitly blur any active element to prevent mobile keyboards from opening after the intro animation ends
+    try {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    } catch {}
+
     requestAnimationFrame(() => {
       const container = document.getElementById('content-scroll-container');
       if (container) container.scrollTop = 0;

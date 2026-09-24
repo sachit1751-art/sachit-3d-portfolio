@@ -21,10 +21,10 @@ const categories: SkillCategory[] = [
     title: 'AI Tools & Automation',
     description: 'LLM integrations, prompt caching, MCP servers, and agent architectures.',
     skills: [
-      { name: 'Claude', iconName: 'Sparkles' },
+      { name: 'Anthropic Claude API', iconName: 'Sparkles' },
       { name: 'Prompt Engineering', iconName: 'MessageSquare' },
       { name: 'Prompt Caching', iconName: 'Zap' },
-      { name: 'Codex', iconName: 'Bot' },
+      { name: 'OpenAI API', iconName: 'Bot' },
       { name: 'Model Context Protocol (MCP)', iconName: 'Layers' },
       { name: 'Cursor IDE', iconName: 'Code2' },
     ],

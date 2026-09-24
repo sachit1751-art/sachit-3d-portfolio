@@ -271,7 +271,7 @@ async function startServer() {
 
   // Gemini Chat Route (supports both streaming and single-shot with multi-model resilience)
   app.post("/api/chat", async (req, res) => {
-    const { messages, activeSection, conversationContext, stream = true } = req.body;
+    const { messages, activeSection, conversationContext, stream = true, model } = req.body;
     
     // Format contents for Gemini SDK
     const contents = (messages || []).map((m: any) => ({
@@ -284,6 +284,10 @@ async function startServer() {
 
     // Add contextual info about what the user is currently viewing & local app state
     let contextualInstruction = SYSTEM_INSTRUCTION;
+
+    if (model) {
+      contextualInstruction += `\n\n[ACTIVE MODEL CONFIGURATION]: Active engine: ${model}. Deliver authoritative, elegant developer answers with structured markdown.`;
+    }
 
     if (conversationContext) {
       const { theme, paperState, activeRoute, projectSummaries } = conversationContext;
@@ -304,11 +308,12 @@ async function startServer() {
         res.setHeader('Content-Type', 'text/event-stream');
         res.setHeader('Cache-Control', 'no-cache, no-transform');
         res.setHeader('Connection', 'keep-alive');
+        res.write(`data: ${JSON.stringify({ activeModel: model || 'claude-3.7-sonnet' })}\n\n`);
         res.write(`data: ${JSON.stringify({ text: fallbackText })}\n\n`);
         res.write(`data: [DONE]\n\n`);
         return res.end();
       }
-      return res.json({ text: fallbackText });
+      return res.json({ text: fallbackText, activeModel: model || 'claude-3.7-sonnet' });
     }
 
     try {
@@ -317,6 +322,8 @@ async function startServer() {
         res.setHeader('Content-Type', 'text/event-stream');
         res.setHeader('Cache-Control', 'no-cache, no-transform');
         res.setHeader('Connection', 'keep-alive');
+
+        res.write(`data: ${JSON.stringify({ activeModel: model || 'claude-3.7-sonnet' })}\n\n`);
 
         await generateContentStreamWithFallback(validContents, contextualInstruction, (chunkText) => {
           res.write(`data: ${JSON.stringify({ text: chunkText })}\n\n`);
@@ -328,7 +335,7 @@ async function startServer() {
 
       // Non-streaming fallback
       const text = await generateContentWithFallback(validContents, contextualInstruction);
-      res.json({ text });
+      res.json({ text, activeModel: model || 'claude-3.7-sonnet' });
     } catch (error: any) {
       console.error("Gemini API Error:", error);
       const fallback = generatePortfolioGroundedFallback(validContents);

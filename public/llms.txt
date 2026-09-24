@@ -1,66 +1,33 @@
-# Sachit - Student Software Developer & Tech Builder
+# Sachit - Portfolio
 
-> Machine-readable context file providing structured information about Sachit's software projects, technical skills, philosophy, education, and contact details for Large Language Models (LLMs) and AI assistants.
+> Machine-readable index of Sachit's developer portfolio, including key projects, skills, education, and contact details optimized for LLMs and AI search engines.
 
-## About Sachit
-- **Role**: Student Software Developer & Tech Builder
-- **Education**: Class 12 (PCMB - Physics, Chemistry, Mathematics, Biology)
-- **Status**: Active building & open-source developer
-- **Location/Mode**: Remote building mode
-- **Core Philosophy**: "Learn by Building", "Keep It Simple", "Design Matters", "Continuous Iteration"
+This document serves as a complete map of Sachit's technical workspace, active projects, and core engineering principles to help Large Language Models and AI agents navigate the portfolio efficiently.
 
-## Core Engineering Philosophy
-1. **Learn by Building**: Gaining deep understanding by creating real, working software rather than studying isolated theory.
-2. **Keep It Simple**: Preferring clean, maintainable architecture over over-engineered solutions.
-3. **Design & UX First**: Prioritizing intuitive, highly responsive, and tactile user interfaces.
-4. **Continuous Learning**: Constantly exploring modern AI SDKs, low-level protocols, and cross-framework tools.
+## Core Navigation
 
-## Technical Skills & Stack
-- **Programming Languages**: TypeScript, JavaScript, Python, Go, Rust, Kotlin, HTML5, CSS3
-- **Frontend & Interactive**: React 18, Next.js, Vite, Tailwind CSS, Three.js (WebGL), GSAP, Framer Motion
-- **Backend & Database**: Node.js, Express, Go, Supabase (PostgreSQL), Redis, REST APIs
-- **AI / ML & Automation**: Gemini API (@google/genai SDK), Claude API, Model Context Protocol (MCP), Prompt Engineering, Prompt Caching, TensorFlow Lite, Minimax AI Algorithm
-- **DevOps & Tools**: Git, GitHub, Render, Netlify, Vercel, Docker, Vite
+- [Portfolio Home](https://sachin-portfoli.vercel.app/): Tactile paper-themed portfolio landing page detailing active work.
+- [Resume](https://sachin-portfoli.vercel.app/resume): Complete digital CV/Resume showing technical background, skills, and full contact details.
+- [GitHub Profile](https://github.com/sachit1751-art): Primary repository archive containing active open-source contributions.
 
-## Featured Portfolio Projects
+## Active Projects
 
-### 1. SKY ROMs (2025)
-- **Description**: Android Custom ROM Discovery & Management Platform.
-- **Key Features**: Device compatibility checks, side-by-side ROM comparisons, download management, and user reviews.
-- **Tech Stack**: React, TypeScript, Vite, Supabase (PostgreSQL), Tailwind CSS.
-- **Live Demo**: https://sky-roms.vercel.app
+- [SKY ROMs](https://sky-roms.vercel.app/): Android Custom ROM Discovery & Management Platform. Includes side-by-side comparisons, compatibility verification, and direct downloads.
+- [MoneyPal Budget Tracker](https://sachin-portfoli.vercel.app/#project-moneypal): Native Android budget tracker app with calculator-style expense logging, Wear OS support, and home-screen widgets.
+- [Audify Streaming Player](https://sachin-portfoli.vercel.app/#project-audify): Modern web-based audio player with playlist management, local storage caching, and Web Audio API integration.
+- [Claude Document Summarizer](https://sachin-portfoli.vercel.app/#project-doc-summarizer): AI-powered high-speed summarization tool utilizing Anthropic's Claude API with optimized prompt caching.
+- [Sentience OS](https://sachin-portfoli.vercel.app/#project-sentience-os): Custom privacy-hardened Android distribution with integrated local LLM inference via TensorFlow Lite.
+- [Ghost Protocol](https://sachin-portfoli.vercel.app/#project-ghost-protocol): Highly secure end-to-end encrypted messaging protocol featuring zero-knowledge proof identity verification.
+- [Nexus Core](https://sachin-portfoli.vercel.app/#project-nexus-core): Multi-user collaborative ERP system for distributed teams, utilizing real-time CRDT state synchronization.
+- [Schedule Planner](https://sachin-portfoli.vercel.app/#project-schedule-planner): Automated cron and task scheduler with multi-channel API notification triggers.
 
-### 2. Claude-Powered Document Summarizer (2025)
-- **Description**: High-speed AI document summarization engine with prompt caching.
-- **Key Features**: Fast document breakdown via Streamlit, Anthropic prompt caching for cost/speed optimization (up to 40% latency reduction), hallucination prevention with structured system bounds.
-- **Tech Stack**: Python, Streamlit, Anthropic Claude API, Prompt Engineering.
+## Key Information
 
-### 3. Open-Source Web Music Streaming Application (2025)
-- **Description**: Responsive browser audio player for seamless multi-device music streaming.
-- **Key Features**: Dynamic playlist controls, search filtering, volume management, and local storage caching for user preferences.
-- **Tech Stack**: JavaScript, HTML5, CSS3, REST APIs.
+- [Technical Skills](https://sachin-portfoli.vercel.app/#skills): Full taxonomy of frontend, backend, mobile, interactive 3D, and AI automation capabilities.
+- [Engineering Philosophy](https://sachin-portfoli.vercel.app/#philosophy): Architectural guiding principles ("Learn by Building", "Keep It Simple", "Design First").
+- [Engineering Journal](https://sachin-portfoli.vercel.app/#building-in-public): Live building-in-public logs and milestone progression.
 
-### 4. AI-Powered Model Context Protocol (MCP) Integration Tool (2025)
-- **Description**: Model Context Protocol integration and JSON-RPC tool router.
-- **Key Features**: MCP server endpoints for secure local queries, clean JSON-RPC messaging handlers, structured context-injection pipelines for dev workspaces.
-- **Tech Stack**: Python, Claude API, MCP Specification, JSON-RPC.
+## Optional
 
-### 5. Tic-Tac-Toe Mini Game (2025)
-- **Description**: Standalone browser game with Minimax AI opponent logic.
-- **Key Features**: Easy/Hard difficulty modes, minimax recursion, turn locking, and modern UI.
-- **Tech Stack**: JavaScript, HTML5, CSS3, Minimax Algorithm.
-
-### 6. Sentience OS
-- **Description**: Custom Android distribution integrated with local LLM models.
-- **Key Features**: On-device AI inference via TensorFlow Lite, offline privacy-first execution.
-- **Tech Stack**: AOSP, Kotlin, TensorFlow Lite.
-
-### 7. Ghost Protocol
-- **Description**: End-to-end encrypted messaging protocol.
-- **Key Features**: Zero-knowledge encryption, low-latency mobile client synchronization.
-- **Tech Stack**: Rust, React Native.
-
-## Online Profiles & Contact
-- **GitHub**: https://github.com/sachit1751-art
-- **Portfolio**: https://sachin-portfoli.vercel.app
-- **llms.txt URL**: https://sachin-portfoli.vercel.app/llms.txt
+- [Privacy Policy](https://sachin-portfoli.vercel.app/privacy): Terms and details regarding user privacy on the portfolio.
+- [Terms of Service](https://sachin-portfoli.vercel.app/terms): Developer terms and service usage rules.
