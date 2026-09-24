@@ -99,20 +99,21 @@ export const DepthFlipText = memo<DepthFlipTextProps>(({
                       style={{
                         transformStyle: 'preserve-3d',
                         backfaceVisibility: 'hidden',
+                        WebkitBackfaceVisibility: 'hidden',
                         willChange: 'transform, opacity',
                       }}
                       variants={{
                         initial: {
-                          rotateX: -60,
-                          y: 20,
+                          rotateX: -70,
+                          y: 15,
                           opacity: 0,
-                          filter: 'blur(2px)',
+                          scale: 0.94,
                         },
                         animate: {
                           rotateX: 0,
                           y: 0,
                           opacity: 1,
-                          filter: 'blur(0px)',
+                          scale: 1,
                           transition: {
                             duration: 0.48,
                             ease: [0.16, 1, 0.3, 1],
@@ -120,10 +121,10 @@ export const DepthFlipText = memo<DepthFlipTextProps>(({
                           },
                         },
                         exit: {
-                          rotateX: 60,
-                          y: -20,
+                          rotateX: 70,
+                          y: -15,
                           opacity: 0,
-                          filter: 'blur(2px)',
+                          scale: 0.94,
                           transition: {
                             duration: 0.32,
                             ease: [0.7, 0, 0.84, 0],
