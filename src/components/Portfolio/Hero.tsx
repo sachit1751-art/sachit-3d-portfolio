@@ -91,7 +91,7 @@ export const Hero = memo<HeroProps>(({
             Independent Developer
           </p>
         </div>
-        <h1 className="gsap-hero-title text-[2.2rem] xs:text-[2.8rem] sm:text-6xl md:text-[72px] lg:text-[88px] leading-[1.1] font-handwriting font-bold tracking-tight my-2" style={{ color: 'var(--c-heading)' }}>
+        <h1 className="gsap-hero-title text-[clamp(2.2rem,1.25rem+4.5vw,5.25rem)] leading-[1.18] font-handwriting font-bold tracking-tight my-2 overflow-visible" style={{ color: 'var(--c-heading)', paddingRight: '0.1em' }}>
           <span className="sr-only">Sachit</span>
           <span className="inline-block" aria-hidden="true">
             <DepthFlipText

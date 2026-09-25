@@ -534,7 +534,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
       <section id="chat-about-me" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
         <div className="mb-10 text-center">
           <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block mb-3" style={{ color: 'var(--c-muted)' }}>
-            [ 09 / INTERACTIVE ASSISTANT ]
+            [ 11 / INTERACTIVE ASSISTANT ]
           </span>
           <div className="flex items-center justify-center gap-3 mb-5">
             <MessageSquare className="w-7 h-7" style={{ color: 'var(--c-dot)' }} />

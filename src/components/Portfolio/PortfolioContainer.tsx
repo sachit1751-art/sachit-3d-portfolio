@@ -6,7 +6,9 @@ import { About } from './About';
 import { Philosophy } from './Philosophy';
 import { Projects } from './Projects';
 import { Skills } from './Skills';
+import { CurrentlyBuilding } from './CurrentlyBuilding';
 import { GitHubSection } from './GitHub';
+import { Experience } from './Experience';
 import { Education } from './Education';
 import { Strengths } from './Strengths';
 import { BuildingInPublic } from './BuildingInPublic';
@@ -51,7 +53,21 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
       const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
 
       if (Math.abs(deltaX) > 65 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
-        const sections = ['hero', 'about', 'philosophy', 'projects', 'skills', 'github', 'education', 'strengths', 'building-in-public', 'chat-about-me', 'contact'];
+        const sections = [
+          'hero',
+          'about',
+          'philosophy',
+          'projects',
+          'skills',
+          'currently-building',
+          'github',
+          'experience',
+          'education',
+          'strengths',
+          'building-in-public',
+          'chat-about-me',
+          'contact',
+        ];
         
         let currentIndex = 0;
         let minDistance = Infinity;
@@ -114,7 +130,13 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
             <Skills />
           </ScrollReveal>
           <ScrollReveal>
+            <CurrentlyBuilding />
+          </ScrollReveal>
+          <ScrollReveal>
             <GitHubSection theme={theme} />
+          </ScrollReveal>
+          <ScrollReveal>
+            <Experience />
           </ScrollReveal>
           <ScrollReveal>
             <Education />

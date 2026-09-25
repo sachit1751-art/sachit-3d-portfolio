@@ -233,7 +233,7 @@ export const Contact = memo(() => {
             <Send className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
           </div>
           <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
-            [ 10 / CONTACT ]
+            [ 12 / CONTACT ]
           </span>
           <h2 className="font-sans text-4xl sm:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
             <WordReveal text="Let's Build Something" baseDelay={0.1} />

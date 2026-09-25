@@ -57,6 +57,14 @@
     --font-mono: 'Courier Prime', 'Courier-Fallback', 'JetBrains Mono', monospace;
     --font-body: 'Courier Prime', 'Courier-Fallback', monospace;
     --_wm: '\200B\FEFFsachit-2026\FEFF\200B';
+
+    /* Fluid Header Typography Scale (clamp-based responsive scaling across viewports) */
+    --fluid-h1: clamp(2.2rem, 1.25rem + 4.5vw, 5.25rem);
+    --fluid-h2: clamp(1.75rem, 1.15rem + 2.5vw, 3rem);
+    --fluid-h3: clamp(1.2rem, 0.95rem + 1.1vw, 1.75rem);
+    --fluid-h4: clamp(1.05rem, 0.9rem + 0.75vw, 1.35rem);
+    --fluid-h5: clamp(0.95rem, 0.85rem + 0.5vw, 1.15rem);
+    --fluid-h6: clamp(0.85rem, 0.78rem + 0.35vw, 1rem);
   }
 
   /* Global Accessibility & Performance */
@@ -194,8 +202,47 @@
     contain: layout style;
   }
 
+  /* Fluid Header Scaling & Character Glyph Bounds Protection */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-handwriting);
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-break: normal;
+    text-wrap: balance;
+    /* Safeguard for handwritten glyph swashes and terminal strokes (e.g. 'L', 'l', italics) */
+    overflow: visible;
+    padding-inline: 0.08em;
+  }
+
+  h1 {
+    font-size: var(--fluid-h1);
+    line-height: clamp(1.12, 1.08 + 0.2vw, 1.22);
+  }
+
+  h2 {
+    font-size: var(--fluid-h2);
+    line-height: clamp(1.18, 1.14 + 0.2vw, 1.26);
+  }
+
+  h3 {
+    font-size: var(--fluid-h3);
+    line-height: clamp(1.24, 1.2 + 0.2vw, 1.32);
+  }
+
+  h4 {
+    font-size: var(--fluid-h4);
+    line-height: 1.35;
+  }
+
+  h5 {
+    font-size: var(--fluid-h5);
+    line-height: 1.38;
+  }
+
+  h6 {
+    font-size: var(--fluid-h6);
+    line-height: 1.4;
   }
 
   .font-serif {
@@ -219,7 +266,7 @@
   }
 }
 
-/* Font overrides OUTSIDE @layer to beat Tailwind v4 utilities */
+/* Font & Fluid Typography overrides OUTSIDE @layer to beat Tailwind v4 utilities */
 .font-sans {
   font-family: var(--font-handwriting) !important;
 }
@@ -234,6 +281,48 @@
 
 .font-serif {
   font-family: var(--font-body) !important;
+}
+
+/* Fluid Typography utility classes and responsive header clamp overrides */
+.text-fluid-h1 {
+  font-size: var(--fluid-h1) !important;
+  line-height: clamp(1.12, 1.08 + 0.2vw, 1.22) !important;
+}
+
+.text-fluid-h2 {
+  font-size: var(--fluid-h2) !important;
+  line-height: clamp(1.18, 1.14 + 0.2vw, 1.26) !important;
+}
+
+.text-fluid-h3 {
+  font-size: var(--fluid-h3) !important;
+  line-height: clamp(1.24, 1.2 + 0.2vw, 1.32) !important;
+}
+
+/* Ensure all section headers scale fluidly with clamp() and give glyphs clearance */
+h2.text-4xl,
+h2.sm\:text-5xl,
+.section-title {
+  font-size: var(--fluid-h2) !important;
+  line-height: clamp(1.18, 1.14 + 0.2vw, 1.26) !important;
+  letter-spacing: -0.01em !important;
+  padding-inline: 0.08em;
+  overflow: visible;
+}
+
+/* Ensure hero title scales fluidly without glyph truncation */
+.gsap-hero-title {
+  font-size: var(--fluid-h1) !important;
+  line-height: clamp(1.12, 1.08 + 0.2vw, 1.22) !important;
+  letter-spacing: -0.01em !important;
+  overflow: visible !important;
+}
+
+/* Ensure character & word reveals maintain visible overflow for ascenders/descenders/swashes */
+.char-reveal,
+.word-reveal {
+  overflow: visible !important;
+  padding-inline-end: 0.05em;
 }
 
 @layer base {

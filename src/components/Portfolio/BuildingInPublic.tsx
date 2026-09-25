@@ -35,7 +35,7 @@ export const BuildingInPublic = memo(() => {
             <Feather className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
           </div>
           <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
-            [ 07 / JOURNAL ]
+            [ 10 / JOURNAL ]
           </span>
           <h2 className="font-sans text-4xl sm:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
             <WordReveal text="Building in Public" baseDelay={0.1} />

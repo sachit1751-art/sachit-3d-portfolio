@@ -94,23 +94,22 @@ export const PretextText = memo<PretextTextProps>(({
     );
   }, [text, font, containerWidth, lineHeight, adjustedFontSize, prepareOptions]);
 
-  // Render balanced lines if mode === 'balanced' and lines are available
-  if (mode === 'balanced' && layout && layout.lines.length > 1) {
+  // Render balanced text if mode === 'balanced'
+  if (mode === 'balanced') {
     return (
       <Component
         ref={containerRef as React.RefObject<any>}
         className={`pretext-container ${className}`}
         style={{
+          wordBreak: 'normal',
+          overflowWrap: 'break-word',
+          textWrap: 'balance',
           ...style,
           ...(adjustedFontSize ? { fontSize: `${adjustedFontSize}px` } : {}),
         }}
         {...rest}
       >
-        {layout.lines.map((line, idx) => (
-          <span key={idx} className="block w-full">
-            {line.text}
-          </span>
-        ))}
+        {text}
       </Component>
     );
   }

@@ -66,18 +66,19 @@ export const DepthFlipText = memo<DepthFlipTextProps>(({
       style={{
         perspective: '1200px',
         transformStyle: 'preserve-3d',
+        overflow: 'visible',
         ...style,
       }}
       onClick={triggerNext}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      title="Click or hover to flip 3D title"
+      title="Click or flip 3D title"
     >
       <AnimatePresence mode="wait">
         <motion.span
           key={`${currentPhrase}-${index}`}
-          className="inline-block transform-gpu"
-          style={{ transformStyle: 'preserve-3d' }}
+          className="inline-block transform-gpu overflow-visible"
+          style={{ transformStyle: 'preserve-3d', overflow: 'visible' }}
           initial="initial"
           animate="animate"
           exit="exit"
@@ -87,8 +88,8 @@ export const DepthFlipText = memo<DepthFlipTextProps>(({
             return (
               <span
                 key={`word-${wordIdx}-${word}`}
-                className="inline-block whitespace-nowrap mr-[0.25em]"
-                style={{ transformStyle: 'preserve-3d' }}
+                className="inline-block whitespace-nowrap mr-[0.25em] overflow-visible"
+                style={{ transformStyle: 'preserve-3d', overflow: 'visible' }}
               >
                 {chars.map((char) => {
                   const i = charGlobalIndex++;

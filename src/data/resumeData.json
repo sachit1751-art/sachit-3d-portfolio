@@ -50,7 +50,7 @@
     },
     {
       "id": "moneypal",
-      "title": "MoneyPal — Android Application",
+      "title": "MoneyPal",
       "technologies": "Kotlin, Jetpack Compose, Android SDK, Room Database, Git",
       "bullets": [
         "Engineered MoneyPal as a native Android budget tracker application featuring calculator-style expense entry, flexible budget periods, and automated recurring expense tracking.",
@@ -60,7 +60,7 @@
     },
     {
       "id": "audify",
-      "title": "Audify — Modern Audio Streaming Application",
+      "title": "Audify",
       "technologies": "React, TypeScript, Tailwind CSS, Web Audio API, Vite, Git",
       "bullets": [
         "Developed Audify as a feature-rich, responsive web audio streaming and music player application with fluid playlist controls and real-time track searching.",

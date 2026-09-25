@@ -43,6 +43,7 @@ const ALL_SECTIONS = [
   'education',
   'strengths',
   'building-in-public',
+  'chat-about-me',
   'contact',
 ];
 

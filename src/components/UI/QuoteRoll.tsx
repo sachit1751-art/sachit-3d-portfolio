@@ -65,7 +65,7 @@ export function QuoteRoll({ quotes, interval = 5000, className = '', mode = 'rol
           animate={simplify ? { opacity: 1 } : { y: 0, opacity: 1, filter: 'blur(0px)' }}
           exit={simplify ? { opacity: 0 } : { y: -12, opacity: 0, filter: 'blur(3px)' }}
           transition={simplify ? { duration: 0.2 } : { type: 'spring', stiffness: 300, damping: 28 }}
-          className="[grid-area:1/1] line-clamp-1 truncate max-w-full"
+          className="[grid-area:1/1] line-clamp-1 truncate max-w-full pr-1.5"
         >
           {quotes[index]}
         </motion.span>

@@ -34,7 +34,6 @@ import { AnimatedMenuIcon } from '../UI/AnimatedMenuIcon';
 import { WordReveal } from '../UI/TextReveal';
 import { usePerformance } from '../../hooks/usePerformance';
 import { ScrollReveal } from '../UI/ScrollReveal';
-import { PretextText } from '../UI/PretextText';
 import { observeElement } from '../../utils/observer';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -85,7 +84,7 @@ const projects: Project[] = [
   },
   {
     id: 'moneypal',
-    title: 'MoneyPal — Android Application',
+    title: 'MoneyPal',
     category: 'Android & Wear OS',
     filterCategories: ['ANDROID', 'MOBILE'],
     year: '2025',
@@ -99,7 +98,7 @@ const projects: Project[] = [
   },
   {
     id: 'audify',
-    title: 'Audify — Modern Audio Streaming Application',
+    title: 'Audify',
     category: 'Web Audio',
     filterCategories: ['WEB'],
     year: '2025',
@@ -306,21 +305,24 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
               className="cursor-pointer outline-none group/title focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] rounded-md py-1 select-none"
               aria-label={`Toggle quick details for ${project.title}`}
             >
-              <h3 className="font-sans text-xl sm:text-2xl font-bold transition-colors mb-2 flex items-center justify-between tracking-tight" style={{ color: 'var(--c-heading)' }}>
-                <span className="line-clamp-1">{project.title}</span>
-                <span className="font-mono text-[10px] uppercase tracking-wider opacity-60 ml-2" style={{ color: 'var(--c-muted)' }}>
+              <h3 className="font-sans text-xl sm:text-2xl font-bold transition-colors mb-2 flex items-center justify-between tracking-tight" style={{ color: 'var(--c-heading)', overflow: 'visible' }}>
+                <span className="line-clamp-1 pr-1.5" style={{ paddingRight: '0.15em' }}>{project.title}</span>
+                <span className="font-mono text-[10px] uppercase tracking-wider opacity-60 ml-2 shrink-0" style={{ color: 'var(--c-muted)' }}>
                   {project.year}
                 </span>
               </h3>
 
-              <PretextText
-                text={project.description}
-                font="15px sans-serif"
-                lineHeight={22}
-                mode="balanced"
+              <p
                 className="text-sm sm:text-base leading-relaxed mb-4 font-body opacity-85"
-                style={{ color: 'var(--c-body)' }}
-              />
+                style={{
+                  color: 'var(--c-body)',
+                  wordBreak: 'normal',
+                  overflowWrap: 'break-word',
+                  textWrap: 'pretty',
+                }}
+              >
+                {project.description}
+              </p>
             </div>
 
             {/* Print-only Full Details (Always visible on paper) */}
