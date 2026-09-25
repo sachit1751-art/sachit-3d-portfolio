@@ -667,6 +667,7 @@
   border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  box-shadow: 0 0 0 transparent;
   transition: border-color 0.3s ease-out, background 0.3s ease-out, box-shadow 0.3s ease-out, transform 0.3s ease-out;
   contain: layout style;
 }
@@ -685,8 +686,9 @@
 
 .hero-card:hover {
   border-color: var(--c-border-hover);
-  background: var(--c-card-gradient-from);
-  transform: translateY(-4px);
+  background: var(--c-card);
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 0 8px 24px -4px var(--c-border-hover), 0 2px 8px -1px var(--c-card);
 }
 
 .hero-card:hover .hero-card-number {
@@ -697,23 +699,6 @@
 .hero-card-number {
   transition: all 0.3s ease-out;
   opacity: 0.6;
-}
-
-/* Category accent line on hover */
-.hero-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--c-border-hover), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease-out;
-}
-
-.hero-card:hover::before {
-  opacity: 1;
 }
 
 /* Slippy Jellyfish button animation (from Uiverse.io) */

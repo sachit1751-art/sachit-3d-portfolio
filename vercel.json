@@ -1,6 +1,24 @@
 {
   "headers": [
     {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Link",
+          "value": "</mascots/cap-directions.webp>; rel=preload; as=image; type=\"image/webp\", </fonts/Kalam-Bold.ttf>; rel=preload; as=font; type=\"font/ttf\"; crossorigin=anonymous, </fonts/Kalam-Regular.ttf>; rel=preload; as=font; type=\"font/ttf\"; crossorigin=anonymous"
+        }
+      ]
+    },
+    {
+      "source": "/index.html",
+      "headers": [
+        {
+          "key": "Link",
+          "value": "</mascots/cap-directions.webp>; rel=preload; as=image; type=\"image/webp\", </fonts/Kalam-Bold.ttf>; rel=preload; as=font; type=\"font/ttf\"; crossorigin=anonymous, </fonts/Kalam-Regular.ttf>; rel=preload; as=font; type=\"font/ttf\"; crossorigin=anonymous"
+        }
+      ]
+    },
+    {
       "source": "/fonts/(.*)",
       "headers": [
         {

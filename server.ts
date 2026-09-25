@@ -482,6 +482,10 @@ Sitemap: ${baseUrl}/sitemap.xml`;
     app.use(express.static(distPath));
     // In Express v5, we must use "*all" for catch-all wildcard routing
     app.get('*all', (req, res) => {
+      res.setHeader(
+        'Link',
+        '</mascots/cap-directions.webp>; rel=preload; as=image; type="image/webp", </fonts/Kalam-Bold.ttf>; rel=preload; as=font; type="font/ttf"; crossorigin=anonymous, </fonts/Kalam-Regular.ttf>; rel=preload; as=font; type="font/ttf"; crossorigin=anonymous'
+      );
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }

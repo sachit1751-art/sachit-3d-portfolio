@@ -58,14 +58,14 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
 
-    <!-- Mascot Sprite Preloads -->
-    <link rel="preload" as="image" href="/mascots/cap-directions.webp" />
-    <link rel="preload" as="image" href="/mascots/cap-reactions.webp" />
+    <!-- Primary Mascot Images Preload (LCP & Interactivity Optimization) -->
+    <link rel="preload" as="image" type="image/webp" href="/mascots/cap-directions.webp" fetchpriority="high" />
+    <link rel="preload" as="image" type="image/webp" href="/mascots/cap-reactions.webp" />
 
-    <!-- Fonts (Preloaded Local Assets) -->
-    <link rel="preload" as="font" type="font/ttf" href="/fonts/Kalam-Regular.ttf" crossorigin />
-    <link rel="preload" as="font" type="font/ttf" href="/fonts/Kalam-Bold.ttf" crossorigin />
-    <link rel="preload" as="font" type="font/ttf" href="/fonts/Kalam-Light.ttf" crossorigin />
+    <!-- Primary Fonts Preload (LCP & FCP Mobile Optimization) -->
+    <link rel="preload" as="font" type="font/ttf" href="/fonts/Kalam-Bold.ttf" crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/ttf" href="/fonts/Kalam-Regular.ttf" crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/ttf" href="/fonts/Kalam-Light.ttf" crossorigin="anonymous" />
 
     <!-- Theme Color -->
     <meta name="theme-color" content="#f5f1eb" />
