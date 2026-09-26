@@ -34,6 +34,7 @@ import { GitHubIcon } from '../UI/Icons';
 import { PaperTheme } from '../../types';
 import { useSound, toggleSound } from '../../utils/soundManager';
 import { triggerShortcutHUD } from '../UI/ShortcutHUD';
+import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
 
 export interface SiteMapItem {
   id: string;
@@ -116,6 +117,20 @@ export const SiteMapModal: React.FC<SiteMapModalProps> = ({
   const listRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  // Swipe-to-dismiss gesture on touch-enabled mobile devices
+  const {
+    bind: swipeDismissBind,
+    style: swipeDismissStyle,
+    isTouchDevice: isTouchModal,
+  } = useSwipeToDismiss({
+    onDismiss: onClose,
+    direction: 'down',
+    threshold: 75,
+    velocityThreshold: 0.45,
+    enabled: isOpen,
+    onlyTouch: true,
+  });
 
   // Store last active element for focus restoration on close
   useEffect(() => {
@@ -709,11 +724,25 @@ export const SiteMapModal: React.FC<SiteMapModalProps> = ({
               border: '1px solid var(--c-border)',
               color: 'var(--c-body)',
               boxShadow: '0 25px 60px -15px rgba(0,0,0,0.3)',
+              ...swipeDismissStyle,
             }}
             onKeyDown={handleKeyDown}
           >
+            {/* Mobile Touch Swipe-to-Dismiss Grab Bar */}
+            {isTouchModal && (
+              <div
+                {...swipeDismissBind()}
+                className="sm:hidden flex flex-col items-center pt-2.5 pb-1 cursor-grab active:cursor-grabbing select-none touch-none"
+                aria-label="Swipe down to dismiss"
+                title="Swipe down to dismiss"
+              >
+                <div className="w-10 h-1 rounded-full bg-[var(--c-border-hover)] opacity-70 transition-transform active:scale-95" />
+              </div>
+            )}
+
             {/* Header: Search Input & Close button */}
             <div
+              {...(isTouchModal ? swipeDismissBind() : {})}
               className="p-4 sm:p-5 border-b flex items-center gap-3 relative flex-shrink-0"
               style={{ borderColor: 'var(--c-border)' }}
             >

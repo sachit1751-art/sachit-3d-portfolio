@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { PaperTheme } from '../../types';
 import { resumeData, generateResumePlainText } from '../../data/resume';
+import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
 
 /**
  * Editorial framer-motion variants applying a soft fade-in and subtle slide-up effect
@@ -78,6 +79,19 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [zoomLevel, setZoomLevel] = useState<number>(100);
   const toastTimeoutRef = useRef<number | null>(null);
+
+  // Swipe-to-dismiss gesture on touch-enabled mobile devices
+  const {
+    bind: swipeResumeBind,
+    style: swipeResumeStyle,
+    isTouchDevice: isTouchResume,
+  } = useSwipeToDismiss({
+    onDismiss: onBack,
+    direction: 'down',
+    threshold: 80,
+    velocityThreshold: 0.45,
+    onlyTouch: true,
+  });
 
   const allProjects = resumeData.projects;
 
@@ -157,9 +171,29 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
         )}
       </AnimatePresence>
 
-      <motion.div variants={resumeContentVariants} className="max-w-5xl mx-auto flex flex-col gap-6 relative z-10">
+      <motion.div
+        variants={resumeContentVariants}
+        className="max-w-5xl mx-auto flex flex-col gap-6 relative z-10"
+        style={swipeResumeStyle}
+      >
+        {/* Mobile Touch Swipe-to-Dismiss Grab Bar */}
+        {isTouchResume && (
+          <div
+            {...swipeResumeBind()}
+            className="sm:hidden flex flex-col items-center pt-1 pb-1 cursor-grab active:cursor-grabbing select-none touch-none"
+            aria-label="Swipe down to return to portfolio"
+            title="Swipe down to return to portfolio"
+          >
+            <div className="w-10 h-1.5 rounded-full bg-[var(--c-border-hover)] opacity-70 transition-transform active:scale-95" />
+            <span className="text-[9px] font-mono tracking-widest uppercase opacity-40 mt-1">
+              swipe down to return
+            </span>
+          </div>
+        )}
+
         {/* Top Control Bar */}
         <div
+          {...(isTouchResume ? swipeResumeBind() : {})}
           className="resume-controls no-print flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-5 rounded-[var(--radius-lg)]"
           style={{
             backgroundColor: 'transparent',

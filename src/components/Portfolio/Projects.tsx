@@ -3,68 +3,16 @@ import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Project } from '../../types';
-import {
-  ExternalLink,
-  ChevronDown,
-  ChevronUp,
-  Cpu,
-  Smartphone,
-  Code2,
-  Code,
-  FileCode,
-  Terminal,
-  Atom,
-  Layers,
-  Zap,
-  Database,
-  Sparkles,
-  Palette,
-  Server,
-  Globe,
-  Bot,
-  Brain,
-  Gamepad2,
-  Binary,
-  HardDrive,
-  Shield,
-  Tag,
-} from 'lucide-react';
+import { ExternalLink, Code2 } from 'lucide-react';
 import { GitHubIcon } from '../UI/Icons';
 import { AnimatedMenuIcon } from '../UI/AnimatedMenuIcon';
 import { WordReveal } from '../UI/TextReveal';
 import { usePerformance } from '../../hooks/usePerformance';
 import { ScrollReveal } from '../UI/ScrollReveal';
 import { observeElement } from '../../utils/observer';
+import { getTechStackSVG } from '../UI/TechIcons';
 
 gsap.registerPlugin(ScrollTrigger);
-
-// Helper to get small tech icons for stack tags like AOSP, Kotlin, React, etc.
-const getTagIcon = (tag: string) => {
-  const normalized = tag.toLowerCase().trim();
-  if (normalized.includes('aosp') || normalized.includes('hal')) return Cpu;
-  if (normalized.includes('kotlin')) return Code2;
-  if (normalized.includes('android')) return Smartphone;
-  if (normalized.includes('react native')) return Smartphone;
-  if (normalized.includes('react')) return Atom;
-  if (normalized.includes('typescript')) return FileCode;
-  if (normalized.includes('javascript')) return Code;
-  if (normalized.includes('html')) return Code;
-  if (normalized.includes('css') || normalized.includes('tailwind')) return Palette;
-  if (normalized.includes('python')) return Terminal;
-  if (normalized.includes('claude') || normalized.includes('ai')) return Sparkles;
-  if (normalized.includes('prompt caching') || normalized.includes('vite')) return Zap;
-  if (normalized.includes('mcp') || normalized.includes('next')) return Layers;
-  if (normalized.includes('tensorflow') || normalized.includes('minimax')) return Brain;
-  if (normalized.includes('supabase') || normalized.includes('postgres')) return Database;
-  if (normalized.includes('redis') || normalized.includes('cache')) return HardDrive;
-  if (normalized.includes('node')) return Server;
-  if (normalized.includes('rest') || normalized.includes('api') || normalized.includes('web')) return Globe;
-  if (normalized.includes('automation')) return Bot;
-  if (normalized.includes('game')) return Gamepad2;
-  if (normalized.includes('go') || normalized.includes('binary') || normalized.includes('wasm')) return Binary;
-  if (normalized.includes('security') || normalized.includes('rust')) return Shield;
-  return Tag;
-};
 
 const projects: Project[] = [
   {
@@ -277,12 +225,14 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
           <div>
             {/* Header Meta: Category + Index */}
             <div className="flex items-center justify-between text-xs font-handwriting mb-3" style={{ color: 'var(--c-subtle)' }}>
-              <span
-                className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-[var(--radius-sm)]"
-                style={{ backgroundColor: 'var(--c-input-bg)', border: '1px solid var(--c-border)' }}
-              >
-                {project.category}
-              </span>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span
+                  className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-[var(--radius-sm)]"
+                  style={{ backgroundColor: 'var(--c-input-bg)', border: '1px solid var(--c-border)' }}
+                >
+                  {project.category}
+                </span>
+              </div>
               <span className="text-[10px] uppercase tracking-widest font-mono font-bold" style={{ color: 'var(--c-faint)' }}>
                 {String(idx + 1).padStart(2, '0')}
               </span>
@@ -401,21 +351,21 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
 
           {/* Bottom Tech Tags & Quick Action Strip */}
           <div className="space-y-3 pt-3 mt-auto" style={{ borderTop: '1px solid var(--c-border)' }}>
-            {/* Tech Badges with Small Icons */}
+            {/* Tech Badges with Authentic SVG Icons */}
             <div className="flex flex-wrap gap-1.5">
               {project.tags.map((tag) => {
-                const TagIcon = getTagIcon(tag);
+                const TechIcon = getTechStackSVG(tag);
                 return (
                   <span
                     key={tag}
-                    className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-mono tracking-wider rounded-[var(--radius-sm)] transition-colors"
+                    className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-mono tracking-wider rounded-[var(--radius-sm)] transition-colors hover:border-[var(--c-border-hover)] select-none"
                     style={{
                       border: '1px solid var(--c-border)',
                       color: 'var(--c-body)',
                       backgroundColor: 'var(--c-input-bg)',
                     }}
                   >
-                    <TagIcon className="w-3 h-3 opacity-70 flex-shrink-0" style={{ color: 'var(--c-heading)' }} />
+                    <TechIcon className="w-3 h-3 opacity-80 flex-shrink-0" style={{ color: 'var(--c-heading)' }} />
                     <span>{tag}</span>
                   </span>
                 );

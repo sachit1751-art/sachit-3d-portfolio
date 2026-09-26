@@ -4103,6 +4103,19 @@ section[id] {
   }
 }
 
+/* Phone-Only Touch Unfold CTA: strictly hidden on desktop and tablets with big screens */
+.phone-touch-only-unfold {
+  display: none !important;
+}
+
+@media (pointer: coarse) and (max-width: 639px) {
+  @media not all and (min-width: 640px) {
+    .phone-touch-only-unfold {
+      display: flex !important;
+    }
+  }
+}
+
 /* Mobile Navigation Drawer Smoothness & High Z-Index */
 #mobile-fullscreen-menu {
   z-index: 99999 !important;

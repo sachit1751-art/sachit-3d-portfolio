@@ -52,6 +52,7 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
   const interactionRef = useRef({
     isDragging: false,
     startedOnBall: false,
+    startedOnCanvas: false,
     lastX: 0,
     lastY: 0,
     rotX: 0,
@@ -301,11 +302,13 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
     const handlePointerDown = (e: PointerEvent) => {
       if (e.button !== 0) return;
 
-      // Ignore interactive controls like buttons
-      if ((e.target as HTMLElement)?.closest('button, a, [role="button"]')) {
+      // Ignore interactive controls like buttons, links, and explicit no-unfold elements
+      if ((e.target as HTMLElement)?.closest('button, a, [role="button"], input, select, textarea, [data-no-unfold]')) {
+        interactionRef.current.startedOnCanvas = false;
         return;
       }
 
+      interactionRef.current.startedOnCanvas = true;
       const isOnBall = checkIsPointerOnBall(e);
       interactionRef.current.startedOnBall = isOnBall;
       interactionRef.current.lastX = e.clientX;
@@ -363,20 +366,30 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
     };
 
     const handlePointerUp = (e: PointerEvent) => {
-      const { startedOnBall, dragDistance } = interactionRef.current;
+      const { startedOnBall, startedOnCanvas, dragDistance } = interactionRef.current;
       interactionRef.current.isDragging = false;
+      interactionRef.current.startedOnBall = false;
+      interactionRef.current.startedOnCanvas = false;
+
+      // If user released on an interactive control (like mute button, CTA, links), never unfold
+      if ((e.target as HTMLElement)?.closest('button, a, [role="button"], input, select, textarea, [data-no-unfold]')) {
+        return;
+      }
+
+      // If the interaction didn't start on this canvas container, never trigger unfold
+      if (!startedOnCanvas) {
+        return;
+      }
 
       if (paperStateRef.current === 'crumpled') {
         if (!startedOnBall) {
-          // Clicked anywhere outside the paper ball -> unfold the sheet
+          // Clicked anywhere on canvas outside the paper ball -> unfold the sheet
           onPaperClick?.();
         } else if (dragDistance < 10) {
           // Tapped directly on the paper ball without dragging -> unfold the sheet
           onPaperClick?.();
         }
       }
-
-      interactionRef.current.startedOnBall = false;
     };
 
     container.addEventListener('pointerdown', handlePointerDown);

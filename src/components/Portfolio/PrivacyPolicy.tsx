@@ -3,6 +3,7 @@ import { Shield, ArrowLeft, Lock } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PaperTheme } from '../../types';
 import { SEOHead } from '../SEO/SEOHead';
+import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
 
 interface PrivacyPolicyProps {
   theme?: PaperTheme;
@@ -10,6 +11,19 @@ interface PrivacyPolicyProps {
 }
 
 export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ theme = 'cotton', onBack }) => {
+  const {
+    bind: swipeBackBind,
+    style: swipeBackStyle,
+    isTouchDevice: isTouchPrivacy,
+  } = useSwipeToDismiss({
+    onDismiss: onBack || (() => {}),
+    direction: 'down',
+    threshold: 80,
+    velocityThreshold: 0.45,
+    enabled: Boolean(onBack),
+    onlyTouch: true,
+  });
+
   return (
     <motion.main
       data-theme={theme}
@@ -18,7 +32,7 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ theme = 'cotton', 
       exit={{ opacity: 0, y: -16 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className="relative w-full min-h-screen py-8 sm:py-12 px-4 sm:px-8 transition-colors duration-300 bg-transparent font-body"
-      style={{ color: 'var(--c-body)' }}
+      style={{ color: 'var(--c-body)', ...swipeBackStyle }}
     >
       <SEOHead
         title="Privacy Policy — Sachit"
@@ -35,6 +49,20 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ theme = 'cotton', 
           boxShadow: '0 4px 20px -2px rgba(0,0,0,0.06)',
         }}
       >
+        {/* Mobile Touch Swipe-to-Dismiss Grab Bar */}
+        {onBack && isTouchPrivacy && (
+          <div
+            {...swipeBackBind()}
+            className="sm:hidden flex flex-col items-center pt-0 pb-3 cursor-grab active:cursor-grabbing select-none touch-none"
+            aria-label="Swipe down to return to portfolio"
+          >
+            <div className="w-10 h-1 rounded-full bg-[var(--c-border-hover)] opacity-70 transition-transform active:scale-95" />
+            <span className="text-[9px] font-mono tracking-widest uppercase opacity-40 mt-1">
+              swipe down to return
+            </span>
+          </div>
+        )}
+
         <div className="mb-8 pb-6 border-b" style={{ borderColor: 'var(--c-border)' }}>
           {onBack && (
             <button

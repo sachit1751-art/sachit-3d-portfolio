@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef, memo } from 'react';
 import { PaperTheme } from '../../types';
 import { ArrowUpRight, Sparkles, Compass, Search, FolderClosed, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
 
 interface HeaderProps {
   theme: PaperTheme;
@@ -61,6 +62,20 @@ export const Header = memo<HeaderProps>(({
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isScrollingRef = useRef(false);
+
+  // Swipe-to-dismiss gesture on touch-enabled mobile devices for navigation drawer
+  const {
+    bind: swipeDrawerBind,
+    style: swipeDrawerStyle,
+    isTouchDevice: isTouchNav,
+  } = useSwipeToDismiss({
+    onDismiss: () => setMobileMenuOpen(false),
+    direction: 'up',
+    threshold: 45,
+    velocityThreshold: 0.35,
+    enabled: mobileMenuOpen,
+    onlyTouch: true,
+  });
   const navBtns = useRef<Record<string, HTMLButtonElement | null>>({});
   const navContainerRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
@@ -348,6 +363,7 @@ export const Header = memo<HeaderProps>(({
               borderColor: 'var(--c-border)',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
+              ...swipeDrawerStyle,
             }}
           >
             <div className="flex flex-col space-y-3">
@@ -378,6 +394,21 @@ export const Header = memo<HeaderProps>(({
                 );
               })}
             </div>
+
+            {/* Mobile Touch Swipe-Up-To-Dismiss Handle */}
+            {isTouchNav && (
+              <div
+                {...swipeDrawerBind()}
+                className="mt-4 pt-3 border-t flex flex-col items-center gap-1 cursor-grab active:cursor-grabbing select-none touch-none"
+                style={{ borderColor: 'var(--c-border)' }}
+                aria-label="Swipe up to dismiss menu"
+              >
+                <div className="w-10 h-1 rounded-full bg-[var(--c-border-hover)] opacity-70 transition-transform active:scale-95" />
+                <span className="text-[9px] font-mono tracking-widest uppercase opacity-40 mt-0.5">
+                  swipe up to close
+                </span>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
