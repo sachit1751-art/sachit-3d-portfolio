@@ -29,7 +29,7 @@ const SUGGESTIONS: Record<string, string[]> = {
   hero: ["Tell me about Sachit", "What is his core philosophy?"],
   about: ["What is Class 12 PCMB?", "Where is he based?"],
   philosophy: ["Explain 'Learn by Building'", "How does he view AI?"],
-  projects: ["Tell me about SKY ROMs", "What is Claude Document Summarizer?", "What is the MCP Tool project?"],
+  projects: ["Tell me about SKY ROMs", "What is MoneyPal?", "Tell me about Audify", "What is the MCP Tool project?"],
   skills: ["What programming languages does he know?", "What AI tools does he use?"],
   experience: ["What projects has he built?", "What are his core focus areas?"],
   education: ["What is he currently studying?", "What subjects are in PCMB?"],
@@ -247,7 +247,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
             const updated = [...prev];
             updated[updated.length - 1] = { 
               role: 'model', 
-              content: "I'm ready to answer any questions about Sachit's projects (like SKY ROMs and Claude Document Summarizer), technical skills, or background. What would you like to know?" 
+              content: "I'm ready to answer any questions about Sachit's projects (like SKY ROMs, MoneyPal, Audify, and the MCP Tool), technical skills, or background. What would you like to know?" 
             };
             return updated;
           });

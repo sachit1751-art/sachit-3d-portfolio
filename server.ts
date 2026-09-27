@@ -158,26 +158,35 @@ async function fetchGitHubContributions(username: string): Promise<ContributionD
 function generatePortfolioGroundedFallback(contents: any[]): string {
   const lastUserMsg = [...contents].reverse().find(c => c.role === 'user')?.parts?.[0]?.text?.toLowerCase() || '';
   
-  if (lastUserMsg.includes('sky rom') || lastUserMsg.includes('android')) {
+  if (lastUserMsg.includes('sky rom') || lastUserMsg.includes('android custom rom')) {
     return "### SKY ROMs\n**SKY ROMs** is Sachit's Android Custom ROM Discovery & Management Platform. Built with React, TypeScript, Vite, Supabase, and Tailwind CSS, it offers ROM discovery, device compatibility checks, comparisons, and download management. [Live Demo: sky-roms.vercel.app](https://sky-roms.vercel.app)";
   }
-  if (lastUserMsg.includes('chatbot') || lastUserMsg.includes('ai chat') || lastUserMsg.includes('assistant')) {
-    return "### AI Chatbot & Assistant\nAn open-source, full-stack multi-model conversational platform built with Next.js, Vercel AI SDK, and serverless Postgres. Features multi-model routing (Claude, OpenAI, xAI, DeepSeek), persistent chat histories, and streaming UI. [Live Demo: chatbot-seven-dun-evb9u88zkv.vercel.app](https://chatbot-seven-dun-evb9u88zkv.vercel.app)";
+  if (lastUserMsg.includes('moneypal') || lastUserMsg.includes('budget') || lastUserMsg.includes('expense')) {
+    return "### MoneyPal\n**MoneyPal** is a native Android budget tracker application featuring calculator-style expense entry, flexible budget periods, Wear OS companion app, and interactive widgets built with Kotlin, Jetpack Compose, and Room Database.";
   }
-  if (lastUserMsg.includes('claude') || lastUserMsg.includes('summariz') || lastUserMsg.includes('document')) {
-    return "### Claude Document Summarizer\nA high-speed document summarization engine built in Python using Anthropic's Claude API with prompt caching for minimal latency and cost efficiency. It handles deep text extraction and markdown reporting.";
+  if (lastUserMsg.includes('audify') || lastUserMsg.includes('music') || lastUserMsg.includes('audio') || lastUserMsg.includes('stream')) {
+    return "### Audify\n**Audify** is a modern, responsive web audio streaming and music player application built with React, TypeScript, Tailwind CSS, and Web Audio API with local playlist caching.";
+  }
+  if (lastUserMsg.includes('mcp') || lastUserMsg.includes('protocol') || lastUserMsg.includes('context')) {
+    return "### AI-Powered Model Context Protocol (MCP) Tool\nA developer tool configuring Model Context Protocol (MCP) server endpoints and JSON-RPC messaging handlers enabling LLMs to securely query local resources using Anthropic Claude API.";
+  }
+  if (lastUserMsg.includes('tic-tac-toe') || lastUserMsg.includes('game') || lastUserMsg.includes('minimax')) {
+    return "### Tic-Tac-Toe Mini Game\nA standalone web browser game with Minimax AI decision recursion, difficulty modes, turn locking, and responsive board UI.";
+  }
+  if (lastUserMsg.includes('chatbot') || lastUserMsg.includes('ai chat') || lastUserMsg.includes('assistant')) {
+    return "### AI Chatbot & Assistant\nAn open-source, full-stack multi-model conversational platform built with Next.js, Vercel AI SDK, and serverless Postgres. Features multi-model routing (Claude, OpenAI, xAI, DeepSeek), persistent chat histories, and streaming UI.";
   }
   if (lastUserMsg.includes('skill') || lastUserMsg.includes('stack') || lastUserMsg.includes('technolog')) {
-    return "### Technical Skills & Stack\n- **Languages & Frameworks**: TypeScript, JavaScript, React, Next.js, Python, Tailwind CSS, Vite\n- **AI & Integrations**: Google GenAI SDK, Anthropic Claude API, Model Context Protocol (MCP), Vercel AI SDK\n- **Backend & Cloud**: Supabase, PostgreSQL, REST APIs, Node.js/Express, Git\n- **Core Philosophy**: Learn by building and creating real, working software.";
+    return "### Technical Skills & Stack\n- **Languages & Frameworks**: TypeScript, JavaScript, React, Next.js, Python, Kotlin, Tailwind CSS, Vite\n- **AI & Integrations**: Anthropic Claude API, Prompt Engineering (caching, system prompts), Model Context Protocol (MCP), Google GenAI\n- **Backend & Mobile**: Supabase, PostgreSQL, Android SDK, Jetpack Compose, Room Database, REST APIs, Git\n- **Core Philosophy**: Learn by building and creating real, working software.";
   }
   if (lastUserMsg.includes('education') || lastUserMsg.includes('study') || lastUserMsg.includes('pcmb') || lastUserMsg.includes('class 12')) {
     return "Sachit is currently a Senior High School Student (Class 12) pursuing a **PCMB** curriculum (Physics, Chemistry, Mathematics, Biology) in India, combining rigorous STEM fundamentals with hands-on software development and AI engineering.";
   }
-  if (lastUserMsg.includes('nexus') || lastUserMsg.includes('sentience') || lastUserMsg.includes('project')) {
-    return "Sachit has engineered several notable projects:\n1. **SKY ROMs** — Android Custom ROM Discovery Platform\n2. **AI Chatbot & Assistant** — Multi-model conversational AI platform\n3. **Claude Document Summarizer** — Fast document breakdown with prompt caching\n4. **Nexus Core / Sentience OS** — Experimental modular software architectures\n5. **MCP Integration Tools** — Local model context protocol tools\n\nFeel free to ask about any specific project!";
+  if (lastUserMsg.includes('project')) {
+    return "Sachit has engineered several notable projects:\n1. **SKY ROMs** — Android Custom ROM Discovery Platform\n2. **MoneyPal** — Native Android budget tracker with Wear OS & widgets\n3. **Audify** — Modern web audio streaming player\n4. **AI-Powered MCP Tool** — Model Context Protocol endpoints & JSON-RPC\n5. **Tic-Tac-Toe Mini Game** — Minimax AI browser game\n\nFeel free to ask about any specific project!";
   }
 
-  return "Sachit is a software developer and prompt engineer focused on full-stack web applications, AI integrations, and developer tooling. He builds with TypeScript, Next.js, Python, and modern LLM APIs. Explore his featured projects (like SKY ROMs and the AI Chatbot) or ask for specific details on his tech stack!";
+  return "Sachit is a software developer and prompt engineer focused on full-stack web applications, AI integrations, and developer tooling. He builds with TypeScript, Next.js, Python, and modern LLM APIs. Explore his featured projects (like SKY ROMs, MoneyPal, Audify, and the MCP Tool) or ask for specific details on his tech stack!";
 }
 
 const CANDIDATE_MODELS = [
@@ -439,7 +448,12 @@ async function startServer() {
     const protocol = req.get('x-forwarded-proto') || 'https';
     const baseUrl = `${protocol}://${host}`;
     
-    const robotsTxt = `# Robots.txt for Sachit Developer Portfolio
+    const robotsTxt = `# Robots.txt for Sachit Portfolio (${baseUrl})
+# Author: Sachit (sachit1771@gmail.com / sachit1751@gmail.com)
+# All original work, design, and code Copyright © 2026 Sachit. All rights reserved.
+# Provenance: sachit:sachit1771@gmail.com:2026:original-creator-verified-signature
+# Machine-readable AI model index: /llms.txt
+
 User-agent: *
 
 # Allow public indexable pages and visual assets
@@ -447,6 +461,7 @@ Allow: /
 Allow: /resume
 Allow: /privacy
 Allow: /terms
+Allow: /og-image.png
 Allow: /og-image.svg
 Allow: /mascots/
 Allow: /favicon.png
@@ -462,6 +477,30 @@ Disallow: /draft/
 Disallow: /private/
 Disallow: /src/
 Disallow: /node_modules/
+
+# AI Search & LLM Crawlers (Allow indexing of public portfolio, require author attribution to Sachit)
+User-agent: GPTBot
+Allow: /
+Allow: /llms.txt
+Disallow: /api/private/
+
+User-agent: ClaudeBot
+Allow: /
+Allow: /llms.txt
+Disallow: /api/private/
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /llms.txt
+Disallow: /api/private/
+
+User-agent: Applebot-Extended
+Allow: /
+Allow: /llms.txt
+
+User-agent: Google-Extended
+Allow: /
+Allow: /llms.txt
 
 # XML Sitemap Link
 Sitemap: ${baseUrl}/sitemap.xml`;

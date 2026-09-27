@@ -29,44 +29,32 @@ export const DEFAULT_PROJECT_SUMMARIES: ProjectSummary[] = [
     name: 'SKY ROMs',
     category: 'Android / Web',
     description: 'Android Custom ROM Discovery & Management Platform with device compatibility checks and side-by-side ROM comparisons.',
-    techStack: ['React', 'TypeScript', 'Vite', 'Supabase', 'Tailwind CSS'],
+    techStack: ['React', 'TypeScript', 'Vite', 'Supabase', 'Tailwind CSS', 'Capacitor'],
     url: 'https://sky-roms.vercel.app'
   },
   {
-    name: 'Claude Document Summarizer',
-    category: 'AI / Automation',
-    description: 'High-speed AI document summarization engine with Anthropic prompt caching for speed and cost optimization.',
-    techStack: ['Python', 'Anthropic Claude API', 'Prompt Engineering']
+    name: 'MoneyPal',
+    category: 'Android / Wear OS',
+    description: 'Native Android budget tracker with calculator-style expense logging, Wear OS companion app, and home-screen widgets.',
+    techStack: ['Kotlin', 'Jetpack Compose', 'Android SDK', 'Room Database', 'Wear OS']
   },
   {
-    name: 'Open-Source Web Music Streaming',
+    name: 'Audify',
     category: 'Web Audio / Frontend',
-    description: 'Responsive browser audio player with dynamic playlist controls, search filtering, and local caching.',
-    techStack: ['JavaScript', 'HTML5', 'CSS3', 'REST APIs', 'Web Audio']
+    description: 'Feature-rich web audio streaming player with fluid playlist management, Web Audio API hooks, and local preference caching.',
+    techStack: ['React', 'TypeScript', 'Tailwind CSS', 'Web Audio API', 'Vite']
+  },
+  {
+    name: 'AI-Powered MCP Tool',
+    category: 'AI Tool / Automation',
+    description: 'Model Context Protocol server endpoints and JSON-RPC messaging handlers enabling LLMs to securely query local resources using Claude API.',
+    techStack: ['Python', 'Anthropic Claude API', 'MCP Servers', 'JSON-RPC']
   },
   {
     name: 'Tic-Tac-Toe Mini Game',
     category: 'Browser Game',
-    description: 'Interactive browser game with an unbeatable Minimax AI decision algorithm.',
-    techStack: ['JavaScript', 'HTML5', 'CSS3']
-  },
-  {
-    name: 'MCP Integration Tool',
-    category: 'AI Protocol',
-    description: 'Model Context Protocol client implementation for dynamic context sharing.',
-    techStack: ['Python', 'Claude API', 'MCP Specification']
-  },
-  {
-    name: 'Sentience OS',
-    category: 'Mobile OS / AI',
-    description: 'Custom Android distribution integrated with on-device local LLMs.',
-    techStack: ['AOSP', 'Kotlin', 'TensorFlow Lite']
-  },
-  {
-    name: 'Ghost Protocol',
-    category: 'Cybersecurity',
-    description: 'End-to-end encrypted messaging protocol with zero-knowledge encryption.',
-    techStack: ['Rust', 'React Native']
+    description: 'Interactive browser game with an unbeatable Minimax AI recursive decision algorithm and turn locking.',
+    techStack: ['HTML', 'CSS', 'JavaScript', 'Minimax Algorithm']
   }
 ];
 

@@ -438,13 +438,28 @@ export const SiteMapModal: React.FC<SiteMapModalProps> = ({
       },
 
       {
-        id: 'project-sentience-os',
-        title: 'Sentience OS',
-        subtitle: 'Minimal terminal agent with autonomous task execution loops',
+        id: 'project-mcp-tool',
+        title: 'AI-Powered MCP Tool',
+        subtitle: 'Model Context Protocol endpoints & JSON-RPC messaging for LLM local querying',
         category: 'project',
         categoryLabel: 'Project',
-        icon: Sparkles,
-        keywords: ['agent', 'terminal', 'cli', 'sentience', 'automation'],
+        icon: Code2,
+        keywords: ['mcp', 'model context protocol', 'python', 'claude api', 'json-rpc', 'automation'],
+        badge: 'AI Tool',
+        action: () => {
+          onNavigateSection('projects');
+          onClose();
+        },
+      },
+      {
+        id: 'project-tic-tac-toe',
+        title: 'Tic-Tac-Toe Mini Game',
+        subtitle: 'Standalone browser game with Minimax AI decision recursion & turn locking',
+        category: 'project',
+        categoryLabel: 'Project',
+        icon: Code2,
+        keywords: ['tic-tac-toe', 'minimax', 'game', 'javascript', 'ai game'],
+        badge: 'Game Dev',
         action: () => {
           onNavigateSection('projects');
           onClose();

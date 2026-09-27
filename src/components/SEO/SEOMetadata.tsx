@@ -24,8 +24,8 @@ const SECTION_SEO_MAP: Record<string, { title: string; description: string; keyw
   },
   projects: {
     title: 'Featured Projects — Sachit Portfolio',
-    description: 'Explore featured software engineering and AI projects built by Sachit including SKY ROMs, Claude Doc Summarizer, and AI Chatbot.',
-    keywords: ['Portfolio Projects', 'SKY ROMs', 'Claude API', 'React Projects', 'TypeScript Apps', 'AI Automation Projects'],
+    description: 'Explore featured software engineering, Android, and AI projects built by Sachit including SKY ROMs, MoneyPal, Audify, and AI-Powered MCP Tool.',
+    keywords: ['Portfolio Projects', 'SKY ROMs', 'MoneyPal', 'Audify', 'MCP Tool', 'Android Apps', 'React Projects', 'AI Automation Projects'],
   },
   skills: {
     title: 'Technical Skills & Stack — Sachit',
@@ -85,7 +85,7 @@ export const SEOMetadata = ({
       description = description || 'Portfolio of Sachit, a Software Developer and Prompt Engineer focusing on full-stack web applications, AI tools, custom Android platforms, and automation.';
     }
 
-    const fullTitle = title.includes('Sachit') ? title : `${title} — Sachit`;
+    const fullTitle = 'Sachit';
     document.title = fullTitle;
 
     // 1. Meta Description
@@ -130,7 +130,7 @@ export const SEOMetadata = ({
     setOgTag('og:description', description);
     setOgTag('og:type', pageType === 'home' && activeSection === 'hero' ? 'website' : 'article');
     setOgTag('og:url', `https://sachin-portfoli.vercel.app${canonicalPath}`);
-    setOgTag('og:site_name', 'Sachit Portfolio');
+    setOgTag('og:site_name', 'Sachit');
 
     // 5. Twitter Card Meta Tags
     const setTwitterTag = (name: string, content: string) => {

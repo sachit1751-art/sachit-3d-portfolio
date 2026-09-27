@@ -4,6 +4,7 @@ import { PaperTheme } from '../../types';
 import { ArrowUpRight, Sparkles, Compass, Search, FolderClosed, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
+import { WATERMARKED_NAME } from '../../utils/watermark';
 
 interface HeaderProps {
   theme: PaperTheme;
@@ -274,8 +275,13 @@ export const Header = memo<HeaderProps>(({
               className="flex-shrink-0 flex items-center gap-3 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] rounded py-1"
               aria-label="Go to top"
             >
-              <span className="text-2xl sm:text-3xl font-handwriting font-bold leading-tight" style={{ color: 'var(--c-name)' }}>
-                Sachit
+              <span
+                className="text-2xl sm:text-3xl font-handwriting font-bold leading-tight"
+                style={{ color: 'var(--c-name)' }}
+                aria-label="Sachit"
+                data-provenance="sachit-2026-original-creator"
+              >
+                {WATERMARKED_NAME}
               </span>
             </button>
 

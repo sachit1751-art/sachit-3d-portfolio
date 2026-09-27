@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { LocalMascot } from '../UI/LocalMascot';
 import { WordReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
+import { WATERMARKED_NAME } from '../../utils/watermark';
 
 // ﻿watermark:sachit-2026﻿
 export const About = memo(() => {
@@ -95,7 +96,7 @@ export const About = memo(() => {
         <div className="lg:col-span-5 space-y-4 text-base sm:text-lg leading-relaxed font-handwriting" style={{ color: 'var(--c-body)' }}>
           <p>
             <WordReveal
-              text="I'm Sachit, a student software developer focused on building practical software and exploring AI, web development, automation, and open-source technologies."
+              text={`I'm ${WATERMARKED_NAME}, a student software developer focused on building practical software and exploring AI, web development, automation, and open-source technologies.`}
               baseDelay={0.2}
             />
           </p>

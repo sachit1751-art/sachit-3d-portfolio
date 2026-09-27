@@ -54,14 +54,11 @@ The SEO strategy establishes **Sachit** as a leading **AI Automation & Web Devel
 3. `Person`: Preferred name ("Sachit"), job title ("AI Automation & Web Developer"), `sameAs` social profiles (GitHub, LinkedIn), and `knowsAbout` tech stack skills.
 4. `SoftwareApplication` / `WebApplication` / `MobileApplication`:
    - **SKY ROMs**
+   - **MoneyPal**
+   - **Audify**
+   - **AI-Powered MCP Tool**
    - **AI Chatbot & Assistant**
-   - **Claude Document Summarizer**
-   - **Schedule Planner**
    - **Tic-Tac-Toe Minimax AI**
-   - **MCP Integration Tool**
-   - **Nexus Core ERP**
-   - **Sentience OS**
-   - **Ghost Protocol**
 5. `ItemList`: Ordered portfolio list linking project schemas.
 
 ---

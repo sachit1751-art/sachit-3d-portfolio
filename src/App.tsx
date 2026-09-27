@@ -15,6 +15,7 @@ import { useScrollContainerArrowNav } from './hooks/useScrollContainerArrowNav';
 import { initSecurity } from './utils/security';
 import { initFontLoader } from './utils/fontLoader';
 import { resetSharedObservers } from './utils/observer';
+import { initAuthorshipVerification } from './utils/watermark';
 
 import { PortfolioContainer } from './components/Portfolio/PortfolioContainer';
 
@@ -182,6 +183,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    initAuthorshipVerification();
     if (import.meta.env.PROD) {
       initSecurity();
     }

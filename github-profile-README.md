@@ -101,81 +101,80 @@ const developer = {
 ### 🤖 [SKY ROMs](https://sky-roms.vercel.app)
 **Android Custom ROM Discovery & Management Platform**
 
-`React` · `TypeScript` · `Vite` · `Supabase` · `Tailwind CSS`
+`React` · `TypeScript` · `Vite` · `Supabase` · `Tailwind CSS` · `Capacitor`
 
-- Device compatibility engine with dynamic model filtering.
-- Side-by-side ROM comparisons, verified changelogs, and user reviews.
-- Seamless download asset pipeline with Supabase backend.
+- Device compatibility engine with dynamic model filtering and ROM comparisons.
+- Full CRUD operations with Supabase Auth, PostgreSQL, and storage buckets.
+- Mobile native wrapper built with Capacitor and Android Studio.
 - 🔗 **[Live Production App ↗](https://sky-roms.vercel.app)**
 
 </td>
 <td width="50%" valign="top">
 
-### 🧠 [Sentience OS](#)
-**Custom Android Distribution with On-Device AI**
+### 💰 [MoneyPal](#)
+**Native Android Budget Tracker with Wear OS & Widgets**
 
-`AOSP` · `Kotlin` · `TensorFlow Lite` · `Local LLMs`
+`Kotlin` · `Jetpack Compose` · `Android SDK` · `Room Database` · `Wear OS`
 
-- Custom Android build integrating on-device neural inferencing.
-- Privacy-first contextual automation and permission hardening.
-- Optimized for edge compute without telemetry reliance.
-- 🔗 **[Architecture Documentation ↗](#)**
-
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-
-### 🏗️ [Nexus Core](#)
-**Next-Gen ERP for Distributed Teams**
-
-`Next.js` · `Go` · `PostgreSQL` · `Redis` · `Socket.io`
-
-- Real-time collaborative state management using CRDTs.
-- Distributed resource scheduler with predictive scaling algorithms.
-- Low-latency WebSocket pub/sub synchronization layer.
-- 🔗 **[Repository & Benchmark ↗](#)**
-
-</td>
-<td width="50%" valign="top">
-
-### 🔐 [Ghost Protocol](#)
-**Military-Grade E2EE Messaging Protocol**
-
-`Rust` · `React Native` · `WebAssembly` · `Zero-Knowledge`
-
-- Decentralized peer-to-peer relay nodes with zero-knowledge identity proofs.
-- Forward secrecy with double ratchet key exchange mechanism.
-- Cross-platform core compiled to WebAssembly.
-- 🔗 **[Protocol Spec & Code ↗](#)**
+- Calculator-style fast expense entry with flexible budget cycles.
+- Interactive home-screen widgets and Wear OS companion app for wrist logging.
+- Offline-first Room database architecture with reactive Kotlin Flow state.
+- 🔗 **[Architecture & Code ↗](#)**
 
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
 
-### 📄 [Claude Document Summarizer](#)
-**High-Speed Document Intelligence Engine**
+### 🎵 [Audify](#)
+**Modern Web Audio Streaming & Music Player**
 
-`Python` · `Anthropic Claude API` · `Prompt Caching`
+`React` · `TypeScript` · `Tailwind CSS` · `Web Audio API` · `Vite`
 
-- Intelligent document distillation and structural key-takeaway extraction.
-- Implements prompt caching for 90% latency and cost reduction.
-- Handles multi-format document ingestion pipelines.
+- Fluid playlist controls, search filtering, and real-time track seeking.
+- Custom Web Audio API hooks for volume normalization and audio processing.
+- Local storage caching for offline user preferences.
 - 🔗 **[View Project ↗](#)**
 
 </td>
 <td width="50%" valign="top">
 
-### ⏰ [Schedule Planner](#)
-**Automated Event Engine & Notification Dispatcher**
+### ⚡ [AI-Powered MCP Tool](#)
+**Model Context Protocol Server & Agent Integration**
 
-`Python` · `Node.js` · `RESTful APIs` · `Task Queue`
+`Python` · `Anthropic Claude API` · `MCP Servers` · `JSON-RPC`
 
-- Automated task scheduling system with cron-like recurrence rules.
-- Multi-channel notification pipeline with priority dispatch.
-- Resilient background worker architecture.
-- 🔗 **[View Project ↗](#)**
+- Standardized Model Context Protocol endpoints allowing LLMs to query local datasets.
+- Fast JSON-RPC messaging handlers bridging agent clients with custom tools.
+- Structured context-injection pipelines for enhanced reasoning.
+- 🔗 **[Repository & Spec ↗](#)**
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 🎮 [Tic-Tac-Toe Mini Game](#)
+**Browser Game with Minimax AI Algorithm**
+
+`HTML5` · `CSS3` · `JavaScript` · `Minimax AI`
+
+- Standalone browser game featuring Minimax recursive decision evaluation.
+- Multi-level difficulty selector, turn locking, and win/draw detection.
+- Clean modern responsive board UI.
+- 🔗 **[Play Online ↗](#)**
+
+</td>
+<td width="50%" valign="top">
+
+### 💬 [AI Chatbot & Assistant](https://chatbot-seven-dun-evb9u88zkv.vercel.app)
+**Multi-Model Conversational Platform**
+
+`Next.js` · `TypeScript` · `Vercel AI SDK` · `Postgres`
+
+- Multi-model routing across Claude, OpenAI, and DeepSeek.
+- Streaming conversational interface with persistent chat history.
+- 🔗 **[Live Demo ↗](https://chatbot-seven-dun-evb9u88zkv.vercel.app)**
 
 </td>
 </tr>

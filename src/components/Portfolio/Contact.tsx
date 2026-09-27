@@ -6,6 +6,7 @@ import { CharReveal, WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
 import { HoneycombLoader } from '../UI/HoneycombLoader';
 import { GitHubIcon } from '../UI/Icons';
+import { WATERMARKED_NAME } from '../../utils/watermark';
 
 const EMAIL = 'sachit1751@gmail.com';
 const GITHUB = 'https://github.com/sachit1751-art';
@@ -605,7 +606,7 @@ export const Contact = memo(() => {
                 </button>
               </div>
               <p className="text-sm font-handwriting tracking-wide" style={{ color: 'var(--c-muted)' }}>
-                <WordReveal text="© 2026 Sachit • Built with React, TypeScript & Interactive Typewriter Engine" baseDelay={0.2} />
+                <WordReveal text={`© 2026 ${WATERMARKED_NAME} • Built with React, TypeScript & Interactive Typewriter Engine`} baseDelay={0.2} />
               </p>
             </div>
       </section>

@@ -1,6 +1,6 @@
 {
-  "name": "Sachit — Software Developer Portfolio",
-  "short_name": "Sachit Portfolio",
+  "name": "Sachit",
+  "short_name": "Sachit",
   "description": "Interactive 3D paper unfolding portfolio built with React, Three.js, GSAP, and Tailwind CSS.",
   "start_url": "/",
   "display": "standalone",

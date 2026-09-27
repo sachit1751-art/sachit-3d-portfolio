@@ -16,7 +16,7 @@ export const SEOHead = ({
 }: SEOHeadProps) => {
   useEffect(() => {
     // 1. Update Title
-    const fullTitle = title.includes('Sachit') ? title : `${title} — Sachit`;
+    const fullTitle = 'Sachit';
     document.title = fullTitle;
 
     // 2. Update Meta Description

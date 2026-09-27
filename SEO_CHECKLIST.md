@@ -29,16 +29,13 @@
 - [x] **WebSite Schema**: Defined root URL, publisher reference, and website description.
 - [x] **ProfilePage Schema**: Defined mainEntity pointing to Person schema.
 - [x] **Person Schema**: Detailed name ("Sachit"), jobTitle ("AI Automation & Web Developer"), image, email, social links (`sameAs`), and skills (`knowsAbout`).
-- [x] **SoftwareApplication Schemas**: Added comprehensive schemas for all 9 featured projects:
-  - SKY ROMs (`WebApplication`)
+- [x] **SoftwareApplication Schemas**: Added comprehensive schemas for active featured projects:
+  - SKY ROMs (`WebApplication` / Android Custom ROM Platform)
+  - MoneyPal (`FinanceApplication` / `MobileApplication` / Kotlin, Compose, Wear OS)
+  - Audify (`MultimediaApplication` / Web Audio Streaming Player)
+  - AI-Powered MCP Tool (`DeveloperApplication` / Model Context Protocol Integration)
   - AI Chatbot & Assistant (`WebApplication`)
-  - Claude Document Summarizer (`SoftwareApplication`)
-  - Schedule Planner (`SoftwareApplication`)
-  - Tic-Tac-Toe Minimax AI (`WebApplication`)
-  - MCP Integration Tool (`SoftwareApplication`)
-  - Nexus Core ERP (`WebApplication`)
-  - Sentience OS (`MobileApplication`)
-  - Ghost Protocol (`SoftwareApplication`)
+  - Tic-Tac-Toe Minimax AI (`GameApplication`)
 - [x] **ItemList Schema**: Created ordered list schema linking all project applications.
 
 ---

@@ -8,13 +8,10 @@ const sections = ['hero', 'about', 'projects', 'skills', 'contact', 'building-in
 const pages = ['', 'resume', 'privacy', 'terms'];
 const projects = [
   'sky-roms',
-  'ai-chatbot',
-  'doc-summarizer',
-  'ai-code-reviewer',
-  'portfolio-2026',
-  'aosp-patcher',
-  'mcp-server',
-  'ai-prompt-optimizer',
+  'moneypal',
+  'audify',
+  'mcp-tool',
+  'tic-tac-toe',
 ];
 
 export function generateSitemapXML(): string {

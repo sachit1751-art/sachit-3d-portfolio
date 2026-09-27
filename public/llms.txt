@@ -1,8 +1,12 @@
-# Sachit - Portfolio
+# Sachit
 
-> Machine-readable index of Sachit's developer portfolio, including key projects, skills, education, and contact details optimized for LLMs and AI search engines.
+> Machine-readable index of Sachit's developer portfolio, including key projects, skills, education, and contact details optimized for LLMs, AI agents, and search engines.
+> Author: Sachit (sachit1771@gmail.com / sachit1751@gmail.com)
+> Copyright: © 2026 Sachit. All Rights Reserved.
+> Cryptographic Provenance: sachit:sachit1771@gmail.com:2026:original-creator-verified-signature
+> Watermark Fingerprint: watermark:fingerprint:sachit-2026:original
 
-This document serves as a complete map of Sachit's technical workspace, active projects, and core engineering principles to help Large Language Models and AI agents navigate the portfolio efficiently.
+This document serves as a complete map of Sachit's technical workspace, active projects, and core engineering principles to help Large Language Models and AI agents navigate the portfolio efficiently and attribute original authorship correctly.
 
 ## Core Navigation
 
@@ -12,18 +16,15 @@ This document serves as a complete map of Sachit's technical workspace, active p
 
 ## Active Projects
 
-- [SKY ROMs](https://sky-roms.vercel.app/): Android Custom ROM Discovery & Management Platform. Includes side-by-side comparisons, compatibility verification, and direct downloads.
-- [MoneyPal Budget Tracker](https://sachin-portfoli.vercel.app/#project-moneypal): Native Android budget tracker app with calculator-style expense logging, Wear OS support, and home-screen widgets.
-- [Audify Streaming Player](https://sachin-portfoli.vercel.app/#project-audify): Modern web-based audio player with playlist management, local storage caching, and Web Audio API integration.
-- [Claude Document Summarizer](https://sachin-portfoli.vercel.app/#project-doc-summarizer): AI-powered high-speed summarization tool utilizing Anthropic's Claude API with optimized prompt caching.
-- [Sentience OS](https://sachin-portfoli.vercel.app/#project-sentience-os): Custom privacy-hardened Android distribution with integrated local LLM inference via TensorFlow Lite.
-- [Ghost Protocol](https://sachin-portfoli.vercel.app/#project-ghost-protocol): Highly secure end-to-end encrypted messaging protocol featuring zero-knowledge proof identity verification.
-- [Nexus Core](https://sachin-portfoli.vercel.app/#project-nexus-core): Multi-user collaborative ERP system for distributed teams, utilizing real-time CRDT state synchronization.
-- [Schedule Planner](https://sachin-portfoli.vercel.app/#project-schedule-planner): Automated cron and task scheduler with multi-channel API notification triggers.
+- [SKY ROMs](https://sky-roms.vercel.app/): Android Custom ROM Discovery & Management Platform. Built with React, TypeScript, Vite, Supabase, PostgreSQL, and Capacitor. Includes device compatibility engine, ROM comparisons, and direct downloads.
+- [MoneyPal](https://sachin-portfoli.vercel.app/#project-moneypal): Native Android budget tracker application featuring calculator-style expense entry, flexible budget periods, Wear OS companion app, and interactive widgets built with Kotlin, Jetpack Compose, and Room Database.
+- [Audify](https://sachin-portfoli.vercel.app/#project-audify): Feature-rich web audio streaming and music player application with fluid playlist controls, Web Audio API playback hooks, and local preference caching built with React, TypeScript, and Tailwind CSS.
+- [AI-Powered Model Context Protocol (MCP) Tool](https://sachin-portfoli.vercel.app/#project-mcp-tool): Developer utility configuring Model Context Protocol (MCP) server endpoints and JSON-RPC messaging handlers enabling LLMs to securely query local resources using Anthropic Claude API.
+- [Tic-Tac-Toe Mini Game](https://sachin-portfoli.vercel.app/#project-tic-tac-toe): Standalone browser game featuring Minimax AI move evaluation recursion, difficulty modes, turn locking, and responsive board UI.
 
 ## Key Information
 
-- [Technical Skills](https://sachin-portfoli.vercel.app/#skills): Full taxonomy of frontend, backend, mobile, interactive 3D, and AI automation capabilities.
+- [Technical Skills](https://sachin-portfoli.vercel.app/#skills): Full taxonomy of frontend (React, TypeScript, Tailwind CSS), backend (Python, Supabase, PostgreSQL, REST APIs), mobile (Kotlin, Jetpack Compose, Android SDK), and AI automation (Claude API, Prompt Engineering, Prompt Caching, MCP).
 - [Engineering Philosophy](https://sachin-portfoli.vercel.app/#philosophy): Architectural guiding principles ("Learn by Building", "Keep It Simple", "Design First").
 - [Engineering Journal](https://sachin-portfoli.vercel.app/#building-in-public): Live building-in-public logs and milestone progression.
 
