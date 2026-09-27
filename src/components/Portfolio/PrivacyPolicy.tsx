@@ -85,7 +85,7 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ theme = 'cotton', 
             Privacy Policy
           </h1>
           <p className="font-mono text-xs opacity-70">
-            Last Updated: September 3, 2026 • Privacy-First Infrastructure
+            Last Updated: September 27, 2026 • Privacy-First & Zero-Tracking Infrastructure
           </p>
         </div>
 
@@ -93,51 +93,70 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ theme = 'cotton', 
           <section className="p-6 rounded-[var(--radius-lg)] space-y-3" style={{ backgroundColor: 'var(--c-input-bg)', border: '1px solid var(--c-border)' }}>
             <div className="flex items-center gap-2 font-sans text-lg font-bold" style={{ color: 'var(--c-heading)' }}>
               <Lock className="w-5 h-5 text-emerald-600" />
-              <h2>1. Zero-PII Commitment</h2>
+              <h2>1. Zero-PII & Privacy-By-Design Commitment</h2>
             </div>
             <p>
-              Your privacy is respected by default. This website does not track, sell, or profile visitors using third-party tracking pixels, invasive cookies, or advertising identifiers. All interactions remain completely anonymous.
+              Your privacy is fundamental. This developer portfolio operates on a strict privacy-first architecture. We do not sell, rent, monetize, or track your identity across the web. There are no invasive third-party ad trackers, fingerprinting scripts, or cross-site marketing pixels deployed anywhere on this site.
             </p>
           </section>
 
           <section className="space-y-3">
             <h2 className="font-sans text-xl font-bold" style={{ color: 'var(--c-heading)' }}>
-              2. Local Storage Usage
+              2. Client-Side Local Storage & Session Data
             </h2>
             <p>
-              This website utilizes browser <code className="px-1.5 py-0.5 rounded font-mono text-xs" style={{ backgroundColor: 'var(--c-input-bg)', border: '1px solid var(--c-border)' }}>localStorage</code> and <code className="px-1.5 py-0.5 rounded font-mono text-xs" style={{ backgroundColor: 'var(--c-input-bg)', border: '1px solid var(--c-border)' }}>sessionStorage</code> solely for enhancing site usability:
+              This website uses standard browser <code className="px-1.5 py-0.5 rounded font-mono text-xs" style={{ backgroundColor: 'var(--c-input-bg)', border: '1px solid var(--c-border)' }}>localStorage</code> and <code className="px-1.5 py-0.5 rounded font-mono text-xs" style={{ backgroundColor: 'var(--c-input-bg)', border: '1px solid var(--c-border)' }}>sessionStorage</code> strictly for client-side user experience enhancements:
             </p>
             <ul className="list-disc pl-6 space-y-1.5 font-mono text-xs">
-              <li><strong>Theme Preference:</strong> Remembers your chosen palette (Kraft, Cotton, Blueprint, Slate).</li>
-              <li><strong>Session Progress:</strong> Remembers unlocked easter egg sequences during your active session.</li>
-              <li><strong>Consent Settings:</strong> Persists your cookie and analytics preference choice.</li>
+              <li><strong>Theme Palette:</strong> Stores your selected theme (Kraft, Cotton, Blueprint, or Slate).</li>
+              <li><strong>Audio & FX Preferences:</strong> Saves paper sound effect volume and animation toggles.</li>
+              <li><strong>Interactive State:</strong> Preserves easter egg progress and modal dismiss states during your active visit.</li>
             </ul>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="font-sans text-xl font-bold" style={{ color: 'var(--c-heading)' }}>
-              3. Direct Dispatch & Form Submissions
-            </h2>
-            <p>
-              When you send a message through the contact form, the details you supply (name, email address, message body) are processed directly to route your inquiry to <code className="font-mono text-xs px-1">sachit1751@gmail.com</code>. This information is never shared with third-party marketers or data brokers.
+            <p className="text-xs opacity-80">
+              No private data stored in your browser's local storage is ever transmitted to external servers or advertisers.
             </p>
           </section>
 
           <section className="space-y-3">
             <h2 className="font-sans text-xl font-bold" style={{ color: 'var(--c-heading)' }}>
-              4. Analytics
+              3. Direct Contact & Communication
             </h2>
             <p>
-              We use an opt-in, lightweight event counter to monitor aggregate page performance (such as overall pageviews and button interaction counts) without capturing personal data, IP addresses, or location telemetry.
+              When you contact Sachit via the on-site direct dispatch form or email (<code className="font-mono text-xs px-1">sachit1771@gmail.com</code> / <code className="font-mono text-xs px-1">sachit1751@gmail.com</code>), the information you provide (name, email address, message body) is used solely to reply to your inquiry. Your contact information is never shared with third parties or added to marketing newsletters.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="font-sans text-xl font-bold" style={{ color: 'var(--c-heading)' }}>
+              4. Server Logging & Privacy-Respecting Telemetry
+            </h2>
+            <p>
+              Standard, ephemeral server request logs (e.g. status codes, requested URL path) may be generated for reliability, DDoS defense, and routing integrity. Any performance telemetry collected is anonymized, aggregated, and strictly non-identifiable.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="font-sans text-xl font-bold" style={{ color: 'var(--c-heading)' }}>
+              5. AI Crawlers & Provenance Directives
+            </h2>
+            <p>
+              This site provides structured, machine-readable developer indices via <code className="font-mono text-xs px-1">/llms.txt</code> and respects standard crawler directives in <code className="font-mono text-xs px-1">/robots.txt</code>. All content, projects, and codebase artifacts remain the verifiable, copyrighted work of Sachit.
             </p>
           </section>
 
           <section className="p-6 rounded-[var(--radius-lg)]" style={{ backgroundColor: 'var(--c-input-bg)', border: '1px solid var(--c-border)' }}>
             <h2 className="font-sans text-lg font-bold mb-2" style={{ color: 'var(--c-heading)' }}>
-              5. Contact Privacy Officer
+              6. Data Rights & Inquiries
             </h2>
-            <p className="text-xs">
-              If you have questions regarding this privacy policy or wish to request data removal, please email <a href="mailto:sachit1751@gmail.com" className="font-bold underline" style={{ color: 'var(--c-heading)' }}>sachit1751@gmail.com</a>.
+            <p className="text-xs leading-relaxed">
+              If you have any questions regarding this Privacy Policy, your rights, or wish to request the deletion of any communications, please contact Sachit directly at{' '}
+              <a href="mailto:sachit1771@gmail.com" className="font-bold underline" style={{ color: 'var(--c-heading)' }}>
+                sachit1771@gmail.com
+              </a>{' '}
+              or{' '}
+              <a href="mailto:sachit1751@gmail.com" className="font-bold underline" style={{ color: 'var(--c-heading)' }}>
+                sachit1751@gmail.com
+              </a>.
             </p>
           </section>
         </div>

@@ -85,7 +85,7 @@ export const TermsOfService: React.FC<TermsOfServiceProps> = ({ theme = 'cotton'
             Terms of Service
           </h1>
           <p className="font-mono text-xs opacity-70">
-            Last Updated: September 3, 2026 • Usage & Licensing Conditions
+            Last Updated: September 27, 2026 • Usage & Licensing Conditions
           </p>
         </div>
 
@@ -96,34 +96,55 @@ export const TermsOfService: React.FC<TermsOfServiceProps> = ({ theme = 'cotton'
               <h2>1. Intellectual Property & Code Rights</h2>
             </div>
             <p>
-              The custom design, source code architecture, 3D paper rendering mechanics, and original visual elements on this website are the intellectual property of Sachit. Open-source projects linked herein follow their respective GitHub license terms (e.g. MIT, Apache 2.0).
+              The bespoke interface designs, 3D procedural paper physics, custom animations, visual shaders, and proprietary code architecture powering this portfolio are the copyrighted intellectual property of Sachit. Unless otherwise noted, open-source projects showcased here (such as SKY ROMs, MoneyPal, Audify, and the AI MCP Tool) are licensed under their respective open-source repositories (typically MIT or Apache-2.0).
             </p>
           </section>
 
           <section className="space-y-3">
             <h2 className="font-sans text-xl font-bold" style={{ color: 'var(--c-heading)' }}>
-              2. Website Usage & Acceptable Conduct
+              2. Permitted Use & Acceptable Conduct
             </h2>
             <p>
-              You are granted a non-exclusive license to view, test, and interact with the portfolio demos. You agree not to attempt denial-of-service attacks, manipulate automated forms, or extract server keys.
+              Visitors are granted a personal, revocable, non-exclusive license to browse, interact with, review code demos, and test functionality on this website. You agree not to:
+            </p>
+            <ul className="list-disc pl-6 space-y-1.5 font-mono text-xs">
+              <li>Launch automated denial-of-service (DoS/DDoS) attacks or exploit server endpoints.</li>
+              <li>Attempt unauthorized access to private server environments or bypass security headers.</li>
+              <li>Claim uncredited authorship or duplicate the unique visual design without explicit written consent.</li>
+            </ul>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="font-sans text-xl font-bold" style={{ color: 'var(--c-heading)' }}>
+              3. Interactive AI Assistant & Live Demos Disclaimer
+            </h2>
+            <p>
+              The interactive features (including the on-site AI Assistant, interactive console, and portfolio playground components) are provided strictly for educational and professional demonstration purposes on an "as-is" and "as-available" basis without warranties of any kind.
             </p>
           </section>
 
           <section className="space-y-3">
             <h2 className="font-sans text-xl font-bold" style={{ color: 'var(--c-heading)' }}>
-              3. AI Assistant & Demos Disclaimer
+              4. External Links & Showcase Services
             </h2>
             <p>
-              Interactive tools (such as the AI Chat Assistant and terminal easter eggs) are provided for portfolio presentation purposes "as-is" without express warranty of uninterrupted availability.
+              This website links to external third-party platforms such as GitHub, Vercel, Telegram, and project live demos. Sachit is not responsible for the content, privacy practices, or uptime of third-party domains.
             </p>
           </section>
 
           <section className="p-6 rounded-[var(--radius-lg)]" style={{ backgroundColor: 'var(--c-input-bg)', border: '1px solid var(--c-border)' }}>
             <h2 className="font-sans text-lg font-bold mb-2" style={{ color: 'var(--c-heading)' }}>
-              4. Inquiries & Licensing Questions
+              5. Collaboration, Licensing & Contact
             </h2>
-            <p className="text-xs">
-              For code reuse, collaboration, or hiring inquiries, please reach out directly at <a href="mailto:sachit1751@gmail.com" className="font-bold underline" style={{ color: 'var(--c-heading)' }}>sachit1751@gmail.com</a>.
+            <p className="text-xs leading-relaxed">
+              For project collaborations, software engineering inquiries, contract work, or commercial licensing permissions, please contact Sachit directly at{' '}
+              <a href="mailto:sachit1771@gmail.com" className="font-bold underline" style={{ color: 'var(--c-heading)' }}>
+                sachit1771@gmail.com
+              </a>{' '}
+              or{' '}
+              <a href="mailto:sachit1751@gmail.com" className="font-bold underline" style={{ color: 'var(--c-heading)' }}>
+                sachit1751@gmail.com
+              </a>.
             </p>
           </section>
         </div>
