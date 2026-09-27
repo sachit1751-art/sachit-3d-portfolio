@@ -109,7 +109,7 @@ export const Hero = memo<HeroProps>(({
                 "UI & Motion Engineer",
                 "Best Vibecoder"
               ]}
-              interval={3300}
+              interval={3800}
             />
           </span>
         </h1>
@@ -124,6 +124,7 @@ export const Hero = memo<HeroProps>(({
       <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4 mb-8">
         <button
           onClick={onExploreProjects}
+          aria-label="View Projects"
           className="gsap-hero-btn view-projects-btn px-5 sm:px-6 py-3 font-body text-sm sm:text-base transition-all hover:-translate-y-0.5 active:translate-y-0 hover:bg-[var(--c-btn-bg-hover)] flex items-center gap-2 cursor-pointer rounded-[var(--radius-md)]"
           style={{ backgroundColor: 'var(--c-btn-bg)', color: 'var(--c-btn-text)' }}
         >
@@ -149,6 +150,7 @@ export const Hero = memo<HeroProps>(({
 
         <button
           onClick={onContactClick}
+          aria-label="Contact Me"
           className="gsap-hero-btn jellyfish-btn px-5 sm:px-6 py-3 bg-transparent font-handwriting text-base cursor-pointer"
         >
           <span>Contact Me</span>
