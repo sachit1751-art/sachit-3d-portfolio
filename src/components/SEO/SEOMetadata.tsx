@@ -115,7 +115,7 @@ export const SEOMetadata = ({
     }
     gSiteVer.setAttribute('content', googleSiteVerification);
 
-    // 4. Open Graph Meta Tags (Facebook, LinkedIn, Google Search)
+    // 4. Open Graph Meta Tags (Facebook, LinkedIn, Google Search, WhatsApp)
     const setOgTag = (property: string, content: string) => {
       let tag = document.querySelector(`meta[property="${property}"]`);
       if (!tag) {
@@ -126,11 +126,20 @@ export const SEOMetadata = ({
       tag.setAttribute('content', content);
     };
 
+    const hostOrigin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://sachin-portfoli.vercel.app';
+    const ogImageUrl = `${hostOrigin}/og-image.png`;
+
     setOgTag('og:title', fullTitle);
     setOgTag('og:description', description);
     setOgTag('og:type', pageType === 'home' && activeSection === 'hero' ? 'website' : 'article');
-    setOgTag('og:url', `https://sachin-portfoli.vercel.app${canonicalPath}`);
+    setOgTag('og:url', `${hostOrigin}${canonicalPath}`);
     setOgTag('og:site_name', 'Sachit');
+    setOgTag('og:image', ogImageUrl);
+    setOgTag('og:image:secure_url', ogImageUrl);
+    setOgTag('og:image:type', 'image/png');
+    setOgTag('og:image:width', '1200');
+    setOgTag('og:image:height', '630');
+    setOgTag('og:image:alt', 'Sachit — Software Developer & Prompt Engineer Portfolio');
 
     // 5. Twitter Card Meta Tags
     const setTwitterTag = (name: string, content: string) => {
@@ -146,6 +155,17 @@ export const SEOMetadata = ({
     setTwitterTag('twitter:card', 'summary_large_image');
     setTwitterTag('twitter:title', fullTitle);
     setTwitterTag('twitter:description', description);
+    setTwitterTag('twitter:image', ogImageUrl);
+    setTwitterTag('twitter:image:alt', 'Sachit — Software Developer & Prompt Engineer Portfolio');
+
+    // WhatsApp / Legacy image_src fallback
+    let imgSource = document.querySelector('link[rel="image_src"]');
+    if (!imgSource) {
+      imgSource = document.createElement('link');
+      imgSource.setAttribute('rel', 'image_src');
+      document.head.appendChild(imgSource);
+    }
+    imgSource.setAttribute('href', ogImageUrl);
 
     // 6. Canonical Link
     let canonical = document.querySelector('link[rel="canonical"]');

@@ -443,6 +443,28 @@ async function startServer() {
   app.get("/sitemap.xml", serveSitemap);
   app.get("/sitemap.xml.js", serveSitemap);
 
+  app.get("/og-image.png", (req, res) => {
+    const ogPngPath = path.join(process.cwd(), "public", "og-image.png");
+    if (fs.existsSync(ogPngPath)) {
+      res.setHeader("Content-Type", "image/png");
+      res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=604800");
+      res.sendFile(ogPngPath);
+    } else {
+      res.status(404).send("Not found");
+    }
+  });
+
+  app.get("/og-image.svg", (req, res) => {
+    const ogSvgPath = path.join(process.cwd(), "public", "og-image.svg");
+    if (fs.existsSync(ogSvgPath)) {
+      res.setHeader("Content-Type", "image/svg+xml");
+      res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=604800");
+      res.sendFile(ogSvgPath);
+    } else {
+      res.status(404).send("Not found");
+    }
+  });
+
   app.get("/robots.txt", (req, res) => {
     const host = req.get('x-forwarded-host') || req.get('host') || 'sachin-portfoli.vercel.app';
     const protocol = req.get('x-forwarded-proto') || 'https';

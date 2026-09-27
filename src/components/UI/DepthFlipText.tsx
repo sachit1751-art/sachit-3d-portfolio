@@ -105,31 +105,34 @@ export const DepthFlipText = memo<DepthFlipTextProps>(({
                       }}
                       variants={{
                         initial: {
-                          rotateX: -70,
-                          y: 15,
+                          rotateX: -60,
+                          y: 10,
                           opacity: 0,
-                          scale: 0.94,
+                          filter: 'blur(3px)',
+                          scale: 0.96,
                         },
                         animate: {
                           rotateX: 0,
                           y: 0,
                           opacity: 1,
+                          filter: 'blur(0px)',
                           scale: 1,
                           transition: {
-                            duration: 0.48,
-                            ease: [0.16, 1, 0.3, 1],
-                            delay: i * 0.022,
+                            duration: 0.52,
+                            ease: [0.22, 1, 0.36, 1],
+                            delay: Math.min(i * 0.016, 0.22),
                           },
                         },
                         exit: {
-                          rotateX: 70,
-                          y: -15,
+                          rotateX: 60,
+                          y: -10,
                           opacity: 0,
-                          scale: 0.94,
+                          filter: 'blur(2px)',
+                          scale: 0.96,
                           transition: {
-                            duration: 0.32,
-                            ease: [0.7, 0, 0.84, 0],
-                            delay: i * 0.01,
+                            duration: 0.36,
+                            ease: [0.32, 0, 0.67, 0],
+                            delay: Math.min(i * 0.01, 0.14),
                           },
                         },
                       }}

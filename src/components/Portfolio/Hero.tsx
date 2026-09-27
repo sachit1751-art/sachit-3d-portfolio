@@ -99,16 +99,17 @@ export const Hero = memo<HeroProps>(({
               phrases={[
                 "Full-Stack Web Developer",
                 "AI & Prompt Engineer",
-                "Next.js Frontend Developer",
-                "Native Android Developer",
+                "Frontend Developer",
+                "Android Developer",
+                "Backend Engineer",
+                "Product Engineer",
+                "Opensource Dev",
                 "LLM Integration Developer",
-                "REST API & Backend Engineer",
                 "Web & Mobile Developer",
                 "UI & Motion Engineer",
-                "Software Product Engineer",
                 "Best Vibecoder"
               ]}
-              interval={3800}
+              interval={3300}
             />
           </span>
         </h1>
