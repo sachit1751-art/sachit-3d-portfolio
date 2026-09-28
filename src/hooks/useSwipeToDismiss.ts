@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useDrag } from '@use-gesture/react';
 
 export type SwipeDirection = 'down' | 'up' | 'left' | 'right';
 
@@ -33,9 +32,10 @@ export function isTouchDevice(): boolean {
 }
 
 /**
- * Lightweight hook utilizing `@use-gesture/react` to provide fluid,
- * native-feeling swipe-to-dismiss functionality for modals, sheets,
- * and navigation drawers specifically on touch-enabled mobile devices.
+ * High-performance, zero-dependency hook providing fluid, native-feeling
+ * swipe-to-dismiss functionality for modals, sheets, and navigation drawers.
+ * Built directly on native DOM Pointer and Touch APIs to eliminate external
+ * package dependencies and build-time resolution failures.
  */
 export function useSwipeToDismiss({
   onDismiss,
@@ -49,8 +49,14 @@ export function useSwipeToDismiss({
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [isTouch, setIsTouch] = useState<boolean>(() => isTouchDevice());
+
   const onDismissRef = useRef(onDismiss);
   onDismissRef.current = onDismiss;
+
+  // Gesture tracking refs
+  const dragStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const lastPosRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const pointerIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     setIsTouch(isTouchDevice());
@@ -64,107 +70,138 @@ export function useSwipeToDismiss({
 
   const isGestureActive = enabled && (!onlyTouch || isTouch);
 
-  // Common drag logic for both full container and dedicated grab handle
-  const handleDrag = useCallback(
-    ({
-      down,
-      movement: [mx, my],
-      velocity: [vx, vy],
-      direction: [dx, dy],
-      tap,
-      cancel,
-    }: {
-      down: boolean;
-      movement: [number, number];
-      velocity: [number, number];
-      direction: [number, number];
-      tap?: boolean;
-      cancel?: () => void;
-    }) => {
-      if (tap || !isGestureActive) return;
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent<HTMLElement>) => {
+      if (!isGestureActive) return;
+      if (e.button !== 0 && e.pointerType === 'mouse') return;
+
+      const target = e.currentTarget;
+      try {
+        target.setPointerCapture(e.pointerId);
+        pointerIdRef.current = e.pointerId;
+      } catch {
+        // Fallback for environments where setPointerCapture isn't supported
+      }
+
+      const now = performance.now();
+      dragStartRef.current = { x: e.clientX, y: e.clientY, time: now };
+      lastPosRef.current = { x: e.clientX, y: e.clientY, time: now };
+      setIsDragging(true);
+    },
+    [isGestureActive]
+  );
+
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLElement>) => {
+      if (!dragStartRef.current) return;
+
+      const mx = e.clientX - dragStartRef.current.x;
+      const my = e.clientY - dragStartRef.current.y;
 
       let clampedX = 0;
       let clampedY = 0;
 
       switch (direction) {
-        case 'down': {
-          // Downward dismiss: positive Y follows finger; upward Y is dampened
+        case 'down':
           clampedY = my > 0 ? my : my * resistance;
+          break;
+        case 'up':
+          clampedY = my < 0 ? my : my * resistance;
+          break;
+        case 'right':
+          clampedX = mx > 0 ? mx : mx * resistance;
+          break;
+        case 'left':
+          clampedX = mx < 0 ? mx : mx * resistance;
+          break;
+      }
+
+      setOffset({ x: clampedX, y: clampedY });
+      lastPosRef.current = { x: e.clientX, y: e.clientY, time: performance.now() };
+    },
+    [direction, resistance]
+  );
+
+  const handlePointerEnd = useCallback(
+    (e: React.PointerEvent<HTMLElement>) => {
+      if (!dragStartRef.current) return;
+
+      const start = dragStartRef.current;
+      const last = lastPosRef.current || { x: e.clientX, y: e.clientY, time: performance.now() };
+      const duration = Math.max(1, last.time - start.time);
+
+      const totalDx = e.clientX - start.x;
+      const totalDy = e.clientY - start.y;
+      const vx = Math.abs(totalDx) / duration;
+      const vy = Math.abs(totalDy) / duration;
+
+      let shouldDismiss = false;
+
+      switch (direction) {
+        case 'down': {
+          const passedDistance = totalDy > threshold;
+          const isFlick = vy > velocityThreshold && totalDy > 20;
+          if (passedDistance || isFlick) shouldDismiss = true;
           break;
         }
         case 'up': {
-          // Upward dismiss: negative Y follows finger; downward Y is dampened
-          clampedY = my < 0 ? my : my * resistance;
+          const passedDistance = totalDy < -threshold;
+          const isFlick = vy > velocityThreshold && totalDy < -20;
+          if (passedDistance || isFlick) shouldDismiss = true;
           break;
         }
         case 'right': {
-          // Rightward dismiss: positive X follows finger; leftward X is dampened
-          clampedX = mx > 0 ? mx : mx * resistance;
+          const passedDistance = totalDx > threshold;
+          const isFlick = vx > velocityThreshold && totalDx > 20;
+          if (passedDistance || isFlick) shouldDismiss = true;
           break;
         }
         case 'left': {
-          // Leftward dismiss: negative X follows finger; rightward X is dampened
-          clampedX = mx < 0 ? mx : mx * resistance;
+          const passedDistance = totalDx < -threshold;
+          const isFlick = vx > velocityThreshold && totalDx < -20;
+          if (passedDistance || isFlick) shouldDismiss = true;
           break;
         }
       }
 
-      if (down) {
-        setIsDragging(true);
-        setOffset({ x: clampedX, y: clampedY });
-      } else {
-        setIsDragging(false);
-
-        let shouldDismiss = false;
-        switch (direction) {
-          case 'down': {
-            const passedDistance = clampedY > threshold;
-            const isFlick = vy > velocityThreshold && dy > 0 && clampedY > 20;
-            if (passedDistance || isFlick) shouldDismiss = true;
-            break;
-          }
-          case 'up': {
-            const passedDistance = clampedY < -threshold;
-            const isFlick = vy > velocityThreshold && dy < 0 && clampedY < -20;
-            if (passedDistance || isFlick) shouldDismiss = true;
-            break;
-          }
-          case 'right': {
-            const passedDistance = clampedX > threshold;
-            const isFlick = vx > velocityThreshold && dx > 0 && clampedX > 20;
-            if (passedDistance || isFlick) shouldDismiss = true;
-            break;
-          }
-          case 'left': {
-            const passedDistance = clampedX < -threshold;
-            const isFlick = vx > velocityThreshold && dx < 0 && clampedX < -20;
-            if (passedDistance || isFlick) shouldDismiss = true;
-            break;
-          }
+      if (pointerIdRef.current !== null) {
+        try {
+          e.currentTarget.releasePointerCapture(pointerIdRef.current);
+        } catch {
+          // Fallback
         }
+        pointerIdRef.current = null;
+      }
 
-        if (shouldDismiss) {
-          onDismissRef.current();
-        }
+      dragStartRef.current = null;
+      lastPosRef.current = null;
+      setIsDragging(false);
+      setOffset({ x: 0, y: 0 });
 
-        // Reset offset with spring transition
-        setOffset({ x: 0, y: 0 });
+      if (shouldDismiss) {
+        onDismissRef.current();
       }
     },
-    [direction, isGestureActive, resistance, threshold, velocityThreshold]
+    [direction, threshold, velocityThreshold]
   );
 
-  const bind = useDrag(handleDrag, {
-    enabled: isGestureActive,
-    axis: direction === 'down' || direction === 'up' ? 'y' : 'x',
-    filterTaps: true,
-    pointer: { touch: true },
-  });
+  const bind = useCallback(
+    () => ({
+      onPointerDown: handlePointerDown,
+      onPointerMove: handlePointerMove,
+      onPointerUp: handlePointerEnd,
+      onPointerCancel: handlePointerEnd,
+      style: {
+        touchAction: direction === 'down' || direction === 'up' ? 'pan-x' : 'pan-y',
+      },
+    }),
+    [handlePointerDown, handlePointerMove, handlePointerEnd, direction]
+  );
 
   // Calculate dynamic transform and opacity decay
   const displacement = Math.abs(direction === 'down' || direction === 'up' ? offset.y : offset.x);
   const opacity = isDragging
-    ? Math.max(0.4, 1 - (displacement / (threshold * 3.5)))
+    ? Math.max(0.4, 1 - displacement / (threshold * 3.5))
     : 1;
 
   const style: React.CSSProperties = {
