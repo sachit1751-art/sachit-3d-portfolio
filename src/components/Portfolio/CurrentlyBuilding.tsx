@@ -26,15 +26,9 @@ export const CurrentlyBuilding = memo(() => {
             font="20px sans-serif"
             lineHeight={30}
             mode="balanced"
-            className="text-lg sm:text-xl leading-relaxed font-body mb-6"
+            className="text-lg sm:text-xl leading-relaxed font-body"
             style={{ color: 'var(--c-body)' }}
           />
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[var(--radius-sm)]" style={{ border: '1px solid var(--c-border)', backgroundColor: 'var(--c-input-bg)' }}>
-            <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--c-dot)' }} />
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: 'var(--c-subtle)' }}>
-              Status: Planning & Exploration
-            </span>
-          </div>
         </LineReveal>
       </section>
     </ScrollReveal>

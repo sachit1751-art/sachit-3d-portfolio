@@ -1,7 +1,7 @@
 import React, { memo, useRef, useEffect } from 'react';
 // ​‌sachit-2026-original-author‌​
 import gsap from 'gsap';
-import { ArrowDownRight, Mail, FileText, Copy } from 'lucide-react';
+import { ArrowDownRight, Mail, FileText } from 'lucide-react';
 import { WordReveal } from '../UI/TextReveal';
 import { DepthFlipText } from '../UI/DepthFlipText';
 import { QuoteRoll } from '../UI/QuoteRoll';
@@ -191,22 +191,24 @@ export const Hero = memo<HeroProps>(({
             className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
             style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
           >
-            <Mail className="w-4 h-4 text-emerald-600" />
+            <Mail className="w-4 h-4" />
           </a>
         </div>
 
-        <div className="gsap-hero-social flex flex-wrap items-center gap-4 text-sm font-mono" style={{ color: 'var(--c-body)' }}>
-          <button
-            type="button"
-            onClick={() => copyEmailToClipboard('sachit1751@gmail.com')}
-            className="group flex items-center gap-1.5 hover:underline cursor-pointer transition-opacity"
+        <div className="gsap-hero-social flex flex-wrap items-center gap-4 text-sm font-mono">
+          <a
+            href="mailto:sachit1751@gmail.com"
+            onClick={(e) => {
+              e.preventDefault();
+              copyEmailToClipboard('sachit1751@gmail.com');
+            }}
+            className="hover:underline cursor-pointer transition-colors"
+            style={{ color: 'var(--c-heading)' }}
             aria-label="Copy email address: sachit1751@gmail.com"
             title="Click to copy email address to clipboard"
           >
-            <Mail className="w-3.5 h-3.5 text-emerald-600" />
-            <span className="font-semibold" style={{ color: 'var(--c-heading)' }}>sachit1751@gmail.com</span>
-            <Copy className="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity" />
-          </button>
+            sachit1751@gmail.com
+          </a>
         </div>
       </div>
 

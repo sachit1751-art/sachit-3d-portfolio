@@ -585,20 +585,6 @@ export const Contact = memo(() => {
             {/* Footer */}
             <footer className="pt-6 text-center space-y-3" style={{ borderTop: '1px solid var(--c-border)' }}>
               <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs font-mono" style={{ color: 'var(--c-subtle)' }}>
-                {/* Email link in footer - copies to clipboard and triggers success notification toast */}
-                <a
-                  href={`mailto:${EMAIL}`}
-                  onClick={handleCopyEmail}
-                  className="group inline-flex items-center gap-1.5 underline hover:opacity-100 cursor-pointer transition-colors"
-                  style={{ color: 'var(--c-heading)' }}
-                  aria-label={`Copy email address: ${EMAIL}`}
-                  title="Click to copy email address to clipboard"
-                >
-                  <Mail className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-                  <span className="font-bold">{EMAIL}</span>
-                  <Copy className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
-                </a>
-                <span>•</span>
                 <span>📍 New Delhi, India / Remote (Worldwide)</span>
                 <span>•</span>
                 <span>⚡ Avg Response: &lt; 24h</span>
