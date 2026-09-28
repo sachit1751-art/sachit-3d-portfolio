@@ -61,6 +61,11 @@
     --font-body: 'Courier Prime', 'Courier-Fallback', monospace;
     --_wm: '\200B\FEFFsachit-2026\FEFF\200B';
 
+    /* Invisible Design Watermarks & Steganographic Fingerprints */
+    --sachit-signature-hash: "sachit:2026:immutable:sachit1771@gmail.com";
+    --sachit-provenance-stamp: "sachit:sachit1771@gmail.com:2026:original-creator-verified-signature";
+    --sachit-anti-rebrand: "strict-deny:permanent-author-sachit";
+
     /* Fluid Header Typography Scale (clamp-based responsive scaling across viewports) */
     --fluid-h1: clamp(2.2rem, 1.25rem + 4.5vw, 5.25rem);
     --fluid-h2: clamp(1.75rem, 1.15rem + 2.5vw, 3rem);
@@ -90,6 +95,61 @@
 
   section, [id] {
     scroll-margin-top: 85px;
+  }
+
+  /* Invisible CSS Scraping & Clone Detection Markers */
+  #physical-paper-sheet::before {
+    content: "sachit:portfolio:2026:original-authored-by-sachit";
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+    font-size: 0;
+  }
+
+  section#hero::after {
+    content: "provenance:sachit-portfolio-original:2026:sachit1771@gmail.com";
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    opacity: 0;
+    pointer-events: none;
+    font-size: 0;
+  }
+
+  section#projects::after {
+    content: "design-copyright:sachit:all-rights-reserved:2026";
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    opacity: 0;
+    pointer-events: none;
+    font-size: 0;
+  }
+
+  .paper-portfolio-watermark-guard {
+    position: fixed;
+    left: -9999px;
+    top: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0.001;
+    pointer-events: none;
+    user-select: none;
+    clip: rect(0, 0, 0, 0);
   }
 
   #content-scroll-container,

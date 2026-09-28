@@ -2,6 +2,17 @@ import React, { useState, useEffect, memo } from 'react';
 // ​‌sachit-2026-original-authored‌​
 import { AnimatedMenuIcon } from '../components/UI/AnimatedMenuIcon';
 import { motion, AnimatePresence } from 'motion/react';
+import {
+  Layers,
+  FileText,
+  Code,
+  Zap,
+  Gauge,
+  Compass,
+  Gamepad2,
+  Cpu,
+  Sliders,
+} from 'lucide-react';
 import { Architecture } from './Architecture';
 import { FileStructure } from './FileStructure';
 import { TechStack } from './TechStack';
@@ -22,15 +33,15 @@ interface StructureRoomProps {
 }
 
 const TABS = [
-  { id: 'architecture', label: 'Architecture', numeral: 'I' },
-  { id: 'file-structure', label: 'Source Structure', numeral: 'II' },
-  { id: 'tech-stack', label: 'Tech Stack', numeral: 'III' },
-  { id: 'animation', label: 'Animation System', numeral: 'IV' },
-  { id: 'performance', label: 'Performance', numeral: 'V' },
-  { id: 'decisions', label: 'Design Decisions', numeral: 'VI' },
-  { id: 'mood-game', label: 'MOOD Game', numeral: 'VII' },
-  { id: 'procedural', label: 'Procedural Engine', numeral: 'VIII' },
-  { id: 'settings', label: 'Settings & Sync', numeral: 'IX' },
+  { id: 'architecture', label: 'Architecture', numeral: 'I', icon: Layers },
+  { id: 'file-structure', label: 'Source Structure', numeral: 'II', icon: FileText },
+  { id: 'tech-stack', label: 'Tech Stack', numeral: 'III', icon: Code },
+  { id: 'animation', label: 'Animation System', numeral: 'IV', icon: Zap },
+  { id: 'performance', label: 'Performance', numeral: 'V', icon: Gauge },
+  { id: 'decisions', label: 'Design Decisions', numeral: 'VI', icon: Compass },
+  { id: 'mood-game', label: 'MOOD Game', numeral: 'VII', icon: Gamepad2 },
+  { id: 'procedural', label: 'Procedural Engine', numeral: 'VIII', icon: Cpu },
+  { id: 'settings', label: 'Settings & Sync', numeral: 'IX', icon: Sliders },
 ];
 
 // ﻿watermark:sachit-portfolio-2026﻿
@@ -160,19 +171,27 @@ export const StructureRoom: React.FC<StructureRoomProps> = memo(({ theme, setThe
       </header>
 
       {/* Horizontal Tab Bar */}
-      <nav className="sr-tabs-bar">
-        {TABS.map((tab, i) => (
-          <React.Fragment key={tab.id}>
-            <button
-              onClick={() => handleSelectTab(tab.id)}
-              className={`sr-tab-item ${activeTab === tab.id ? 'active' : ''}`}
-            >
-              <span className="sr-tab-numeral">{tab.numeral}.</span>
-              <span>{tab.label}</span>
-            </button>
-            {i < TABS.length - 1 && <span className="sr-tab-separator">|</span>}
-          </React.Fragment>
-        ))}
+      <nav className="sr-tabs-bar" aria-label="Structure Room navigation">
+        {TABS.map((tab, i) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <React.Fragment key={tab.id}>
+              <button
+                onClick={() => handleSelectTab(tab.id)}
+                className={`sr-tab-item ${isActive ? 'active' : ''}`}
+                title={`${tab.numeral}. ${tab.label}`}
+                role="tab"
+                aria-selected={isActive}
+              >
+                <span className="sr-tab-numeral">{tab.numeral}.</span>
+                <Icon className={`w-3.5 h-3.5 flex-shrink-0 transition-opacity ${isActive ? 'opacity-100' : 'opacity-70'}`} />
+                <span>{tab.label}</span>
+              </button>
+              {i < TABS.length - 1 && <span className="sr-tab-separator">|</span>}
+            </React.Fragment>
+          );
+        })}
       </nav>
 
       {/* Content Area */}

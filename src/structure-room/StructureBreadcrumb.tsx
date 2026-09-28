@@ -7,6 +7,7 @@ export interface BreadcrumbTab {
   id: string;
   label: string;
   numeral: string;
+  icon?: React.ComponentType<{ className?: string; size?: number; style?: React.CSSProperties }>;
 }
 
 interface StructureBreadcrumbProps {
@@ -76,23 +77,33 @@ export const StructureBreadcrumb: React.FC<StructureBreadcrumbProps> = ({
         <div className="relative inline-flex items-center gap-1.5 flex-shrink-0" ref={dropdownRef}>
           <ChevronRight className="w-3 h-3 opacity-40 flex-shrink-0" />
 
-          <button
-            onClick={() => setIsDropdownOpen((prev) => !prev)}
-            className="font-bold py-0.5 px-2 rounded flex-shrink-0 flex items-center gap-1.5 cursor-pointer transition-all hover:brightness-110"
-            style={{
-              color: 'var(--c-heading)',
-              backgroundColor: 'var(--c-input-bg)',
-              border: '1px solid var(--c-border-hover)',
-            }}
-            aria-expanded={isDropdownOpen}
-            aria-haspopup="listbox"
-            aria-current="page"
-            title="Click to quickly jump to another sub-section"
-          >
-            <span className="w-1.5 h-1.5 rounded-full inline-block animate-pulse" style={{ backgroundColor: 'var(--c-dot)' }} />
-            <span>{activeTabLabel}</span>
-            <ChevronDown className={`w-3 h-3 opacity-70 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
-          </button>
+          {(() => {
+            const activeTabItem = tabs.find((t) => t.id === activeTabId);
+            const ActiveIcon = activeTabItem?.icon;
+            return (
+              <button
+                onClick={() => setIsDropdownOpen((prev) => !prev)}
+                className="font-bold py-0.5 px-2 rounded flex-shrink-0 flex items-center gap-1.5 cursor-pointer transition-all hover:brightness-110"
+                style={{
+                  color: 'var(--c-heading)',
+                  backgroundColor: 'var(--c-input-bg)',
+                  border: '1px solid var(--c-border-hover)',
+                }}
+                aria-expanded={isDropdownOpen}
+                aria-haspopup="listbox"
+                aria-current="page"
+                title="Click to quickly jump to another sub-section"
+              >
+                {ActiveIcon ? (
+                  <ActiveIcon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--c-dot)' }} />
+                ) : (
+                  <span className="w-1.5 h-1.5 rounded-full inline-block animate-pulse" style={{ backgroundColor: 'var(--c-dot)' }} />
+                )}
+                <span>{activeTabLabel}</span>
+                <ChevronDown className={`w-3 h-3 opacity-70 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+            );
+          })()}
 
           {/* Quick Sub-section Selector Dropdown */}
           <AnimatePresence>
@@ -114,28 +125,32 @@ export const StructureBreadcrumb: React.FC<StructureBreadcrumbProps> = ({
                 <div className="px-2.5 py-1 text-[9px] font-mono opacity-50 uppercase tracking-widest border-b border-[var(--c-border)] mb-1">
                   Architecture Sub-sections
                 </div>
-                {tabs.map((t) => (
-                  <button
-                    key={t.id}
-                    onClick={() => {
-                      onSelectTab(t.id);
-                      setIsDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-3 py-1.5 text-[11px] font-mono flex items-center justify-between transition-colors cursor-pointer ${
-                      activeTabId === t.id
-                        ? 'bg-[var(--c-input-bg)] text-[var(--c-heading)] font-bold'
-                        : 'text-[var(--c-body)] hover:bg-[var(--c-input-bg)] hover:text-[var(--c-heading)]'
-                    }`}
-                    role="option"
-                    aria-selected={activeTabId === t.id}
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="opacity-50 text-[10px]">{t.numeral}.</span>
-                      <span>{t.label}</span>
-                    </span>
-                    {activeTabId === t.id && <Check className="w-3 h-3 text-amber-500" />}
-                  </button>
-                ))}
+                {tabs.map((t) => {
+                  const Icon = t.icon;
+                  return (
+                    <button
+                      key={t.id}
+                      onClick={() => {
+                        onSelectTab(t.id);
+                        setIsDropdownOpen(false);
+                      }}
+                      className={`w-full text-left px-3 py-1.5 text-[11px] font-mono flex items-center justify-between transition-colors cursor-pointer ${
+                        activeTabId === t.id
+                          ? 'bg-[var(--c-input-bg)] text-[var(--c-heading)] font-bold'
+                          : 'text-[var(--c-body)] hover:bg-[var(--c-input-bg)] hover:text-[var(--c-heading)]'
+                      }`}
+                      role="option"
+                      aria-selected={activeTabId === t.id}
+                    >
+                      <span className="flex items-center gap-2">
+                        {Icon && <Icon className="w-3.5 h-3.5 opacity-70 flex-shrink-0" />}
+                        <span className="opacity-50 text-[10px]">{t.numeral}.</span>
+                        <span>{t.label}</span>
+                      </span>
+                      {activeTabId === t.id && <Check className="w-3 h-3 text-amber-500" />}
+                    </button>
+                  );
+                })}
               </motion.div>
             )}
           </AnimatePresence>
