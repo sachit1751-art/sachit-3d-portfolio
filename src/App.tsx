@@ -8,6 +8,7 @@ import { SEOHead } from './components/SEO/SEOHead';
 import { SEOMetadata } from './components/SEO/SEOMetadata';
 import { TelemetryTracker } from './components/SEO/TelemetryTracker';
 import { ShortcutHUD } from './components/UI/ShortcutHUD';
+import { ToastNotification } from './components/UI/Toast';
 import { useDoomSequence } from './hooks/useDoomSequence';
 import { usePerformance } from './hooks/usePerformance';
 import { useGlobalShortcuts } from './hooks/useGlobalShortcuts';
@@ -764,6 +765,9 @@ export default function App() {
 
       {/* Global Shortcut HUD Toast Feedback */}
       <ShortcutHUD />
+
+      {/* Global Success & Status Toast Notifications */}
+      <ToastNotification />
 
       {/* Global Site Map & Command Palette Modal (Cmd+K) */}
       {isSiteMapOpen && (

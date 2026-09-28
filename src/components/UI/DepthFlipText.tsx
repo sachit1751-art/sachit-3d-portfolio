@@ -16,6 +16,17 @@ const DEFAULT_PHRASES = [
   'Full-Stack Architect',
   'Prompt Engineer',
   'MCP Tools Creator',
+  "Full-Stack Web Developer",
+  "AI & Prompt Engineer",
+  "Frontend Developer",
+  "Android Developer",
+  "Backend Engineer",
+  "Product Engineer",
+  "Opensource Dev",
+  "LLM Integration Developer",
+  "Web & Mobile Developer",
+  "UI & Motion Engineer",
+  "Best Vibecoder"
 ];
 
 export const DepthFlipText = memo<DepthFlipTextProps>(({
@@ -34,7 +45,7 @@ export const DepthFlipText = memo<DepthFlipTextProps>(({
 
   // Pre-calculate phrase text widths using Pretext for smooth bounding stability
   const phraseWidth = useMemo(() => {
-    return measureTextWidth(currentPhrase, '700 64px Kalam, sans-serif');
+    return measureTextWidth(currentPhrase, '800 64px sans-serif');
   }, [currentPhrase]);
 
   // Next phrase trigger
@@ -66,19 +77,18 @@ export const DepthFlipText = memo<DepthFlipTextProps>(({
       style={{
         perspective: '1200px',
         transformStyle: 'preserve-3d',
-        overflow: 'visible',
         ...style,
       }}
       onClick={triggerNext}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      title="Click or flip 3D title"
+      title="Click or hover to flip 3D title"
     >
       <AnimatePresence mode="wait">
         <motion.span
           key={`${currentPhrase}-${index}`}
-          className="inline-block transform-gpu overflow-visible"
-          style={{ transformStyle: 'preserve-3d', overflow: 'visible' }}
+          className="inline-flex flex-wrap items-center gap-y-1 transform-gpu"
+          style={{ transformStyle: 'preserve-3d' }}
           initial="initial"
           animate="animate"
           exit="exit"
@@ -86,62 +96,61 @@ export const DepthFlipText = memo<DepthFlipTextProps>(({
           {words.map((word, wordIdx) => {
             const chars = Array.from(word);
             return (
-              <span
-                key={`word-${wordIdx}-${word}`}
-                className="inline-block whitespace-nowrap mr-[0.25em] overflow-visible"
-                style={{ transformStyle: 'preserve-3d', overflow: 'visible' }}
-              >
-                {chars.map((char) => {
-                  const i = charGlobalIndex++;
-                  return (
-                    <motion.span
-                      key={`char-${i}-${char}`}
-                      className="inline-block relative transform-gpu"
-                      style={{
-                        transformStyle: 'preserve-3d',
-                        backfaceVisibility: 'hidden',
-                        WebkitBackfaceVisibility: 'hidden',
-                        willChange: 'transform, opacity',
-                      }}
-                      variants={{
-                        initial: {
-                          rotateX: -60,
-                          y: 10,
-                          opacity: 0,
-                          filter: 'blur(3px)',
-                          scale: 0.96,
-                        },
-                        animate: {
-                          rotateX: 0,
-                          y: 0,
-                          opacity: 1,
-                          filter: 'blur(0px)',
-                          scale: 1,
-                          transition: {
-                            duration: 0.52,
-                            ease: [0.22, 1, 0.36, 1],
-                            delay: Math.min(i * 0.016, 0.22),
+              <React.Fragment key={`word-${wordIdx}-${word}`}>
+                <span className="inline-block whitespace-nowrap" style={{ transformStyle: 'preserve-3d' }}>
+                  {chars.map((char) => {
+                    const i = charGlobalIndex++;
+                    return (
+                      <motion.span
+                        key={`char-${i}-${char}`}
+                        className="inline-block relative transform-gpu"
+                        style={{
+                          transformStyle: 'preserve-3d',
+                          backfaceVisibility: 'hidden',
+                          willChange: 'transform, opacity',
+                        }}
+                        variants={{
+                          initial: {
+                            rotateX: -60,
+                            y: 20,
+                            opacity: 0,
+                            filter: 'blur(2px)',
                           },
-                        },
-                        exit: {
-                          rotateX: 60,
-                          y: -10,
-                          opacity: 0,
-                          filter: 'blur(2px)',
-                          scale: 0.96,
-                          transition: {
-                            duration: 0.36,
-                            ease: [0.32, 0, 0.67, 0],
-                            delay: Math.min(i * 0.01, 0.14),
+                          animate: {
+                            rotateX: 0,
+                            y: 0,
+                            opacity: 1,
+                            filter: 'blur(0px)',
+                            transition: {
+                              duration: 0.48,
+                              ease: [0.16, 1, 0.3, 1],
+                              delay: i * 0.022,
+                            },
                           },
-                        },
-                      }}
-                    >
-                      {char}
-                    </motion.span>
-                  );
-                })}
-              </span>
+                          exit: {
+                            rotateX: 60,
+                            y: -20,
+                            opacity: 0,
+                            filter: 'blur(2px)',
+                            transition: {
+                              duration: 0.32,
+                              ease: [0.7, 0, 0.84, 0],
+                              delay: i * 0.01,
+                            },
+                          },
+                        }}
+                      >
+                        {char}
+                      </motion.span>
+                    );
+                  })}
+                </span>
+                {wordIdx < words.length - 1 && (
+                  <span key={`space-${wordIdx}`} className="inline-block w-[0.28em]">
+                    &nbsp;
+                  </span>
+                )}
+              </React.Fragment>
             );
           })}
         </motion.span>

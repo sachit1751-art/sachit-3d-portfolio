@@ -34,6 +34,7 @@ import { GitHubIcon } from '../UI/Icons';
 import { PaperTheme } from '../../types';
 import { useSound, toggleSound } from '../../utils/soundManager';
 import { triggerShortcutHUD } from '../UI/ShortcutHUD';
+import { copyEmailToClipboard } from '../UI/Toast';
 import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
 
 export interface SiteMapItem {
@@ -151,9 +152,8 @@ export const SiteMapModal: React.FC<SiteMapModalProps> = ({
   }, [isOpen, initialCategory]);
 
   const handleCopyEmail = useCallback(() => {
-    navigator.clipboard.writeText('sachit1771@gmail.com');
+    copyEmailToClipboard('sachit1771@gmail.com');
     setCopiedEmail(true);
-    triggerShortcutHUD({ title: 'Email Copied to Clipboard', badge: 'sachit1771@gmail.com' });
     setTimeout(() => setCopiedEmail(false), 2000);
   }, []);
 
