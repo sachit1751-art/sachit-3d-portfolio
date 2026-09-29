@@ -22,6 +22,18 @@
           event.stopPropagation();
         }
       }, true);
+
+      // Automatically unregister legacy service workers and clear stale caches from old deployments
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          for (var i = 0; i < regs.length; i++) regs[i].unregister();
+        });
+      }
+      if ('caches' in window) {
+        caches.keys().then(function(keys) {
+          for (var j = 0; j < keys.length; j++) caches.delete(keys[j]);
+        });
+      }
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 

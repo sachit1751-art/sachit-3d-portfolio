@@ -4,6 +4,10 @@
       "source": "/",
       "headers": [
         {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        },
+        {
           "key": "Link",
           "value": "</mascots/cap-directions.webp>; rel=preload; as=image; type=\"image/webp\", </fonts/Kalam-Bold.ttf>; rel=preload; as=font; type=\"font/ttf\"; crossorigin=anonymous, </fonts/Kalam-Regular.ttf>; rel=preload; as=font; type=\"font/ttf\"; crossorigin=anonymous"
         }
@@ -12,6 +16,10 @@
     {
       "source": "/index.html",
       "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        },
         {
           "key": "Link",
           "value": "</mascots/cap-directions.webp>; rel=preload; as=image; type=\"image/webp\", </fonts/Kalam-Bold.ttf>; rel=preload; as=font; type=\"font/ttf\"; crossorigin=anonymous, </fonts/Kalam-Regular.ttf>; rel=preload; as=font; type=\"font/ttf\"; crossorigin=anonymous"
@@ -83,6 +91,10 @@
     {
       "source": "/sitemap.xml",
       "destination": "/sitemap.xml"
+    },
+    {
+      "source": "/((?!assets/|fonts/|mascots/|Sachit_Resume.pdf|robots.txt|sitemap.xml|llms.txt|favicon.png|apple-touch-icon.png|og-image.png|paper-crumple.mp3).*)",
+      "destination": "/index.html"
     }
   ]
 }
