@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
-import { Feather, FlaskConical, BookText } from 'lucide-react';
-import { Hammer, Palette } from 'lucide-react';
+import { Hammer, Feather, FlaskConical, Palette, BookOpen } from 'lucide-react';
 import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
 import { PretextText } from '../UI/PretextText';
@@ -27,7 +26,7 @@ const principles = [
     description: 'Development is not only about making something work. The way a product looks, feels, and interacts with the user also matters.',
   },
   {
-    icon: BookText,
+    icon: BookOpen,
     title: 'Keep Learning',
     description: 'Technology keeps changing, so I try to keep learning and exploring new tools, frameworks, and ideas.',
   },
@@ -39,7 +38,7 @@ export const Philosophy = memo(() => {
 <section id="philosophy" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
       <div className="mb-8">
         <div className="flex justify-center mb-3">
-          <Feather size={24} className="text-amber-600" />
+          <Feather className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
         </div>
         <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
           [ 02 / PHILOSOPHY ]
@@ -49,7 +48,7 @@ export const Philosophy = memo(() => {
         </h2>
       </div>
         <div className="hidden sm:flex items-center gap-1.5 text-sm font-handwriting" style={{ color: 'var(--c-muted)' }}>
-          <BookText size={16} />
+          <BookOpen className="w-4 h-4" />
           <WordReveal text="Guiding Principles" baseDelay={0.3} />
         </div>
 

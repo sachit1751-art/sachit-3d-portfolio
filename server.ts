@@ -167,10 +167,10 @@ function generatePortfolioGroundedFallback(contents: any[]): string {
     return "### SKY ROMs\n**SKY ROMs** is Sachit's Android Custom ROM Discovery & Management Platform. Built with React, TypeScript, Vite, Supabase, and Tailwind CSS, it offers ROM discovery, device compatibility checks, comparisons, and download management. [Live Demo: sky-roms.vercel.app](https://sky-roms.vercel.app)";
   }
   if (lastUserMsg.includes('moneypal') || lastUserMsg.includes('budget') || lastUserMsg.includes('expense')) {
-    return "### MoneyPal\n**MoneyPal** is a native Android budget tracker application featuring calculator-style expense entry, flexible budget periods, Wear OS companion app, and interactive widgets built with Kotlin, Jetpack Compose, and Room Database.\n\n[GitHub Repository](https://github.com/sachit1751-art/MoneyPal)";
+    return "### MoneyPal\n**MoneyPal** is a native Android budget tracker application featuring calculator-style expense entry, flexible budget periods, Wear OS companion app, and interactive widgets built with Kotlin, Jetpack Compose, and Room Database.";
   }
   if (lastUserMsg.includes('audify') || lastUserMsg.includes('music') || lastUserMsg.includes('audio') || lastUserMsg.includes('stream')) {
-    return "### Audify\n**Audify** is a modern, responsive web audio streaming and music player application built with React, TypeScript, Tailwind CSS, and Web Audio API with local playlist caching.\n\n[GitHub Repository](https://github.com/sachit1751-art/Audify)";
+    return "### Audify\n**Audify** is a modern, responsive web audio streaming and music player application built with React, TypeScript, Tailwind CSS, and Web Audio API with local playlist caching.";
   }
   if (lastUserMsg.includes('mcp') || lastUserMsg.includes('protocol') || lastUserMsg.includes('context')) {
     return "### AI-Powered Model Context Protocol (MCP) Tool\nA developer tool configuring Model Context Protocol (MCP) server endpoints and JSON-RPC messaging handlers enabling LLMs to securely query local resources using Anthropic Claude API.";

@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { BriefcaseBusiness } from 'lucide-react';
+import { Briefcase } from 'lucide-react';
 import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
 
@@ -9,7 +9,7 @@ export const Experience = memo(() => {
       <section id="experience" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
         <div className="mb-8">
           <div className="flex justify-center mb-3">
-            <BriefcaseBusiness size={24} className="text-amber-600" />
+            <Briefcase className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
           </div>
           <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
             [ 07 / EXPERIENCE ]

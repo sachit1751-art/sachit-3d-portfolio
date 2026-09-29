@@ -159,7 +159,7 @@ export const ToastNotification: React.FC = () => {
               boxShadow: '0 8px 24px -4px rgba(0, 0, 0, 0.22)',
             }}
           >
-            <Check size={14} className="text-emerald-500" />
+            <Check className="w-3.5 h-3.5 text-emerald-500 stroke-[2.5]" />
             <span className="tracking-tight">{toast.title || 'Copied'}</span>
           </motion.div>
         )}

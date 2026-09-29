@@ -17,8 +17,8 @@ This document serves as a complete map of Sachit's technical workspace, active p
 ## Active Projects
 
 - [SKY ROMs](https://sky-roms.vercel.app/): Android Custom ROM Discovery & Management Platform. Built with React, TypeScript, Vite, Supabase, PostgreSQL, and Capacitor. Includes device compatibility engine, ROM comparisons, and direct downloads.
-- [MoneyPal](https://sachin-portfoli.vercel.app/#project-moneypal) ([GitHub](https://github.com/sachit1751-art/MoneyPal)): Native Android budget tracker application featuring calculator-style expense entry, flexible budget periods, Wear OS companion app, and interactive widgets built with Kotlin, Jetpack Compose, and Room Database.
-- [Audify](https://sachin-portfoli.vercel.app/#project-audify) ([GitHub](https://github.com/sachit1751-art/Audify)): Feature-rich web audio streaming and music player application with fluid playlist controls, Web Audio API playback hooks, and local preference caching built with React, TypeScript, and Tailwind CSS.
+- [MoneyPal](https://sachin-portfoli.vercel.app/#project-moneypal): Native Android budget tracker application featuring calculator-style expense entry, flexible budget periods, Wear OS companion app, and interactive widgets built with Kotlin, Jetpack Compose, and Room Database.
+- [Audify](https://sachin-portfoli.vercel.app/#project-audify): Feature-rich web audio streaming and music player application with fluid playlist controls, Web Audio API playback hooks, and local preference caching built with React, TypeScript, and Tailwind CSS.
 - [AI-Powered Model Context Protocol (MCP) Tool](https://sachin-portfoli.vercel.app/#project-mcp-tool): Developer utility configuring Model Context Protocol (MCP) server endpoints and JSON-RPC messaging handlers enabling LLMs to securely query local resources using Anthropic Claude API.
 - [Tic-Tac-Toe Mini Game](https://sachin-portfoli.vercel.app/#project-tic-tac-toe): Standalone browser game featuring Minimax AI move evaluation recursion, difficulty modes, turn locking, and responsive board UI.
 

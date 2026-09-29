@@ -3,16 +3,16 @@ import React, { useState, useEffect, memo } from 'react';
 import { AnimatedMenuIcon } from '../components/UI/AnimatedMenuIcon';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  LayersIcon,
-  FileTextIcon,
-  FolderCodeIcon,
-  ZapIcon,
-  GaugeIcon,
-  CompassIcon,
-  CpuIcon,
-  SlidersHorizontalIcon,
+  Layers,
+  FileText,
+  Code,
+  Zap,
+  Gauge,
+  Compass,
+  Gamepad2,
+  Cpu,
+  Sliders,
 } from 'lucide-react';
-import { Gamepad2 } from 'lucide-react';
 import { Architecture } from './Architecture';
 import { FileStructure } from './FileStructure';
 import { TechStack } from './TechStack';
@@ -33,15 +33,15 @@ interface StructureRoomProps {
 }
 
 const TABS = [
-  { id: 'architecture', label: 'Architecture', numeral: 'I', icon: LayersIcon },
-  { id: 'file-structure', label: 'Source Structure', numeral: 'II', icon: FileTextIcon },
-  { id: 'tech-stack', label: 'Tech Stack', numeral: 'III', icon: FolderCodeIcon },
-  { id: 'animation', label: 'Animation System', numeral: 'IV', icon: ZapIcon },
-  { id: 'performance', label: 'Performance', numeral: 'V', icon: GaugeIcon },
-  { id: 'decisions', label: 'Design Decisions', numeral: 'VI', icon: CompassIcon },
+  { id: 'architecture', label: 'Architecture', numeral: 'I', icon: Layers },
+  { id: 'file-structure', label: 'Source Structure', numeral: 'II', icon: FileText },
+  { id: 'tech-stack', label: 'Tech Stack', numeral: 'III', icon: Code },
+  { id: 'animation', label: 'Animation System', numeral: 'IV', icon: Zap },
+  { id: 'performance', label: 'Performance', numeral: 'V', icon: Gauge },
+  { id: 'decisions', label: 'Design Decisions', numeral: 'VI', icon: Compass },
   { id: 'mood-game', label: 'MOOD Game', numeral: 'VII', icon: Gamepad2 },
-  { id: 'procedural', label: 'Procedural Engine', numeral: 'VIII', icon: CpuIcon },
-  { id: 'settings', label: 'Settings & Sync', numeral: 'IX', icon: SlidersHorizontalIcon },
+  { id: 'procedural', label: 'Procedural Engine', numeral: 'VIII', icon: Cpu },
+  { id: 'settings', label: 'Settings & Sync', numeral: 'IX', icon: Sliders },
 ];
 
 // ﻿watermark:sachit-portfolio-2026﻿
@@ -64,50 +64,109 @@ export const StructureRoom: React.FC<StructureRoomProps> = memo(({ theme, setThe
     return 'architecture';
   });
 
-  const [activeSubTab, setActiveSubTab] = useState<string | null>(null);
-
-  // Sync hash with active tab and sub-tab
+  // URL State Synchronization Hook for Structure Room sub-sections
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const subHash = activeSubTab ? `?sub=${activeSubTab}` : '';
-      const newHash = `#structure/${activeTab}${subHash}`;
-      if (window.location.hash !== newHash) {
-        window.history.replaceState(null, '', newHash);
+    const syncFromUrl = () => {
+      const hash = window.location.hash;
+      if (hash.startsWith('#structure/')) {
+        const tabFromHash = hash.replace('#structure/', '').split('?')[0];
+        const validTab = TABS.find((t) => t.id === tabFromHash);
+        if (validTab) {
+          setActiveTab(validTab.id);
+          return;
+        }
       }
-    }
-  }, [activeTab, activeSubTab]);
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      if (tabParam) {
+        const validTab = TABS.find((t) => t.id === tabParam);
+        if (validTab) {
+          setActiveTab(validTab.id);
+        }
+      }
+    };
 
-  // Handle Tab Select
+    const handlePopState = () => {
+      syncFromUrl();
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('hashchange', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('hashchange', handlePopState);
+    };
+  }, []);
+
   const handleSelectTab = (tabId: string) => {
     setActiveTab(tabId);
-    setActiveSubTab(null);
+    try {
+      const targetHash = `#structure/${tabId}`;
+      if (window.location.hash !== targetHash) {
+        window.history.pushState({ structureTab: tabId }, '', targetHash);
+      }
+    } catch (e) {
+      console.warn('URL pushState unavailable', e);
+    }
+  };
+
+  const handleExit = () => {
+    try {
+      if (window.location.hash.startsWith('#structure')) {
+        window.history.pushState({}, '', window.location.pathname + window.location.search);
+      }
+    } catch {}
+    onExit();
+  };
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'architecture': return <Architecture />;
+      case 'file-structure': return <FileStructure />;
+      case 'tech-stack': return <TechStack />;
+      case 'animation': return <AnimationSystem />;
+      case 'performance': return <Performance />;
+      case 'decisions': return <DesignDecisions />;
+      case 'mood-game': return <MoodGame />;
+      case 'procedural': return <ProceduralEngine />;
+      case 'settings': return <Settings theme={theme} setTheme={setTheme} />;
+      default: return <Architecture />;
+    }
   };
 
   return (
-    <div className="sr-wrapper" data-theme={theme}>
-      {/* Editorial Header Bar */}
-      <header className="sr-header">
-        <div className="sr-masthead">
-          <div className="flex items-center gap-2">
-            <button onClick={onExit} className="text-[var(--c-heading)] hover:text-amber-600 transition-colors cursor-pointer" aria-label="Return to main portfolio document">
-              <AnimatedMenuIcon isOpen={true} />
-            </button>
-            <span className="sr-edition-badge font-mono text-[10px] tracking-wider opacity-60 uppercase">
-              STRUCTURE ROOM • ARCHITECTURE SPEC
-            </span>
+    <div className="sr-newsprint" style={{ animation: 'contentFadeIn 0.6s ease-out' }}>
+      {/* Masthead */}
+      <header className="sr-masthead">
+        <div className="sr-masthead-rule" />
+        <div className="sr-masthead-top">
+          <button onClick={handleExit} className="sr-back-link group">
+            <AnimatedMenuIcon isOpen={true} variant="arrow" size={14} />
+            <span>Back to Portfolio</span>
+          </button>
+          <span className="sr-masthead-date">Vol. I — 2026</span>
+          <div className="sr-masthead-status">
+            <span className="sr-status-dot" />
+            UNLOCKED
           </div>
+        </div>
+        <div className="sr-masthead-title-row">
+          <h2 className="sr-masthead-title">STRUCTURE ROOM</h2>
+        </div>
+        <p className="sr-masthead-subtitle">The Technical Blueprint Behind the Portfolio</p>
 
-          {/* Breadcrumb Navigation */}
+        {/* Interactive Deep-Linked Breadcrumb Navigation */}
+        <div className="mt-3 mb-1">
           <StructureBreadcrumb
             activeTabId={activeTab}
-            activeTabLabel={TABS.find((t) => t.id === activeTab)?.label || 'Architecture'}
-            activeSubTab={activeSubTab}
+            activeTabLabel={TABS.find((t) => t.id === activeTab)?.label}
             tabs={TABS}
             onSelectTab={handleSelectTab}
-            onSelectSubTab={setActiveSubTab}
-            onExit={onExit}
+            onExit={handleExit}
+            onResetToRootTab={() => handleSelectTab('architecture')}
           />
         </div>
+
         <div className="sr-masthead-rule" />
       </header>
 
@@ -126,10 +185,7 @@ export const StructureRoom: React.FC<StructureRoomProps> = memo(({ theme, setThe
                 aria-selected={isActive}
               >
                 <span className="sr-tab-numeral">{tab.numeral}.</span>
-                <Icon
-                  size={14}
-                  className={`flex-shrink-0 transition-opacity ${isActive ? 'opacity-100 text-amber-600' : 'opacity-70'}`}
-                />
+                <Icon className={`w-3.5 h-3.5 flex-shrink-0 transition-opacity ${isActive ? 'opacity-100' : 'opacity-70'}`} />
                 <span>{tab.label}</span>
               </button>
               {i < TABS.length - 1 && <span className="sr-tab-separator">|</span>}
@@ -139,31 +195,21 @@ export const StructureRoom: React.FC<StructureRoomProps> = memo(({ theme, setThe
       </nav>
 
       {/* Content Area */}
-      <main className="sr-content-area" id="main-content">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="w-full"
-          >
-            {activeTab === 'architecture' && <Architecture />}
-            {activeTab === 'file-structure' && <FileStructure />}
-            {activeTab === 'tech-stack' && <TechStack />}
-            {activeTab === 'animation' && <AnimationSystem />}
-            {activeTab === 'performance' && <Performance />}
-            {activeTab === 'decisions' && <DesignDecisions />}
-            {activeTab === 'mood-game' && <MoodGame />}
-            {activeTab === 'procedural' && <ProceduralEngine />}
-            {activeTab === 'settings' && <Settings theme={theme} setTheme={setTheme} />}
-          </motion.div>
-        </AnimatePresence>
+      <main className="sr-editorial-content pt-4">
+        <div key={activeTab} className="structure-room-content-inner">
+          {renderContent()}
+        </div>
       </main>
 
-      {/* Floating Ask AI Button */}
-      <ChatAboutMe theme={theme} />
+      {/* Footer Rule */}
+      <div className="sr-masthead-rule sr-footer-rule" />
+
+      {/* Compact Floating Chat Assistant — Does not block architecture flow charts */}
+      <ChatAboutMe 
+        theme={theme} 
+        mode="compact-floating" 
+        activeTab={activeTab} 
+      />
     </div>
   );
 });

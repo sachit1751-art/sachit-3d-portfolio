@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 // ​sachit-2026-original-authored​
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronRight, Home, ChevronDown, Check } from 'lucide-react';
+import { ChevronRight, Home, Layers, ChevronDown, Check } from 'lucide-react';
 
 export interface BreadcrumbTab {
   id: string;
@@ -13,10 +13,8 @@ export interface BreadcrumbTab {
 interface StructureBreadcrumbProps {
   activeTabId: string;
   activeTabLabel?: string;
-  activeSubTab?: string | null;
   tabs?: BreadcrumbTab[];
   onSelectTab: (tabId: string) => void;
-  onSelectSubTab?: (subTabId: string | null) => void;
   onExit: () => void;
   onResetToRootTab?: () => void;
 }
@@ -27,13 +25,14 @@ export const StructureBreadcrumb: React.FC<StructureBreadcrumbProps> = ({
   tabs = [],
   onSelectTab,
   onExit,
+  onResetToRootTab,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
     };
@@ -42,36 +41,45 @@ export const StructureBreadcrumb: React.FC<StructureBreadcrumbProps> = ({
   }, []);
 
   return (
-    <nav aria-label="Architecture Breadcrumb" className="text-xs font-mono flex items-center gap-1.5 flex-wrap">
-      {/* Root Portfolio Link */}
+    <nav
+      aria-label="Structure Room Breadcrumb"
+      className="relative flex items-center gap-1.5 py-1.5 px-3 my-2 text-[10px] sm:text-xs font-mono uppercase tracking-[0.12em] rounded-md transition-all border border-[var(--c-border)] bg-[var(--c-card)] text-[var(--c-subtle)] overflow-x-auto scrollbar-none whitespace-nowrap z-30"
+    >
       <button
         onClick={onExit}
-        className="opacity-70 hover:opacity-100 transition-opacity flex items-center gap-1 hover:underline cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-500 rounded px-1 -ml-1"
-        title="Return to Main Document Page"
+        className="hover:text-[var(--c-heading)] transition-colors flex items-center gap-1 cursor-pointer flex-shrink-0 group py-0.5 px-1.5 rounded hover:bg-[var(--c-input-bg)]"
+        title="Return to Main Portfolio Home"
       >
-        <Home size={12} className="opacity-80" />
-        <span>Document</span>
+        <Home className="w-3.5 h-3.5 transition-transform group-hover:scale-110" style={{ color: 'var(--c-dot)' }} />
+        <span>Portfolio</span>
       </button>
 
-      <ChevronRight size={12} className="opacity-40 flex-shrink-0" />
+      <ChevronRight className="w-3 h-3 opacity-40 flex-shrink-0" />
 
-      {/* Structure Room Title */}
       <button
-        onClick={onExit}
-        className="opacity-70 hover:opacity-100 transition-opacity flex items-center gap-1 hover:underline cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-500 rounded px-1"
-        title="Structure Room Home"
+        onClick={() => {
+          if (onResetToRootTab) {
+            onResetToRootTab();
+          } else {
+            onSelectTab('architecture');
+          }
+        }}
+        className={`hover:text-[var(--c-heading)] transition-colors flex items-center gap-1 cursor-pointer flex-shrink-0 py-0.5 px-1.5 rounded hover:bg-[var(--c-input-bg)] ${
+          activeTabId === 'architecture' ? 'font-semibold' : ''
+        }`}
+        title="Jump to Structure Room Root (Architecture)"
       >
-        <span>Structure</span>
+        <Layers className="w-3.5 h-3.5 opacity-70" />
+        <span>Structure Room</span>
       </button>
 
-      {/* Active Sub-section Selector Dropdown */}
-      {activeTabId && (
+      {activeTabLabel && (
         <div className="relative inline-flex items-center gap-1.5 flex-shrink-0" ref={dropdownRef}>
-          <ChevronRight size={12} className="opacity-40 flex-shrink-0" />
+          <ChevronRight className="w-3 h-3 opacity-40 flex-shrink-0" />
 
           {(() => {
             const activeTabItem = tabs.find((t) => t.id === activeTabId);
-            const Active = activeTabItem?.icon;
+            const ActiveIcon = activeTabItem?.icon;
             return (
               <button
                 onClick={() => setIsDropdownOpen((prev) => !prev)}
@@ -86,13 +94,13 @@ export const StructureBreadcrumb: React.FC<StructureBreadcrumbProps> = ({
                 aria-current="page"
                 title="Click to quickly jump to another sub-section"
               >
-                {Active ? (
-                  <Active size={14} className="flex-shrink-0 text-amber-600" />
+                {ActiveIcon ? (
+                  <ActiveIcon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--c-dot)' }} />
                 ) : (
                   <span className="w-1.5 h-1.5 rounded-full inline-block animate-pulse" style={{ backgroundColor: 'var(--c-dot)' }} />
                 )}
                 <span>{activeTabLabel}</span>
-                <ChevronDown size={12} className={`opacity-70 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-3 h-3 opacity-70 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
             );
           })()}
@@ -101,18 +109,18 @@ export const StructureBreadcrumb: React.FC<StructureBreadcrumbProps> = ({
           <AnimatePresence>
             {isDropdownOpen && (
               <motion.div
-                initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                initial={{ opacity: 0, y: 6, scale: 0.96 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -6, scale: 0.98 }}
-                transition={{ duration: 0.15, ease: 'easeOut' }}
-                className="absolute left-0 top-full mt-1.5 z-50 min-w-[210px] py-1.5 rounded-md shadow-lg border"
+                exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                transition={{ duration: 0.15 }}
+                className="absolute left-0 top-full mt-1.5 min-w-[210px] py-1.5 rounded-lg border shadow-xl z-50 overflow-hidden"
                 style={{
                   backgroundColor: 'var(--c-card)',
-                  borderColor: 'var(--c-border-hover)',
-                  boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.15)',
+                  borderColor: 'var(--c-border)',
+                  boxShadow: '0 12px 30px -5px rgba(0,0,0,0.3)',
+                  backdropFilter: 'blur(12px)',
                 }}
                 role="listbox"
-                aria-label="Structure Sub-sections"
               >
                 <div className="px-2.5 py-1 text-[9px] font-mono opacity-50 uppercase tracking-widest border-b border-[var(--c-border)] mb-1">
                   Architecture Sub-sections
@@ -135,11 +143,11 @@ export const StructureBreadcrumb: React.FC<StructureBreadcrumbProps> = ({
                       aria-selected={activeTabId === t.id}
                     >
                       <span className="flex items-center gap-2">
-                        {Icon && <Icon size={14} className="opacity-80 flex-shrink-0 text-amber-600" />}
+                        {Icon && <Icon className="w-3.5 h-3.5 opacity-70 flex-shrink-0" />}
                         <span className="opacity-50 text-[10px]">{t.numeral}.</span>
                         <span>{t.label}</span>
                       </span>
-                      {activeTabId === t.id && <Check size={12} className="text-amber-500" />}
+                      {activeTabId === t.id && <Check className="w-3 h-3 text-amber-500" />}
                     </button>
                   );
                 })}
@@ -151,3 +159,4 @@ export const StructureBreadcrumb: React.FC<StructureBreadcrumbProps> = ({
     </nav>
   );
 };
+

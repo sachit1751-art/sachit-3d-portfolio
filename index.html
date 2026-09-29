@@ -22,18 +22,6 @@
           event.stopPropagation();
         }
       }, true);
-
-      // Automatically unregister legacy service workers and clear stale caches from old deployments
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(regs) {
-          for (var i = 0; i < regs.length; i++) regs[i].unregister();
-        });
-      }
-      if ('caches' in window) {
-        caches.keys().then(function(keys) {
-          for (var j = 0; j < keys.length; j++) caches.delete(keys[j]);
-        });
-      }
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
@@ -326,8 +314,6 @@
           "operatingSystem": "Android, Wear OS",
           "softwareVersion": "1.0.0",
           "datePublished": "2025-01-01",
-          "codeRepository": "https://github.com/sachit1751-art/MoneyPal",
-          "sameAs": "https://github.com/sachit1751-art/MoneyPal",
           "description": "Native Android budget tracker application featuring calculator-style expense entry, flexible budget periods, Wear OS companion app, and interactive widgets.",
           "author": { "@id": "https://sachin-portfoli.vercel.app/#person" },
           "creator": { "@id": "https://sachin-portfoli.vercel.app/#person" },
@@ -357,8 +343,6 @@
           "operatingSystem": "Web Browser, Cross-platform",
           "softwareVersion": "1.0.0",
           "datePublished": "2025-01-01",
-          "codeRepository": "https://github.com/sachit1751-art/Audify",
-          "sameAs": "https://github.com/sachit1751-art/Audify",
           "description": "Feature-rich, responsive web audio streaming and music player application with fluid playlist controls, Web Audio API playback hooks, and real-time track searching.",
           "author": { "@id": "https://sachin-portfoli.vercel.app/#person" },
           "creator": { "@id": "https://sachin-portfoli.vercel.app/#person" },

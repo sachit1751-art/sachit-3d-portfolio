@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, memo } from 'react';
-import { Send, User, Bot, Loader2, MessageSquare, RotateCcw, FileText, Minus, Copy, Check } from 'lucide-react';
+import { Send, User, Bot, Loader2, MessageSquare, Trash2, RotateCcw, FileText, ExternalLink, Minus, Copy, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';

@@ -1,52 +1,9 @@
 import React, { memo } from 'react';
-import {
-  Sparkles,
-  Terminal,
-  FileCode,
-  Code,
-  Layout,
-  Palette,
-  MessageSquare,
-  Zap,
-  Bot,
-  Layers,
-  Code2,
-  Atom,
-  Database,
-  HardDrive,
-  Server,
-  Globe,
-  GitBranch,
-  Cloud,
-  Smartphone,
-  Laptop,
-} from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { SkillCategory } from '../../types';
 import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
-
-const SKILL_ICONS: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
-  Terminal,
-  FileCode,
-  Code,
-  Layout,
-  Palette,
-  Sparkles,
-  MessageSquare,
-  Zap,
-  Bot,
-  Layers,
-  Code2,
-  Atom,
-  Database,
-  HardDrive,
-  Server,
-  Globe,
-  GitBranch,
-  Cloud,
-  Smartphone,
-  Laptop,
-};
+import * as LucideIcons from 'lucide-react';
 
 const categories: SkillCategory[] = [
   {
@@ -271,7 +228,7 @@ export const Skills = memo(() => {
             <div className="flex flex-wrap gap-2.5">
               {category.skills.map((skill, sIdx) => {
                 const CustomIcon = renderCustomSVG(skill.name);
-                const LucideIcon = skill.iconName ? SKILL_ICONS[skill.iconName] : null;
+                const LucideIcon = skill.iconName ? (LucideIcons as any)[skill.iconName] : null;
                 return (
                   <span
                     key={sIdx}

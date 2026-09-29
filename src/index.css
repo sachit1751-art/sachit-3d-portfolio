@@ -4186,12 +4186,7 @@ section[id] {
   backface-visibility: hidden;
 }
 
-/* Mascot touch target enhancement & zero-CLS containment */
-.mascot-touch-target {
-  aspect-ratio: 1 / 1;
-  contain: layout size;
-}
-
+/* Mascot touch target enhancement */
 .mascot-touch-target::after {
   content: '';
   position: absolute;
@@ -4201,11 +4196,6 @@ section[id] {
   bottom: -24px;
   background: transparent;
   pointer-events: auto;
-}
-
-/* Preloader & Reveal Animation Optimization */
-body[data-mascot-preloaded="true"] .mascot-touch-target {
-  content-visibility: visible;
 }
 
 /* Structure Room Performance Optimizations */

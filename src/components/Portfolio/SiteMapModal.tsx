@@ -15,6 +15,7 @@ import {
   Send,
   Keyboard,
   CornerDownLeft,
+  ArrowUpDown,
   ExternalLink,
   Smartphone,
   Code2,

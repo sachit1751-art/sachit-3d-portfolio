@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Settings as SettingsIcon, Zap, Clock, Volume2, VolumeX } from 'lucide-react';
+import { Settings as SettingsIcon, Palette, Zap, Clock, Volume2, VolumeX } from 'lucide-react';
 import { PaperTheme } from '../types';
 import { useSound } from '../utils/soundManager';
 
