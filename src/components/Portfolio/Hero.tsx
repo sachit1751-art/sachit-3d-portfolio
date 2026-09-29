@@ -99,7 +99,7 @@ export const Hero = memo<HeroProps>(({
             <DepthFlipText
               phrases={[
                 "Full-Stack Web Developer",
-                "AI & Prompt Engineer",
+                "AI & Looping Engineer",
                 "Frontend Developer",
                 "Android Developer",
                 "Backend Engineer",

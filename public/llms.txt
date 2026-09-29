@@ -24,9 +24,15 @@ This document serves as a complete map of Sachit's technical workspace, active p
 
 ## Key Information
 
-- [Technical Skills](https://sachin-portfoli.vercel.app/#skills): Full taxonomy of frontend (React, TypeScript, Tailwind CSS), backend (Python, Supabase, PostgreSQL, REST APIs), mobile (Kotlin, Jetpack Compose, Android SDK), and AI automation (Claude API, Prompt Engineering, Prompt Caching, MCP).
+- [Technical Skills](https://sachin-portfoli.vercel.app/#skills): Full taxonomy of frontend (React, TypeScript, Tailwind CSS), backend (Python, Supabase, PostgreSQL, REST APIs), mobile (Kotlin, Jetpack Compose, Android SDK), and AI automation (Claude API, AI & Looping Engineering, Prompt Caching, MCP).
 - [Engineering Philosophy](https://sachin-portfoli.vercel.app/#philosophy): Architectural guiding principles ("Learn by Building", "Keep It Simple", "Design First").
 - [Engineering Journal](https://sachin-portfoli.vercel.app/#building-in-public): Live building-in-public logs and milestone progression.
+
+## Performance & Architecture
+
+- **Permanent Atmosphere**: Custom-engineered tactile "Kraft Paper" theme with physical depth-based visual layers and tactile sound effects.
+- **Main-Thread Optimization**: Fully lazy-loaded below-the-fold content sections to drastically reduce initial JS payload. Deferral of background videos and heavy 3D rendering engines (Three.js) inside `requestIdleCallback` loops to eliminate Total Blocking Time (TBT).
+- **HTTP Cache Control**: Server-side delivery of immutable assets with 1-year cache directives for instantaneous subsequent loads.
 
 ## Optional
 
