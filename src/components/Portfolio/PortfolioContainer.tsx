@@ -1,20 +1,26 @@
-import React, { memo, useCallback, useRef } from 'react';
+import React, { memo, useCallback, useRef, lazy, Suspense } from 'react';
 import { PaperTheme, PaperState } from '../../types';
 import { Hero } from './Hero';
 import { ScrollTextPath } from '../UI/ScrollTextPath';
 import { About } from './About';
 import { Philosophy } from './Philosophy';
-import { Projects } from './Projects';
-import { Skills } from './Skills';
-import { CurrentlyBuilding } from './CurrentlyBuilding';
-import { GitHubSection } from './GitHub';
-import { Experience } from './Experience';
-import { Education } from './Education';
-import { Strengths } from './Strengths';
-import { BuildingInPublic } from './BuildingInPublic';
-import { ChatAboutMe } from './ChatAboutMe';
-import { Contact } from './Contact';
 import { ScrollReveal } from '../UI/ScrollReveal';
+
+// Dynamic dynamic imports for below-the-fold content blocks to defer heavy JS execution
+const Projects = lazy(() => import('./Projects').then(m => ({ default: m.Projects })));
+const Skills = lazy(() => import('./Skills').then(m => ({ default: m.Skills })));
+const CurrentlyBuilding = lazy(() => import('./CurrentlyBuilding').then(m => ({ default: m.CurrentlyBuilding })));
+const GitHubSection = lazy(() => import('./GitHub').then(m => ({ default: m.GitHubSection })));
+const Experience = lazy(() => import('./Experience').then(m => ({ default: m.Experience })));
+const Education = lazy(() => import('./Education').then(m => ({ default: m.Education })));
+const Strengths = lazy(() => import('./Strengths').then(m => ({ default: m.Strengths })));
+const BuildingInPublic = lazy(() => import('./BuildingInPublic').then(m => ({ default: m.BuildingInPublic })));
+const ChatAboutMe = lazy(() => import('./ChatAboutMe').then(m => ({ default: m.ChatAboutMe })));
+const Contact = lazy(() => import('./Contact').then(m => ({ default: m.Contact })));
+
+function SectionPlaceholder() {
+  return <div className="h-48 animate-pulse bg-transparent rounded-lg border border-transparent" />;
+}
 
 interface PortfolioContainerProps {
   theme: PaperTheme;
@@ -124,34 +130,54 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
             <Philosophy />
           </ScrollReveal>
           <ScrollReveal>
-            <Projects />
+            <Suspense fallback={<SectionPlaceholder />}>
+              <Projects />
+            </Suspense>
           </ScrollReveal>
           <ScrollReveal>
-            <Skills />
+            <Suspense fallback={<SectionPlaceholder />}>
+              <Skills />
+            </Suspense>
           </ScrollReveal>
           <ScrollReveal>
-            <CurrentlyBuilding />
+            <Suspense fallback={<SectionPlaceholder />}>
+              <CurrentlyBuilding />
+            </Suspense>
           </ScrollReveal>
           <ScrollReveal>
-            <GitHubSection theme={theme} />
+            <Suspense fallback={<SectionPlaceholder />}>
+              <GitHubSection theme={theme} />
+            </Suspense>
           </ScrollReveal>
           <ScrollReveal>
-            <Experience />
+            <Suspense fallback={<SectionPlaceholder />}>
+              <Experience />
+            </Suspense>
           </ScrollReveal>
           <ScrollReveal>
-            <Education />
+            <Suspense fallback={<SectionPlaceholder />}>
+              <Education />
+            </Suspense>
           </ScrollReveal>
           <ScrollReveal>
-            <Strengths />
+            <Suspense fallback={<SectionPlaceholder />}>
+              <Strengths />
+            </Suspense>
           </ScrollReveal>
           <ScrollReveal>
-            <BuildingInPublic />
+            <Suspense fallback={<SectionPlaceholder />}>
+              <BuildingInPublic />
+            </Suspense>
           </ScrollReveal>
           <ScrollReveal>
-            <ChatAboutMe theme={theme} paperState={paperState} />
+            <Suspense fallback={<SectionPlaceholder />}>
+              <ChatAboutMe theme={theme} paperState={paperState} />
+            </Suspense>
           </ScrollReveal>
           <ScrollReveal>
-            <Contact />
+            <Suspense fallback={<SectionPlaceholder />}>
+              <Contact />
+            </Suspense>
           </ScrollReveal>
         </div>
       </div>

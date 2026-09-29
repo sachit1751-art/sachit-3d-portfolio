@@ -90,9 +90,18 @@ export const PaperIntro = memo<PaperIntroProps>(({
     const v = videoRef.current;
     if (!v) return;
     if (paperState === 'crumpled') {
-      console.log('[PaperIntro Video Effect] paperState = crumpled -> Playing ambient video loop');
+      console.log('[PaperIntro Video Effect] paperState = crumpled -> Playing ambient video loop deferred');
       v.currentTime = 0;
-      v.play().catch((err) => console.warn('[PaperIntro Video Effect] Play catch:', err));
+      const playVideo = () => {
+        if (videoRef.current) {
+          videoRef.current.play().catch((err) => console.warn('[PaperIntro Video Effect] Play catch:', err));
+        }
+      };
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(() => playVideo(), { timeout: 2000 });
+      } else {
+        setTimeout(playVideo, 1000);
+      }
     } else {
       console.log('[PaperIntro Video Effect] paperState = ' + paperState + ' -> Pausing ambient video');
       v.pause();

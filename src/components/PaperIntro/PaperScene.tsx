@@ -106,7 +106,12 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
     const container = containerRef.current;
     if (!container) return;
 
-    const widthPx = Math.max(container.clientWidth, 100) || window.innerWidth;
+    let active = true;
+    let cleanupFn: (() => void) | undefined;
+
+    const initScene = () => {
+      if (!active) return;
+      const widthPx = Math.max(container.clientWidth, 100) || window.innerWidth;
     const heightPx = Math.max(container.clientHeight, 100) || window.innerHeight;
 
     const scene = new THREE.Scene();
@@ -554,7 +559,7 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
 
     animate();
 
-    return () => {
+    cleanupFn = () => {
       window.removeEventListener('resize', handleResize);
       container.removeEventListener('pointerdown', handlePointerDown);
       container.removeEventListener('pointermove', handlePointerMove);
@@ -579,6 +584,29 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
       shadowMat.dispose();
       shadowTexture.dispose();
       renderer.dispose();
+    };
+  };
+
+    const scheduleInit = () => {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(() => initScene(), { timeout: 1500 });
+      } else {
+        setTimeout(initScene, 350);
+      }
+    };
+
+    if (document.readyState === 'complete') {
+      scheduleInit();
+    } else {
+      window.addEventListener('load', scheduleInit);
+    }
+
+    return () => {
+      active = false;
+      window.removeEventListener('load', scheduleInit);
+      if (cleanupFn) {
+        cleanupFn();
+      }
     };
   }, [theme, simplify]);
 
