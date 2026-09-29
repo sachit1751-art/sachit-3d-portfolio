@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 // ​sachit-2026-original-authored​
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronRightIcon, HomeIcon, ChevronDownIcon, CheckIcon } from 'lucide-react';
+import { ChevronRight, Home, ChevronDown, Check } from 'lucide-react';
 
 export interface BreadcrumbTab {
   id: string;
@@ -49,11 +49,11 @@ export const StructureBreadcrumb: React.FC<StructureBreadcrumbProps> = ({
         className="opacity-70 hover:opacity-100 transition-opacity flex items-center gap-1 hover:underline cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-500 rounded px-1 -ml-1"
         title="Return to Main Document Page"
       >
-        <HomeIcon size={12} className="opacity-80" />
+        <Home size={12} className="opacity-80" />
         <span>Document</span>
       </button>
 
-      <ChevronRightIcon size={12} className="opacity-40 flex-shrink-0" />
+      <ChevronRight size={12} className="opacity-40 flex-shrink-0" />
 
       {/* Structure Room Title */}
       <button
@@ -67,11 +67,11 @@ export const StructureBreadcrumb: React.FC<StructureBreadcrumbProps> = ({
       {/* Active Sub-section Selector Dropdown */}
       {activeTabId && (
         <div className="relative inline-flex items-center gap-1.5 flex-shrink-0" ref={dropdownRef}>
-          <ChevronRightIcon size={12} className="opacity-40 flex-shrink-0" />
+          <ChevronRight size={12} className="opacity-40 flex-shrink-0" />
 
           {(() => {
             const activeTabItem = tabs.find((t) => t.id === activeTabId);
-            const ActiveIcon = activeTabItem?.icon;
+            const Active = activeTabItem?.icon;
             return (
               <button
                 onClick={() => setIsDropdownOpen((prev) => !prev)}
@@ -86,13 +86,13 @@ export const StructureBreadcrumb: React.FC<StructureBreadcrumbProps> = ({
                 aria-current="page"
                 title="Click to quickly jump to another sub-section"
               >
-                {ActiveIcon ? (
-                  <ActiveIcon size={14} className="flex-shrink-0 text-amber-600" />
+                {Active ? (
+                  <Active size={14} className="flex-shrink-0 text-amber-600" />
                 ) : (
                   <span className="w-1.5 h-1.5 rounded-full inline-block animate-pulse" style={{ backgroundColor: 'var(--c-dot)' }} />
                 )}
                 <span>{activeTabLabel}</span>
-                <ChevronDownIcon size={12} className={`opacity-70 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={12} className={`opacity-70 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
             );
           })()}
@@ -139,7 +139,7 @@ export const StructureBreadcrumb: React.FC<StructureBreadcrumbProps> = ({
                         <span className="opacity-50 text-[10px]">{t.numeral}.</span>
                         <span>{t.label}</span>
                       </span>
-                      {activeTabId === t.id && <CheckIcon size={12} className="text-amber-500" />}
+                      {activeTabId === t.id && <Check size={12} className="text-amber-500" />}
                     </button>
                   );
                 })}

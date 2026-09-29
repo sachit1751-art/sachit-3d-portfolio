@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { FeatherIcon, FlaskIcon, BookTextIcon } from 'lucide-react';
+import { Feather, FlaskConical, BookText } from 'lucide-react';
 import { Hammer, Palette } from 'lucide-react';
 import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
@@ -12,12 +12,12 @@ const principles = [
     description: "I learn best by building. When I want to understand a technology, I try to use it in a real project instead of only studying its theory.",
   },
   {
-    icon: FeatherIcon,
+    icon: Feather,
     title: 'Keep It Simple',
     description: 'Good software does not need unnecessary complexity. I prefer interfaces and solutions that are clear and easy to understand.',
   },
   {
-    icon: FlaskIcon,
+    icon: FlaskConical,
     title: 'Experiment',
     description: 'Not every idea will become a finished product. Experimenting, breaking things, and learning from mistakes are part of development.',
   },
@@ -27,7 +27,7 @@ const principles = [
     description: 'Development is not only about making something work. The way a product looks, feels, and interacts with the user also matters.',
   },
   {
-    icon: BookTextIcon,
+    icon: BookText,
     title: 'Keep Learning',
     description: 'Technology keeps changing, so I try to keep learning and exploring new tools, frameworks, and ideas.',
   },
@@ -39,7 +39,7 @@ export const Philosophy = memo(() => {
 <section id="philosophy" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
       <div className="mb-8">
         <div className="flex justify-center mb-3">
-          <FeatherIcon size={24} className="text-amber-600" />
+          <Feather size={24} className="text-amber-600" />
         </div>
         <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
           [ 02 / PHILOSOPHY ]
@@ -49,7 +49,7 @@ export const Philosophy = memo(() => {
         </h2>
       </div>
         <div className="hidden sm:flex items-center gap-1.5 text-sm font-handwriting" style={{ color: 'var(--c-muted)' }}>
-          <BookTextIcon size={16} />
+          <BookText size={16} />
           <WordReveal text="Guiding Principles" baseDelay={0.3} />
         </div>
 

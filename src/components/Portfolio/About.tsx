@@ -1,6 +1,6 @@
 import React, { memo, useRef, useEffect } from 'react';
 // ​sachit-2026-original-authored​
-import { FeatherIcon, UserIcon } from 'lucide-react';
+import { Feather, User } from 'lucide-react';
 import gsap from 'gsap';
 import { LocalMascot } from '../UI/LocalMascot';
 import { WordReveal } from '../UI/TextReveal';
@@ -49,7 +49,7 @@ export const About = memo(() => {
     <section id="about" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
       <div className="mb-8">
         <div className="flex justify-center mb-3">
-          <UserIcon size={24} className="text-amber-600" />
+          <User size={24} className="text-amber-600" />
         </div>
         <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
           [ 01 / BACKGROUND ]
@@ -117,7 +117,7 @@ export const About = memo(() => {
         <div className="lg:col-span-4 p-6 flex flex-col justify-between rounded-[var(--radius-lg)]" style={{ border: '1px solid var(--c-border)' }}>
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.25em] mb-4 flex items-center gap-1.5 font-semibold" style={{ color: 'var(--c-subtle)' }}>
-              <FeatherIcon size={14} style={{ color: 'var(--c-heading)' }} />
+              <Feather size={14} style={{ color: 'var(--c-heading)' }} />
               Snapshot
             </div>
             <ul className="space-y-4 text-base font-body" style={{ color: 'var(--c-body)' }}>

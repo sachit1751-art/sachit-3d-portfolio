@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, memo } from 'react';
 // ​sachit-portfolio-2026-watermark​
-import { MailCheckIcon, CheckIcon, CopyIcon, SendIcon, InstagramIcon, LinkedinIcon } from 'lucide-react';
+import { MailCheck, Check, Copy, Send, Instagram, Linkedin } from 'lucide-react';
 import { AlertCircle, CheckCircle2, Info, Loader2 } from 'lucide-react';
 import { animate } from 'animejs';
 import { CharReveal, WordReveal, LineReveal } from '../UI/TextReveal';
@@ -234,7 +234,7 @@ export const Contact = memo(() => {
         {/* Section Header */}
         <div className="mb-8">
           <div className="flex justify-center mb-3">
-            <SendIcon size={24} className="text-amber-600" />
+            <Send size={24} className="text-amber-600" />
           </div>
           <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
             [ 12 / CONTACT ]
@@ -254,7 +254,7 @@ export const Contact = memo(() => {
               {isSuccess ? (
                 <div className="p-8 text-center flex flex-col items-center justify-center space-y-4 h-full rounded-[var(--radius-lg)] shadow-sm" style={{ border: '1px solid var(--c-border)', backgroundColor: 'var(--c-card)' }}>
                   <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--c-btn-bg)', color: 'var(--c-btn-text)' }}>
-                    <CheckIcon size={32} />
+                    <Check size={32} />
                   </div>
                   <h3 className="font-sans text-2xl font-bold" style={{ color: 'var(--c-heading)' }}>Message Sent Successfully!</h3>
                   <p className="font-body text-sm" style={{ color: 'var(--c-body)' }}>Thanks for reaching out. Your dispatch payload has been transmitted.</p>
@@ -488,7 +488,7 @@ export const Contact = memo(() => {
                     ) : (
                       <>
                         <span>Transmit Message</span>
-                        <SendIcon size={16} />
+                        <Send size={16} />
                       </>
                     )}
                   </button>
@@ -522,13 +522,13 @@ export const Contact = memo(() => {
                 aria-label={copied ? 'Email copied to clipboard' : `Copy email address: ${EMAIL}`}
               >
                 <div className="flex items-center gap-3">
-                  <MailCheckIcon size={16} style={{ color: 'var(--c-subtle)' }} />
+                  <MailCheck size={16} style={{ color: 'var(--c-subtle)' }} />
                   <span className="font-sans font-bold text-sm xs:text-base truncate max-w-[160px] min-[380px]:max-w-none" style={{ color: 'var(--c-heading)' }}>{EMAIL}</span>
                 </div>
                 {copied ? (
-                  <CheckIcon size={16} className="text-emerald-600" aria-hidden="true" />
+                  <Check size={16} className="text-emerald-600" aria-hidden="true" />
                 ) : (
-                  <CopyIcon size={16} className="transition-colors group-hover:scale-110" style={{ color: 'var(--c-muted)' }} aria-hidden="true" />
+                  <Copy size={16} className="transition-colors group-hover:scale-110" style={{ color: 'var(--c-muted)' }} aria-hidden="true" />
                 )}
               </button>
             </LineReveal>

@@ -1,7 +1,7 @@
 import React, { memo, useRef, useEffect } from 'react';
 // ​‌sachit-2026-original-author‌​
 import gsap from 'gsap';
-import { ArrowRightIcon, MailCheckIcon, FileTextIcon, LinkedinIcon } from 'lucide-react';
+import { ArrowRight, MailCheck, FileText, Linkedin } from 'lucide-react';
 import { WordReveal } from '../UI/TextReveal';
 import { DepthFlipText } from '../UI/DepthFlipText';
 import { QuoteRoll } from '../UI/QuoteRoll';
@@ -98,7 +98,7 @@ export const Hero = memo<HeroProps>(({
           style={{ backgroundColor: 'var(--c-btn-bg)', color: 'var(--c-btn-text)' }}
         >
           <span>View Projects</span>
-          <ArrowRightIcon size={16} className="arrow-icon" />
+          <ArrowRight size={16} className="arrow-icon" />
         </button>
 
         {onViewResume && (
@@ -112,7 +112,7 @@ export const Hero = memo<HeroProps>(({
             }}
             aria-label="View Resume"
           >
-            <FileTextIcon size={16} />
+            <FileText size={16} />
             <span>View Resume</span>
           </button>
         )}
@@ -146,7 +146,7 @@ export const Hero = memo<HeroProps>(({
             className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
             style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
           >
-            <LinkedinIcon size={16} />
+            <Linkedin size={16} />
           </a>
           <a
             href="mailto:sachit1751@gmail.com"
@@ -159,7 +159,7 @@ export const Hero = memo<HeroProps>(({
             className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
             style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
           >
-            <MailCheckIcon size={16} />
+            <MailCheck size={16} />
           </a>
         </div>
 
