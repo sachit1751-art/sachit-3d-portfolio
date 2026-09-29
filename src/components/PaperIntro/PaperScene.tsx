@@ -33,7 +33,7 @@ interface PaperSceneProps {
 export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
   paperState,
   onStateChange,
-  theme = 'cotton',
+  theme = 'kraft',
   onPaperClick,
   onSound,
   moodGameActive = false,

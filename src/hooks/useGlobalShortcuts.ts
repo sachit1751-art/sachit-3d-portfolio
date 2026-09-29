@@ -32,12 +32,9 @@ export interface UseGlobalShortcutsOptions {
   introCompleted: boolean;
 }
 
-const THEME_CYCLE: PaperTheme[] = ['cotton', 'kraft', 'blueprint', 'slate'];
+const THEME_CYCLE: PaperTheme[] = ['kraft'];
 const THEME_NAMES: Record<PaperTheme, string> = {
-  cotton: 'Cotton White',
   kraft: 'Kraft Paper',
-  blueprint: 'Studio Blueprint',
-  slate: 'Obsidian Slate',
 };
 
 function isInputElement(el: Element | null): boolean {

@@ -41,6 +41,7 @@ const projects: Project[] = [
     longDescription:
       'Engineered MoneyPal as a native Android budget tracker application featuring calculator-style expense entry, flexible budget periods, and automated recurring expense tracking.\n\nIntegrated interactive home screen widgets and a Wear OS companion app for rapid, wrist-based expense logging and real-time budget monitoring.\n\nUtilized modern Android architecture components including Jetpack Compose for fluid UI design and local Room database persistence for offline-first financial data management.',
     tags: ['Kotlin', 'Jetpack Compose', 'Android SDK', 'Room Database', 'Wear OS', 'Git'],
+    githubUrl: 'https://github.com/sachit1751-art/MoneyPal',
     featured: true,
     stats: { stars: 85, forks: 18, score: 72 }
   },
@@ -55,6 +56,7 @@ const projects: Project[] = [
     longDescription:
       'Developed Audify as a feature-rich, responsive web audio streaming and music player application with fluid playlist controls and real-time track searching.\n\nImplemented custom audio playback hooks utilizing the Web Audio API for smooth track handling, volume management, and dynamic progress bar scrubbing.\n\nConfigured local storage caching and responsive UI styling to maintain user listening preferences and seamless layout adaptation across desktop and mobile devices.',
     tags: ['React', 'TypeScript', 'Tailwind CSS', 'Web Audio API', 'Vite', 'Git'],
+    githubUrl: 'https://github.com/sachit1751-art/Audify',
     featured: true,
     stats: { stars: 96, forks: 24, score: 79 }
   },
@@ -397,11 +399,15 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
                   href={project.githubUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="min-h-[38px] px-3 py-2 text-xs font-mono uppercase tracking-wider rounded-[var(--radius-md)] flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:border-[var(--c-border-focus)] active:scale-95"
+                  className={`min-h-[38px] px-3 py-2 text-xs font-mono uppercase tracking-wider rounded-[var(--radius-md)] flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 ${
+                    !project.demoUrl 
+                      ? 'hover:brightness-105' 
+                      : 'hover:border-[var(--c-border-focus)]'
+                  }`}
                   style={{
-                    border: '1px solid var(--c-border)',
-                    backgroundColor: 'var(--c-input-bg)',
-                    color: 'var(--c-heading)',
+                    border: !project.demoUrl ? 'none' : '1px solid var(--c-border)',
+                    backgroundColor: !project.demoUrl ? 'var(--c-btn-bg)' : 'var(--c-input-bg)',
+                    color: !project.demoUrl ? 'var(--c-btn-text)' : 'var(--c-heading)',
                   }}
                   onClick={(e) => e.stopPropagation()}
                   title="View GitHub Repository"

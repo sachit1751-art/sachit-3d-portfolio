@@ -14,10 +14,7 @@ export interface NotFoundProps {
 }
 
 const THEMES: { id: PaperTheme; label: string; swatch: string }[] = [
-  { id: 'cotton', label: 'Cotton White', swatch: '#fbf9f4' },
   { id: 'kraft', label: 'Kraft Paper', swatch: '#d6bfa2' },
-  { id: 'blueprint', label: 'Studio Blueprint', swatch: '#1a334d' },
-  { id: 'slate', label: 'Obsidian Slate', swatch: '#232428' },
 ];
 
 export const NotFound: React.FC<NotFoundProps> = ({
@@ -29,11 +26,7 @@ export const NotFound: React.FC<NotFoundProps> = ({
   onViewResume,
 }) => {
   // Local fallback theme state if not provided via props
-  const [internalTheme, setInternalTheme] = useState<PaperTheme>(() => {
-    if (propTheme) return propTheme;
-    const attr = document.documentElement.getAttribute('data-theme') as PaperTheme;
-    return attr && ['cotton', 'kraft', 'blueprint', 'slate'].includes(attr) ? attr : 'kraft';
-  });
+  const [internalTheme, setInternalTheme] = useState<PaperTheme>('kraft');
 
   const activeTheme = propTheme || internalTheme;
   const { playUnfold, playCrumple } = usePaperSound();
@@ -50,14 +43,7 @@ export const NotFound: React.FC<NotFoundProps> = ({
 
   // Handler for the "Switch" theme toggle (inspired directly by Domino New York's Switch toggle)
   const handleSwitchTheme = (e: React.MouseEvent) => {
-    const currentIndex = THEMES.findIndex((t) => t.id === activeTheme);
-    const nextTheme = THEMES[(currentIndex + 1) % THEMES.length].id;
-    if (propSetTheme) {
-      propSetTheme(nextTheme, e);
-    } else {
-      setInternalTheme(nextTheme);
-      document.documentElement.setAttribute('data-theme', nextTheme);
-    }
+    // No-op: Kraft is the only theme
   };
 
   const handleGoHome = () => {

@@ -9,10 +9,7 @@ interface SettingsProps {
 }
 
 const THEMES: { id: PaperTheme; label: string; color: string; desc: string }[] = [
-  { id: 'cotton', label: 'Cotton White', color: '#fbf9f4', desc: 'Clean, minimalist paper with high contrast.' },
   { id: 'kraft', label: 'Kraft Paper', color: '#d6bfa2', desc: 'Warm, natural cardboard texture.' },
-  { id: 'blueprint', label: 'Studio Blueprint', color: '#1a334d', desc: 'Technical dark blue with subtle grid lines.' },
-  { id: 'slate', label: 'Obsidian Slate', color: '#232428', desc: 'Deep obsidian for low-light focus.' },
 ];
 
 export const Settings: React.FC<SettingsProps> = ({ theme, setTheme }) => {

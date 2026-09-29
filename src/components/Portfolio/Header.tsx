@@ -17,10 +17,7 @@ interface HeaderProps {
 }
 
 const THEMES: { id: PaperTheme; label: string; color: string }[] = [
-  { id: 'cotton', label: 'Cotton White', color: '#fbf9f4' },
   { id: 'kraft', label: 'Kraft Paper', color: '#d6bfa2' },
-  { id: 'blueprint', label: 'Studio Blueprint', color: '#1a334d' },
-  { id: 'slate', label: 'Obsidian Slate', color: '#232428' },
 ];
 
 const NAV_ITEMS = [

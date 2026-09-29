@@ -397,43 +397,7 @@ h2.sm\:text-5xl,
   }
 
   /* Theme color tokens */
-  [data-theme="cotton"] {
-    --c-bg: #F8F6F0;
-    --c-heading: #1A1917;
-    --c-body: #63615D;
-    --c-muted: #A3A19C;
-    --c-subtle: #7A7874;
-    --c-faint: #B5B3AF;
-    --c-name: #2A2927;
-    --c-border: rgba(26, 25, 23, 0.1);
-    --c-border-hover: rgba(26, 25, 23, 0.3);
-    --c-border-focus: #1A1917;
-    --c-btn-bg: #1A1917;
-    --c-btn-bg-hover: #2A2927;
-    --c-btn-text: #F9F8F6;
-    --c-card-gradient-from: rgba(255,255,255,0.4);
-    --c-card-gradient-to: rgba(255,255,255,0.1);
-    --c-card: rgba(255,255,255,0.25);
-    --c-header-bg: #F8F6F0;
-    --c-header-border: rgba(26,25,23,0.08);
-    --c-input-bg: rgba(255,255,255,0.4);
-    --c-input-bg-focus: rgba(255,255,255,0.6);
-    --c-modal-bg: rgba(248,246,240,0.95);
-    --c-modal-backdrop: rgba(26,25,23,0.7);
-    --c-progress-track: rgba(26,25,23,0.1);
-    --c-progress-fill-from: rgba(26,25,23,0.7);
-    --c-progress-fill-to: #1A1917;
-    --c-tab-active-bg: rgba(26,25,23,0.85);
-    --c-tab-active-text: #F9F8F6;
-    --c-dot: #1A1917;
-    --c-git-0: rgba(26, 25, 23, 0.05);
-    --c-git-1: #dcd8cf;
-    --c-git-2: #9b978c;
-    --c-git-3: #54514a;
-    --c-git-4: #1A1917;
-    --c-git-border: rgba(26, 25, 23, 0.12);
-  }
-
+  :root,
   [data-theme="kraft"] {
     --c-bg: #EFE6D5;
     --c-heading: #241F1A;
@@ -471,80 +435,6 @@ h2.sm\:text-5xl,
     --c-git-border: rgba(36, 31, 26, 0.14);
   }
 
-  [data-theme="blueprint"] {
-    --c-bg: #14283E;
-    --c-heading: #EAEFF4;
-    --c-body: #C8D0DC;
-    --c-muted: #8EA5BF;
-    --c-subtle: #7B95B5;
-    --c-faint: #5A7A9E;
-    --c-name: #F0F4F8;
-    --c-border: rgba(234, 239, 244, 0.12);
-    --c-border-hover: rgba(234, 239, 244, 0.3);
-    --c-border-focus: #EAEFF4;
-    --c-btn-bg: #EAEFF4;
-    --c-btn-bg-hover: #D0D8E4;
-    --c-btn-text: #1a334d;
-    --c-card-gradient-from: rgba(255,255,255,0.08);
-    --c-card-gradient-to: rgba(255,255,255,0.02);
-    --c-card: rgba(255,255,255,0.06);
-    --c-header-bg: #14283E;
-    --c-header-border: rgba(234,239,244,0.1);
-    --c-input-bg: rgba(255,255,255,0.08);
-    --c-input-bg-focus: rgba(255,255,255,0.14);
-    --c-modal-bg: rgba(20,40,62,0.95);
-    --c-modal-backdrop: rgba(0,0,0,0.6);
-    --c-progress-track: rgba(234,239,244,0.12);
-    --c-progress-fill-from: rgba(234,239,244,0.5);
-    --c-progress-fill-to: #EAEFF4;
-    --c-tab-active-bg: rgba(234,239,244,0.85);
-    --c-tab-active-text: #1a334d;
-    --c-dot: #EAEFF4;
-    --c-git-0: rgba(234, 239, 244, 0.06);
-    --c-git-1: #164e7a;
-    --c-git-2: #0284c7;
-    --c-git-3: #38bdf8;
-    --c-git-4: #bae6fd;
-    --c-git-border: rgba(234, 239, 244, 0.15);
-  }
-
-  [data-theme="slate"] {
-    --c-bg: #1E1F23;
-    --c-heading: #E8E7E4;
-    --c-body: #C5C3BE;
-    --c-muted: #9E9C97;
-    --c-subtle: #8A8883;
-    --c-faint: #706E69;
-    --c-name: #F0EFEC;
-    --c-border: rgba(232, 231, 228, 0.12);
-    --c-border-hover: rgba(232, 231, 228, 0.3);
-    --c-border-focus: #E8E7E4;
-    --c-btn-bg: #E8E7E4;
-    --c-btn-bg-hover: #D0CFCC;
-    --c-btn-text: #232428;
-    --c-card-gradient-from: rgba(255,255,255,0.06);
-    --c-card-gradient-to: rgba(255,255,255,0.01);
-    --c-card: rgba(255,255,255,0.04);
-    --c-header-bg: #1E1F23;
-    --c-header-border: rgba(232,231,228,0.1);
-    --c-input-bg: rgba(255,255,255,0.06);
-    --c-input-bg-focus: rgba(255,255,255,0.12);
-    --c-modal-bg: rgba(30,31,35,0.95);
-    --c-modal-backdrop: rgba(0,0,0,0.6);
-    --c-progress-track: rgba(232,231,228,0.12);
-    --c-progress-fill-from: rgba(232,231,228,0.5);
-    --c-progress-fill-to: #E8E7E4;
-    --c-tab-active-bg: rgba(232,231,228,0.85);
-    --c-tab-active-text: #232428;
-    --c-dot: #E8E7E4;
-    --c-git-0: rgba(232, 231, 228, 0.06);
-    --c-git-1: #373a46;
-    --c-git-2: #5d6379;
-    --c-git-3: #9aa2bc;
-    --c-git-4: #e8ebf8;
-    --c-git-border: rgba(232, 231, 228, 0.14);
-  }
-
   /* Focus-visible styles — visible keyboard focus ring for all interactive elements */
   a:focus-visible,
   button:focus-visible,
@@ -568,11 +458,6 @@ h2.sm\:text-5xl,
     mix-blend-mode: multiply;
     transform: translateZ(0);
     will-change: transform;
-  }
-
-  [data-theme="blueprint"] #physical-paper-sheet,
-  [data-theme="slate"] #physical-paper-sheet {
-    mix-blend-mode: normal;
   }
 
   #physical-paper-sheet h1,
@@ -4210,4 +4095,21 @@ section[id] {
 
 .sr-timeline-item {
   contain-intrinsic-size: 0 150px;
+}
+
+/* Premium interactive highlights for focused project cards (MoneyPal & Audify) */
+#project-card-moneypal {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+#project-card-moneypal:hover {
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  box-shadow: 0 12px 30px rgba(16, 185, 129, 0.06) !important;
+}
+
+#project-card-audify {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+#project-card-audify:hover {
+  border-color: rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.06) !important;
 }

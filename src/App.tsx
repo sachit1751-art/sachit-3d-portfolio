@@ -458,29 +458,8 @@ export default function App() {
     moodTransitionFiredRef.current = false;
   }, []);
 
-  const handleThemeChange = useCallback((newTheme: PaperTheme, event?: React.MouseEvent | MouseEvent) => {
-    // If browser doesn't support View Transitions or it's a reduced motion user, just switch
-    if (!document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setTheme(newTheme);
-      return;
-    }
-
-    // Get click coordinates
-    const x = event ? event.clientX : window.innerWidth / 2;
-    const y = event ? event.clientY : window.innerHeight / 2;
-
-    // Set CSS variables for the animation
-    document.documentElement.style.setProperty('--transition-x', `${x}px`);
-    document.documentElement.style.setProperty('--transition-y', `${y}px`);
-    document.documentElement.setAttribute('data-theme-transition', 'circular');
-
-    const transition = document.startViewTransition(() => {
-      setTheme(newTheme);
-    });
-
-    transition.finished.finally(() => {
-      document.documentElement.removeAttribute('data-theme-transition');
-    });
+  const handleThemeChange = useCallback(() => {
+    // No-op: Kraft Paper is the only theme available
   }, []);
 
   // Global keyboard shortcuts manager

@@ -468,62 +468,16 @@ export const SiteMapModal: React.FC<SiteMapModalProps> = ({
 
       // Actions & Theme controls
       {
-        id: 'action-theme-cotton',
-        title: 'Switch Atmosphere: Cotton White',
-        subtitle: 'Clean, radiant high-contrast off-white paper theme',
-        category: 'action',
-        categoryLabel: 'Theme Action',
-        icon: Palette,
-        badge: theme === 'cotton' ? 'Active' : undefined,
-        keywords: ['theme', 'cotton', 'white', 'light', 'bright', 'color'],
-        action: () => {
-          setTheme('cotton');
-          triggerShortcutHUD({ title: 'Atmosphere: Cotton White', badge: 'Theme' });
-          onClose();
-        },
-      },
-      {
         id: 'action-theme-kraft',
-        title: 'Switch Atmosphere: Kraft Paper',
-        subtitle: 'Warm, tactile organic textured kraft paper tone',
+        title: 'Atmosphere: Kraft Paper',
+        subtitle: 'Warm, tactile organic textured kraft paper tone (Default Theme)',
         category: 'action',
         categoryLabel: 'Theme Action',
         icon: Palette,
-        badge: theme === 'kraft' ? 'Active' : undefined,
+        badge: 'Active',
         keywords: ['theme', 'kraft', 'paper', 'tan', 'warm', 'color'],
         action: () => {
-          setTheme('kraft');
           triggerShortcutHUD({ title: 'Atmosphere: Kraft Paper', badge: 'Theme' });
-          onClose();
-        },
-      },
-      {
-        id: 'action-theme-blueprint',
-        title: 'Switch Atmosphere: Studio Blueprint',
-        subtitle: 'Deep oceanic architectural blueprint theme with cyan accents',
-        category: 'action',
-        categoryLabel: 'Theme Action',
-        icon: Palette,
-        badge: theme === 'blueprint' ? 'Active' : undefined,
-        keywords: ['theme', 'blueprint', 'blue', 'drafting', 'dark', 'color'],
-        action: () => {
-          setTheme('blueprint');
-          triggerShortcutHUD({ title: 'Atmosphere: Studio Blueprint', badge: 'Theme' });
-          onClose();
-        },
-      },
-      {
-        id: 'action-theme-slate',
-        title: 'Switch Atmosphere: Obsidian Slate',
-        subtitle: 'Stealth charcoal obsidian slate dark aesthetic',
-        category: 'action',
-        categoryLabel: 'Theme Action',
-        icon: Palette,
-        badge: theme === 'slate' ? 'Active' : undefined,
-        keywords: ['theme', 'slate', 'dark', 'obsidian', 'black', 'night', 'color'],
-        action: () => {
-          setTheme('slate');
-          triggerShortcutHUD({ title: 'Atmosphere: Obsidian Slate', badge: 'Theme' });
           onClose();
         },
       },

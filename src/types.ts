@@ -6,7 +6,7 @@ export type PaperState =
   | 'settling'
   | 'opened';
 
-export type PaperTheme = 'cotton' | 'kraft' | 'blueprint' | 'slate';
+export type PaperTheme = 'kraft';
 
 export interface Project {
   id: string;

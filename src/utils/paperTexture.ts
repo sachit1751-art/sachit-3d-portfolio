@@ -8,32 +8,16 @@ interface GeneratedPaperTextures {
 }
 
 const themeColorMap: Record<PaperTheme, { base: string; fiber: string; highlight: string; gridColor?: string }> = {
-  cotton: {
-    base: '#fbf9f4',
-    fiber: 'rgba(80, 70, 60, 0.12)',
-    highlight: 'rgba(255, 255, 255, 0.55)',
-  },
   kraft: {
     base: '#d6bfa2',
     fiber: 'rgba(60, 45, 30, 0.18)',
     highlight: 'rgba(250, 240, 220, 0.35)',
   },
-  blueprint: {
-    base: '#1a334d',
-    fiber: 'rgba(255, 255, 255, 0.10)',
-    highlight: 'rgba(100, 180, 255, 0.20)',
-    gridColor: 'rgba(120, 180, 230, 0.12)',
-  },
-  slate: {
-    base: '#232428',
-    fiber: 'rgba(255, 255, 255, 0.08)',
-    highlight: 'rgba(255, 255, 255, 0.15)',
-  },
 };
 
 const textureCache = new Map<PaperTheme, GeneratedPaperTextures>();
 
-export function getProceduralPaperTextures(theme: PaperTheme = 'cotton'): GeneratedPaperTextures {
+export function getProceduralPaperTextures(theme: PaperTheme = 'kraft'): GeneratedPaperTextures {
   const cached = textureCache.get(theme);
   if (cached) return cached;
   const textures = createProceduralPaperTextures(theme);
@@ -41,9 +25,9 @@ export function getProceduralPaperTextures(theme: PaperTheme = 'cotton'): Genera
   return textures;
 }
 
-function createProceduralPaperTextures(theme: PaperTheme = 'cotton'): GeneratedPaperTextures {
+function createProceduralPaperTextures(theme: PaperTheme = 'kraft'): GeneratedPaperTextures {
   const size = 512;
-  const themeColors = themeColorMap[theme] || themeColorMap.cotton;
+  const themeColors = themeColorMap[theme] || themeColorMap.kraft;
 
   const diffuseCanvas = document.createElement('canvas');
   diffuseCanvas.width = size;

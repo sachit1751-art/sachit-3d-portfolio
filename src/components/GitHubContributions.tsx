@@ -25,10 +25,7 @@ export interface GitHubContributionsProps {
 type TimeframeOption = '3M' | '6M' | '9M' | '12M';
 
 const THEME_PALETTE_NAMES: Record<PaperTheme, { label: string; accent: string }> = {
-  cotton: { label: 'Sumi Ink & Washed Charcoal', accent: '#1A1917' },
   kraft: { label: 'Roasted Amber & Sepia Leather', accent: '#c89962' },
-  blueprint: { label: 'Cyanotype & Technical Cyan', accent: '#38bdf8' },
-  slate: { label: 'Graphite & Platinum Steel', accent: '#e8ebf8' },
 };
 
 // Deterministic mock generation when GitHub API proxy is offline/rate-limited
