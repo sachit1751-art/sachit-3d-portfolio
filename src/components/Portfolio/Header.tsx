@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useRef, memo } from 'react';
 // ​provenance:sachit-2026-original​
 import { PaperTheme } from '../../types';
-import { ArrowUpRight, Sparkles, Compass, Search, FolderClosed, Menu, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { ArrowUpRight, Sparkles, Compass, Search, FolderClosed, Menu, X, RotateCcw } from 'lucide-react';
+import { motion, AnimatePresence, Variants } from 'motion/react';
 import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
 import { WATERMARKED_NAME } from '../../utils/watermark';
 
@@ -49,7 +49,65 @@ const ALL_SECTIONS = [
   'contact',
 ];
 
-// ﻿author:sachit-2026-original﻿
+// Staggered Fade-In-Up Animation Variants for Header & Buttons
+const headerContainerVariants: Variants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.45,
+      ease: [0.22, 1, 0.36, 1],
+      staggerChildren: 0.065,
+      delayChildren: 0.08,
+    },
+  },
+};
+
+const fadeInUpVariant: Variants = {
+  hidden: { opacity: 0, y: 16, scale: 0.94 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: 'spring',
+      damping: 22,
+      stiffness: 280,
+      mass: 0.75,
+    },
+  },
+};
+
+const mobileDrawerContainerVariants: Variants = {
+  hidden: { opacity: 0, y: -16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.25,
+      ease: 'easeOut',
+      staggerChildren: 0.04,
+      delayChildren: 0.05,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -16,
+    transition: { duration: 0.18, ease: 'easeIn' },
+  },
+};
+
+const mobileDrawerItemVariants: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', damping: 22, stiffness: 300 },
+  },
+};
+
+// author:sachit-2026-original
 export const Header = memo<HeaderProps>(({
   theme,
   setTheme,
@@ -85,16 +143,27 @@ export const Header = memo<HeaderProps>(({
 
   // ── Measure active indicator position ────────────────────────────────
   useEffect(() => {
-    const btn = navBtns.current[currentActive];
-    const nav = navContainerRef.current;
-    if (!btn || !nav) return;
+    const updateIndicator = () => {
+      const btn = navBtns.current[currentActive];
+      const nav = navContainerRef.current;
+      if (!btn || !nav) return;
 
-    const navRect = nav.getBoundingClientRect();
-    const btnRect = btn.getBoundingClientRect();
-    setIndicatorStyle({
-      left: btnRect.left - navRect.left,
-      width: btnRect.width,
-    });
+      const navRect = nav.getBoundingClientRect();
+      const btnRect = btn.getBoundingClientRect();
+      setIndicatorStyle({
+        left: btnRect.left - navRect.left,
+        width: btnRect.width,
+      });
+    };
+
+    updateIndicator();
+    // Re-measure after staggered entrance animation completes
+    const timer = setTimeout(updateIndicator, 400);
+    window.addEventListener('resize', updateIndicator);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', updateIndicator);
+    };
   }, [currentActive]);
 
   // ── Scroll to section & update URL hash ────────────────────────────
@@ -250,13 +319,10 @@ export const Header = memo<HeaderProps>(({
   return (
     <>
       <motion.header
-        initial={{ y: -28, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{
-          y: { type: 'spring', damping: 22, stiffness: 180, mass: 0.8 },
-          opacity: { duration: 0.5, ease: 'easeOut' },
-        }}
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        initial="hidden"
+        animate="visible"
+        variants={headerContainerVariants}
+        className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300"
         style={{
           backgroundColor: (scrolled || mobileMenuOpen) ? 'var(--c-header-bg)' : 'transparent',
           backdropFilter: (scrolled || mobileMenuOpen) ? 'blur(12px)' : 'none',
@@ -269,10 +335,12 @@ export const Header = memo<HeaderProps>(({
       >
         <div className="max-w-[calc(100%-24px)] sm:max-w-[min(88vw,1100px)] md:max-w-[min(82vw,1100px)] mx-auto px-4 sm:px-10 md:px-14 flex items-center justify-between h-[60px] sm:h-[68px]">
           {/* Logo + Section Indicator */}
-          <div className="flex items-center gap-3 sm:gap-6 md:flex-1 justify-start min-w-0">
-            <button
+          <motion.div variants={fadeInUpVariant} className="flex items-center gap-3 sm:gap-6 md:flex-1 justify-start min-w-0">
+            <motion.button
+              whileHover={{ scale: 1.04, y: -1 }}
+              whileTap={{ scale: 0.96 }}
               onClick={() => handleNavClick('hero')}
-              className="flex-shrink-0 flex items-center gap-3 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] rounded py-1"
+              className="flex-shrink-0 flex items-center gap-3 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] rounded py-1 px-1 transition-all"
               aria-label="Go to top"
             >
               <span
@@ -283,7 +351,7 @@ export const Header = memo<HeaderProps>(({
               >
                 {WATERMARKED_NAME}
               </span>
-            </button>
+            </motion.button>
 
             {/* Mobile Section Label */}
             <AnimatePresence mode="wait">
@@ -302,7 +370,7 @@ export const Header = memo<HeaderProps>(({
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </motion.div>
 
           {/* Desktop Nav (Centered) */}
           <nav
@@ -313,12 +381,15 @@ export const Header = memo<HeaderProps>(({
             {NAV_ITEMS.map(({ id, label, isResume }) => {
               const isActive = currentActive === id;
               return (
-                <button
+                <motion.button
                   key={id}
+                  variants={fadeInUpVariant}
+                  whileHover={{ y: -2, scale: 1.04 }}
+                  whileTap={{ y: 0, scale: 0.96 }}
                   ref={(el) => { navBtns.current[id] = el; }}
                   onClick={() => handleNavClick(id, isResume)}
                   onMouseEnter={isResume ? () => { import('./ResumeViewer'); } : undefined}
-                  className="relative px-3.5 py-1.5 text-sm font-body transition-colors cursor-pointer rounded-md"
+                  className="relative px-3.5 py-1.5 text-sm font-body transition-colors cursor-pointer rounded-lg hover:bg-[var(--c-input-bg)]"
                   style={{
                     color: isActive ? 'var(--c-heading)' : 'var(--c-subtle)',
                     fontWeight: isActive ? 600 : 400,
@@ -326,7 +397,12 @@ export const Header = memo<HeaderProps>(({
                   aria-current={isActive ? 'location' : undefined}
                 >
                   {label}
-                </button>
+                  {isResume && (
+                    <span className="ml-1 inline-flex items-center text-[10px] opacity-70">
+                      ↗
+                    </span>
+                  )}
+                </motion.button>
               );
             })}
             {/* Sliding underline indicator */}
@@ -340,18 +416,53 @@ export const Header = memo<HeaderProps>(({
             />
           </nav>
 
-          {/* Right Area: Mobile Menu Toggle */}
-          <div className="flex flex-1 items-center justify-end gap-2">
+          {/* Right Area: Action Buttons & Mobile Menu Toggle */}
+          <motion.div variants={fadeInUpVariant} className="flex flex-1 items-center justify-end gap-2">
+            {/* Search / Site Map Cmd+K button on Desktop */}
+            {onOpenSiteMap && (
+              <motion.button
+                variants={fadeInUpVariant}
+                whileHover={{ scale: 1.04, y: -1 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={onOpenSiteMap}
+                className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--c-border)] hover:border-[var(--c-border-hover)] bg-[var(--c-card)] text-xs font-mono transition-all cursor-pointer shadow-xs"
+                style={{ color: 'var(--c-subtle)' }}
+                title="Open Search & Site Map (⌘K)"
+                aria-label="Open search and site map modal"
+              >
+                <Search className="w-3.5 h-3.5 text-[var(--c-subtle)]" />
+                <span className="hidden lg:inline text-[11px] font-medium">Search</span>
+                <kbd className="px-1 py-0.5 text-[9px] rounded bg-[var(--c-input-bg)] border border-[var(--c-border)] font-mono text-[var(--c-subtle)]">⌘K</kbd>
+              </motion.button>
+            )}
+
+            {/* Recrumple / Refold paper action button */}
+            <motion.button
+              variants={fadeInUpVariant}
+              whileHover={{ scale: 1.05, y: -1, rotate: -12 }}
+              whileTap={{ scale: 0.94, rotate: 0 }}
+              onClick={onRecrumple}
+              className="p-2 rounded-lg border border-[var(--c-border)] hover:border-[var(--c-border-hover)] bg-[var(--c-card)] transition-all cursor-pointer shadow-xs"
+              style={{ color: 'var(--c-heading)' }}
+              title="Fold back to 3D origami paper state"
+              aria-label="Recrumple or fold paper back"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+            </motion.button>
+
             {/* Mobile Menu Toggle Button */}
-            <button
+            <motion.button
+              variants={fadeInUpVariant}
+              whileHover={{ scale: 1.05, y: -1 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setMobileMenuOpen(prev => !prev)}
-              className="md:hidden p-2 rounded-md border border-[var(--c-border)] hover:border-[var(--c-border-hover)] transition-all cursor-pointer"
+              className="md:hidden p-2 rounded-lg border border-[var(--c-border)] hover:border-[var(--c-border-hover)] transition-all cursor-pointer shadow-xs"
               style={{ color: 'var(--c-heading)', backgroundColor: 'var(--c-card)' }}
               aria-label={mobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         </div>
       </motion.header>
 
@@ -359,10 +470,10 @@ export const Header = memo<HeaderProps>(({
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={mobileDrawerContainerVariants}
             className="fixed inset-x-0 top-[60px] z-40 md:hidden border-b shadow-2xl p-6"
             style={{
               backgroundColor: 'var(--c-header-bg)',
@@ -376,10 +487,12 @@ export const Header = memo<HeaderProps>(({
               {NAV_ITEMS.map(({ id, label, subtitle, isResume }) => {
                 const isActive = currentActive === id;
                 return (
-                  <button
+                  <motion.button
                     key={id}
+                    variants={mobileDrawerItemVariants}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => handleNavClick(id, isResume)}
-                    className="flex flex-col items-start px-4 py-3 rounded-xl transition-all text-left"
+                    className="flex flex-col items-start px-4 py-3 rounded-xl transition-all text-left cursor-pointer"
                     style={{
                       backgroundColor: isActive ? 'var(--c-input-bg)' : 'transparent',
                       border: isActive ? '1px solid var(--c-border-hover)' : '1px solid transparent',
@@ -390,13 +503,14 @@ export const Header = memo<HeaderProps>(({
                       style={{ color: isActive ? 'var(--c-heading)' : 'var(--c-body)' }}
                     >
                       {label}
+                      {isResume && <span className="ml-1.5 text-xs font-sans opacity-70">↗</span>}
                     </span>
                     {subtitle && (
                       <span className="text-[11px] font-mono opacity-60 tracking-wider">
                         {subtitle}
                       </span>
                     )}
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>

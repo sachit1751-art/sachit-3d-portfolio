@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Cpu } from 'lucide-react';
+import { CpuIcon } from 'lucide-animated';
 import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
 import { PretextText } from '../UI/PretextText';
@@ -10,7 +10,7 @@ export const CurrentlyBuilding = memo(() => {
       <section id="currently-building" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
         <div className="mb-8">
           <div className="flex justify-center mb-3">
-            <Cpu className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
+            <CpuIcon size={24} className="text-amber-600" />
           </div>
           <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
             [ 05 / NOW ]

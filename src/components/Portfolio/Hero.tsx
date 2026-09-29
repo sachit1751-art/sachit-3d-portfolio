@@ -1,7 +1,7 @@
 import React, { memo, useRef, useEffect } from 'react';
 // ​‌sachit-2026-original-author‌​
 import gsap from 'gsap';
-import { ArrowDownRight, Mail, FileText } from 'lucide-react';
+import { ArrowRightIcon, MailCheckIcon, FileTextIcon, LinkedinIcon } from 'lucide-animated';
 import { WordReveal } from '../UI/TextReveal';
 import { DepthFlipText } from '../UI/DepthFlipText';
 import { QuoteRoll } from '../UI/QuoteRoll';
@@ -28,95 +28,63 @@ export const Hero = memo<HeroProps>(({
     if (!heroRef.current) return;
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      // Animate Hero Elements with a fast, fluid stagger
+      gsap.fromTo(
+        '.gsap-hero-title',
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out', delay: 0.1 }
+      );
 
-      const heroHeader = gsap.utils.toArray<HTMLElement>('.gsap-hero-header', heroRef.current);
-      const heroStatus = gsap.utils.toArray<HTMLElement>('.gsap-hero-status', heroRef.current);
-      const heroSubtitle = gsap.utils.toArray<HTMLElement>('.gsap-hero-subtitle', heroRef.current);
-      const heroTitle = gsap.utils.toArray<HTMLElement>('.gsap-hero-title', heroRef.current);
-      const heroDesc = gsap.utils.toArray<HTMLElement>('.gsap-hero-desc', heroRef.current);
-      const heroBtn = gsap.utils.toArray<HTMLElement>('.gsap-hero-btn', heroRef.current);
-      const heroSocial = gsap.utils.toArray<HTMLElement>('.gsap-hero-social', heroRef.current);
-      const heroCard = gsap.utils.toArray<HTMLElement>('.gsap-hero-card', heroRef.current);
+      gsap.fromTo(
+        '.gsap-hero-btn',
+        { opacity: 0, scale: 0.95 },
+        { opacity: 1, scale: 1, duration: 0.4, stagger: 0.08, ease: 'back.out(1.5)', delay: 0.25 }
+      );
 
-      if (heroHeader.length) {
-        tl.fromTo(heroHeader, { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.55, stagger: 0.1 });
-      }
-      if (heroStatus.length) {
-        tl.fromTo(heroStatus, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45 }, '-=0.3');
-      }
-      if (heroSubtitle.length) {
-        tl.fromTo(heroSubtitle, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45 }, '-=0.35');
-      }
-      if (heroTitle.length) {
-        tl.fromTo(heroTitle, { opacity: 0, y: 16, scale: 0.98 }, { opacity: 1, y: 0, scale: 1, duration: 0.65 }, '-=0.35');
-      }
-      if (heroDesc.length) {
-        tl.fromTo(heroDesc, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.55 }, '-=0.4');
-      }
-      if (heroBtn.length) {
-        tl.fromTo(heroBtn, { opacity: 0, y: 12, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.08 }, '-=0.35');
-      }
-      if (heroSocial.length) {
-        tl.fromTo(heroSocial, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45, stagger: 0.06, clearProps: 'transform' }, '-=0.3');
-      }
-      if (heroCard.length) {
-        tl.fromTo(heroCard, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.55, stagger: 0.1, clearProps: 'transform' }, '-=0.3');
-      }
+      gsap.fromTo(
+        '.gsap-hero-social',
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, duration: 0.4, stagger: 0.05, ease: 'power2.out', delay: 0.4 }
+      );
+
+      gsap.fromTo(
+        '.gsap-hero-card',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, ease: 'power2.out', delay: 0.5 }
+      );
     }, heroRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={heroRef} id="hero" className="relative mb-4 pt-0 pb-4">
-      <div className="mb-6">
-        <div
-          className="gsap-hero-status flex flex-wrap items-center justify-between gap-3 text-xs pb-3.5 mb-6 border-b"
-          style={{ borderColor: 'var(--c-border)', color: 'var(--c-subtle)' }}
-        >
-          <div className="flex items-center gap-2.5 min-w-0">
-            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--c-dot)' }} />
-            <QuoteRoll
-              quotes={DEV_QUOTES}
-              interval={4500}
-              className="font-handwriting text-base sm:text-lg italic tracking-normal"
-            />
-          </div>
-          <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] opacity-80 flex-shrink-0" style={{ color: 'var(--c-heading)' }}>
-            <span className="opacity-40">—</span>
-            <span>I CAN BUILD ANYTHING.</span>
-          </div>
+    <section
+      ref={heroRef}
+      id="hero"
+      aria-label="Hero Introduction"
+      className="relative z-10 pt-20 pb-12 sm:pt-28 sm:pb-16 flex flex-col justify-center min-h-[82vh]"
+    >
+      <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 mb-6">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono border border-[var(--c-border)] bg-[var(--c-card)]">
+          <span className="w-2 h-2 rounded-full animate-pulse bg-emerald-500" />
+          <span style={{ color: 'var(--c-body)' }}>Available for Software Engineering Roles</span>
         </div>
-        <div className="mb-4">
-          <p className="gsap-hero-subtitle font-handwriting text-lg sm:text-xl mb-2" style={{ color: 'var(--c-subtle)' }}>
-            Independent Developer
-          </p>
-        </div>
-        <h1 className="gsap-hero-title text-[clamp(2.2rem,1.25rem+4.5vw,5.25rem)] leading-[1.18] font-handwriting font-bold tracking-tight my-2 overflow-visible" style={{ color: 'var(--c-heading)', paddingRight: '0.1em' }}>
-          <span className="sr-only" data-author="Sachit" data-provenance="sachit-2026-original-creator">{WATERMARKED_NAME}</span>
-          <span className="inline-block" aria-hidden="true">
-            <DepthFlipText
-              phrases={[
-                "Full-Stack Web Developer",
-                "AI & Prompt Engineer",
-                "Frontend Developer",
-                "Android Developer",
-                "Backend Engineer",
-                "Product Engineer",
-                "Opensource Dev",
-                "LLM Integration Developer",
-                "Web & Mobile Developer",
-                "UI & Motion Engineer",
-                "Best Vibecoder"
-              ]}
-              interval={3800}
-            />
-          </span>
+
+        {/* Dynamic Dev Quote Carousel */}
+        <QuoteRoll quotes={DEV_QUOTES} className="hidden sm:block" />
+      </div>
+
+      <div className="relative z-10 mb-6">
+        <h1 className="gsap-hero-title text-[var(--fluid-h1)] font-sans font-bold tracking-tight leading-[1.08] mb-4">
+          <DepthFlipText
+            singleText={`Hello, I'm ${WATERMARKED_NAME}.`}
+            className="text-[var(--c-heading)]"
+          />
         </h1>
-        <p className="gsap-hero-desc max-w-[540px] leading-relaxed text-lg sm:text-xl font-body opacity-90 mt-5" style={{ color: 'var(--c-heading)' }}>
+
+        <p className="max-w-2xl text-base sm:text-lg md:text-xl font-body leading-relaxed text-[var(--c-body)]">
           <WordReveal
-            text="I build full-stack web applications, architect AI integrations, and automate workflows."
+            text="Software Developer & Prompt Engineer creating full-stack web applications, custom Android platforms, and AI automation tools."
             baseDelay={0.1}
           />
         </p>
@@ -130,7 +98,7 @@ export const Hero = memo<HeroProps>(({
           style={{ backgroundColor: 'var(--c-btn-bg)', color: 'var(--c-btn-text)' }}
         >
           <span>View Projects</span>
-          <ArrowDownRight className="arrow-icon w-4 h-4" />
+          <ArrowRightIcon size={16} className="arrow-icon" />
         </button>
 
         {onViewResume && (
@@ -144,7 +112,7 @@ export const Hero = memo<HeroProps>(({
             }}
             aria-label="View Resume"
           >
-            <FileText className="w-4 h-4" />
+            <FileTextIcon size={16} />
             <span>View Resume</span>
           </button>
         )}
@@ -178,7 +146,7 @@ export const Hero = memo<HeroProps>(({
             className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
             style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
           >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            <LinkedinIcon size={16} />
           </a>
           <a
             href="mailto:sachit1751@gmail.com"
@@ -191,7 +159,7 @@ export const Hero = memo<HeroProps>(({
             className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
             style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
           >
-            <Mail className="w-4 h-4" />
+            <MailCheckIcon size={16} />
           </a>
         </div>
 
@@ -243,7 +211,7 @@ export const Hero = memo<HeroProps>(({
           </div>
           <div className="relative z-10 mt-auto">
             <h3 className="hero-card-title text-xl font-bold font-sans" style={{ color: 'var(--c-heading)' }}>
-              AI & Automation
+              AI Automation
             </h3>
             <p className="text-xs mt-1 font-mono uppercase tracking-wider" style={{ color: 'var(--c-body)' }}>
               Claude API · MCP · Prompt Engineering
@@ -251,10 +219,10 @@ export const Hero = memo<HeroProps>(({
           </div>
         </div>
 
-        <div className="gsap-hero-card hero-card flex-1 cursor-default p-5 flex flex-col justify-between min-h-[160px] relative" role="listitem" aria-label="UI/UX focus area">
+        <div className="gsap-hero-card hero-card flex-1 cursor-default p-5 flex flex-col justify-between min-h-[160px] relative" role="listitem" aria-label="Mobile Platforms focus area">
           <div className="relative z-10 flex justify-between items-start">
             <span className="text-xs uppercase tracking-widest font-mono font-bold" style={{ color: 'var(--c-subtle)' }}>
-              Focus • Craft
+              Focus • Mobile
             </span>
             <span className="hero-card-number text-[9px] uppercase tracking-widest font-mono" style={{ color: 'var(--c-faint)' }}>
               003
@@ -262,10 +230,10 @@ export const Hero = memo<HeroProps>(({
           </div>
           <div className="relative z-10 mt-auto">
             <h3 className="hero-card-title text-xl font-bold font-sans" style={{ color: 'var(--c-heading)' }}>
-              UI / UX
+              Android Platforms
             </h3>
             <p className="text-xs mt-1 font-mono uppercase tracking-wider" style={{ color: 'var(--c-body)' }}>
-              Interface · Interaction · Design
+              Kotlin · Jetpack Compose · Custom ROMs
             </p>
           </div>
         </div>

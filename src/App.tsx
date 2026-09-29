@@ -6,7 +6,6 @@ import { NotFound } from './components/Portfolio/NotFound';
 import { HoneycombLoader } from './components/UI/HoneycombLoader';
 import { SEOHead } from './components/SEO/SEOHead';
 import { SEOMetadata } from './components/SEO/SEOMetadata';
-import { TelemetryTracker } from './components/SEO/TelemetryTracker';
 import { ShortcutHUD } from './components/UI/ShortcutHUD';
 import { ToastNotification } from './components/UI/Toast';
 import { useDoomSequence } from './hooks/useDoomSequence';
@@ -77,7 +76,6 @@ export default function App() {
     const checkRoute = () => {
       const path = window.location.pathname;
       const hash = window.location.hash;
-      console.log('[App checkRoute] Path:', path, 'Hash:', hash);
       if (hash.startsWith('#structure') || hash.startsWith('#/structure') || path.startsWith('/structure')) {
         setShowStructureRoom(true);
         setIsViewingResume(false);
@@ -238,23 +236,11 @@ export default function App() {
   const [showMoodTransition, setShowMoodTransition] = useState(false);
   const [showMoodGame, setShowMoodGame] = useState(false);
 
-  // Monitoring state transitions
-  useEffect(() => {
-    console.log('[App State Monitor Effect]', { 
-      paperState, 
-      introCompleted, 
-      showContent,
-      headerReady,
-      timestamp: new Date().toISOString()
-    });
-  }, [paperState, introCompleted, showContent, headerReady]);
-
   const { isUnlocked: doomUnlocked, exitStructureRoom } = useDoomSequence(paperState);
   const { simplify } = usePerformance();
   const moodTransitionFiredRef = useRef(false);
 
   const handleOpenResume = useCallback(() => {
-    console.log('[App] handleOpenResume: Setting flags to skip intro');
     setIsViewingResume(true);
     setShowContent(true);
     setIntroCompleted(true);
@@ -440,7 +426,6 @@ export default function App() {
   }, [paperState, introCompleted]);
 
   const handleRecrumple = useCallback(() => {
-    console.log('[App] handleRecrumple: Resetting session and states');
     try {
       sessionStorage.removeItem(SESSION_CACHE_KEY);
     } catch {}
@@ -578,7 +563,6 @@ export default function App() {
             : '/'
         }
       />
-      <TelemetryTracker />
 
       {is404 && (
         <NotFound

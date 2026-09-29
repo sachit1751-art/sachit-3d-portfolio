@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { preloadImage } from '../../utils/fontLoader';
 
 const DIRECTIONS = [
   'up-left',
@@ -86,13 +87,11 @@ export function LocalMascot(props: LocalMascotProps) {
   const [direction, setDirection] = useState('center');
   const [reaction, setReaction] = useState<string | null>(null);
 
-  // Preload sprite sheet images instantly on mount
+  // Preload sprite sheet images instantly on mount and decode off-thread
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const img1 = new Image();
-    img1.src = directions;
-    const img2 = new Image();
-    img2.src = reactions;
+    preloadImage(directions, 'high');
+    preloadImage(reactions, 'auto');
   }, [directions, reactions]);
 
   useEffect(() => {
@@ -204,6 +203,8 @@ export function LocalMascot(props: LocalMascotProps) {
         flexShrink: 0,
         width: size,
         height: size,
+        aspectRatio: '1 / 1',
+        contain: 'layout size',
         padding: 0,
         border: 0,
         background: 'transparent',

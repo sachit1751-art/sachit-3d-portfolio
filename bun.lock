@@ -15,6 +15,7 @@
         "animejs": "^4.5.0",
         "express": "^5.2.1",
         "gsap": "^3.15.0",
+        "lucide-animated": "^1.0.5",
         "lucide-react": "^1.34.0",
         "motion": "^13.1.1",
         "page-mascot": "^0.1.0",
@@ -519,6 +520,8 @@
     "longest-streak": ["longest-streak@3.1.0", "", {}, ""],
 
     "lru-cache": ["lru-cache@5.1.1", "", { "dependencies": { "yallist": "^3.0.2" } }, ""],
+
+    "lucide-animated": ["lucide-animated@1.0.5", "", { "peerDependencies": { "motion": ">=11.0.0", "react": ">=18.0.0" } }, "sha512-bNRQvgrZZ/rZTug5YET+qNvJLtVHGamEYQ0vCI/GWveBZTTKQAAIQc0M8U2MUJBYR1+kXtjzFhpZL7oOqnD2CA=="],
 
     "lucide-react": ["lucide-react@1.39.0", "", { "peerDependencies": { "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0" } }, ""],
 
