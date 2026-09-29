@@ -1,9 +1,52 @@
 import React, { memo } from 'react';
-import { SparklesIcon } from 'lucide-animated';
+import {
+  Sparkles,
+  Terminal,
+  FileCode,
+  Code,
+  Layout,
+  Palette,
+  MessageSquare,
+  Zap,
+  Bot,
+  Layers,
+  Code2,
+  Atom,
+  Database,
+  HardDrive,
+  Server,
+  Globe,
+  GitBranch,
+  Cloud,
+  Smartphone,
+  Laptop,
+} from 'lucide-react';
 import { SkillCategory } from '../../types';
 import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
-import * as LucideIcons from 'lucide-react';
+
+const SKILL_ICONS: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+  Terminal,
+  FileCode,
+  Code,
+  Layout,
+  Palette,
+  Sparkles,
+  MessageSquare,
+  Zap,
+  Bot,
+  Layers,
+  Code2,
+  Atom,
+  Database,
+  HardDrive,
+  Server,
+  Globe,
+  GitBranch,
+  Cloud,
+  Smartphone,
+  Laptop,
+};
 
 const categories: SkillCategory[] = [
   {
@@ -198,7 +241,7 @@ export const Skills = memo(() => {
     <section id="skills" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
       <div className="mb-8">
         <div className="flex justify-center mb-3">
-          <SparklesIcon size={24} className="text-amber-600" />
+          <Sparkles className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
         </div>
         <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
           [ 04 / CAPABILITIES ]
@@ -228,7 +271,7 @@ export const Skills = memo(() => {
             <div className="flex flex-wrap gap-2.5">
               {category.skills.map((skill, sIdx) => {
                 const CustomIcon = renderCustomSVG(skill.name);
-                const LucideIcon = skill.iconName ? (LucideIcons as any)[skill.iconName] : null;
+                const LucideIcon = skill.iconName ? SKILL_ICONS[skill.iconName] : null;
                 return (
                   <span
                     key={sIdx}

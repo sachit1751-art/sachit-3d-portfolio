@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, memo } from 'react';
-import { SendIcon, UserIcon, BotIcon, RotateCcwIcon, FileTextIcon, LinkIcon, CopyIcon, CheckIcon } from 'lucide-animated';
-import { Loader2, MessageSquare, Trash2, ExternalLink, Minus } from 'lucide-react';
+import { Send, User, Bot, Loader2, MessageSquare, RotateCcw, FileText, Minus, Copy, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -310,7 +309,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
             title="Open Architecture Assistant"
           >
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <BotIcon size={15} className="text-amber-500" />
+            <Bot size={15} className="text-amber-500" />
             <span className="font-bold">Architecture AI</span>
             <MessageSquare size={12} className="opacity-50 ml-1" />
           </motion.button>
@@ -354,7 +353,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
               }}
               title="View machine-readable llms.txt context"
             >
-              <FileTextIcon size={9} className="text-amber-500" />
+              <FileText size={9} className="text-amber-500" />
               <span>llms.txt</span>
             </a>
           </div>
@@ -368,7 +367,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
               }`}
               title={confirmClear ? "Click again to confirm reset" : "Clear conversation"}
             >
-              {confirmClear ? "Reset?" : <RotateCcwIcon size={13} />}
+              {confirmClear ? "Reset?" : <RotateCcw size={13} />}
             </button>
             <button 
               onClick={() => setIsMinimized(true)}
@@ -412,7 +411,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
                       color: m.role === 'user' ? 'var(--c-btn-text)' : 'var(--c-heading)'
                     }}
                   >
-                    {m.role === 'user' ? <UserIcon size={13} /> : <BotIcon size={13} />}
+                    {m.role === 'user' ? <User size={13} /> : <Bot size={13} />}
                   </div>
                   <div 
                     className={`p-2.5 sm:p-3 rounded-xl shadow-sm text-xs sm:text-[13px] ${
@@ -442,7 +441,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
           {isLoading && (
             <div className="flex justify-start pb-2">
               <div className="flex gap-2 items-center text-xs opacity-60 font-mono">
-                <BotIcon size={14} className="animate-spin text-amber-500" />
+                <Bot size={14} className="animate-spin text-amber-500" />
                 <span>Analyzing blueprint...</span>
               </div>
             </div>
@@ -522,7 +521,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
                 color: 'var(--c-btn-text)'
               }}
             >
-              {isLoading || isStreaming ? <Loader2 size={13} className="animate-spin" /> : <SendIcon size={13} />}
+              {isLoading || isStreaming ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
             </button>
           </div>
         </form>
@@ -594,7 +593,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
                         color: m.role === 'user' ? 'var(--c-btn-text)' : 'var(--c-heading)'
                       }}
                     >
-                      {m.role === 'user' ? <UserIcon size={15} /> : <BotIcon size={15} />}
+                      {m.role === 'user' ? <User size={15} /> : <Bot size={15} />}
                     </div>
                     <div 
                       className={`p-3.5 sm:p-4 rounded-2xl w-full text-sm sm:text-base ${
@@ -627,7 +626,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
                             }}
                             title="Copy response"
                           >
-                            {copiedIndex === i ? <CheckIcon size={12} className="text-green-500" /> : <CopyIcon size={12} />}
+                            {copiedIndex === i ? <Check size={12} className="text-green-500" /> : <Copy size={12} />}
                           </button>
                         </div>
                       )}
@@ -652,7 +651,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
                     className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{ backgroundColor: 'var(--c-input-bg)' }}
                   >
-                    <BotIcon size={15} className="animate-spin" />
+                    <Bot size={15} className="animate-spin" />
                   </div>
                   <div 
                     className="p-3.5 sm:p-4 rounded-2xl rounded-tl-none flex items-center gap-3 w-full shadow-xs"
@@ -717,7 +716,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
                   boxShadow: '0 4px 12px -2px rgba(0,0,0,0.15)'
                 }}
               >
-                {isLoading || isStreaming ? <Loader2 size={20} className="animate-spin" /> : <SendIcon size={20} />}
+                {isLoading || isStreaming ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} />}
               </button>
             </div>
           </form>

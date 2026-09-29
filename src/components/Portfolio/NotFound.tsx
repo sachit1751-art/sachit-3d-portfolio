@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, RotateCcw, Home, Sparkles, Layers, FileText, ArrowUpRight } from 'lucide-react';
+import { RotateCcw, Home, Layers, ArrowUpRight } from 'lucide-react';
 import { PaperTheme } from '../../types';
 import { usePaperSound } from '../../hooks/usePaperSound';
 

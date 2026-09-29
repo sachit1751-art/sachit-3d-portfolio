@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ZapIcon, VolumeIcon } from 'lucide-animated';
-import { Settings as SettingsIcon, Palette, Clock, VolumeX } from 'lucide-react';
+import { Settings as SettingsIcon, Zap, Clock, Volume2, VolumeX } from 'lucide-react';
 import { PaperTheme } from '../types';
 import { useSound } from '../utils/soundManager';
 
@@ -108,7 +107,7 @@ export const Settings: React.FC<SettingsProps> = ({ theme, setTheme }) => {
                     color: isMuted ? '#706e69' : '#28c840',
                   }}
                 >
-                  {isMuted ? <VolumeX className="w-5 h-5" /> : <VolumeIcon size={20} />}
+                  {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
                 </div>
                 <div>
                   <div className="font-mono text-sm font-bold uppercase tracking-wider text-[#e8e7e4]">
@@ -168,7 +167,7 @@ export const Settings: React.FC<SettingsProps> = ({ theme, setTheme }) => {
             </div>
 
             <div className="mt-6 sr-info-box">
-              <ZapIcon size={16} className="sr-info-icon" />
+              <Zap className="sr-info-icon" />
               <p>
                 <strong>Animation Sync:</strong> During theme transitions, CSS variables for background colors and text 
                 interpolate over 500ms. This indicator monitors the hardware-accelerated transition 
