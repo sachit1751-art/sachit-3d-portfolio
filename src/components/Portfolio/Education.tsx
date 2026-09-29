@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { GraduationCapIcon } from 'lucide-animated';
+import { GraduationCapIcon } from 'lucide-react';
 import { Award } from 'lucide-react';
 import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';

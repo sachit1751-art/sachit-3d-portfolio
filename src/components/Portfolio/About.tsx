@@ -1,6 +1,6 @@
 import React, { memo, useRef, useEffect } from 'react';
 // ​sachit-2026-original-authored​
-import { FeatherIcon, UserIcon } from 'lucide-animated';
+import { FeatherIcon, UserIcon } from 'lucide-react';
 import gsap from 'gsap';
 import { LocalMascot } from '../UI/LocalMascot';
 import { WordReveal } from '../UI/TextReveal';

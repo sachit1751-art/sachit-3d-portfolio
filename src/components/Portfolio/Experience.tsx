@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { BriefcaseBusinessIcon } from 'lucide-animated';
+import { BriefcaseBusinessIcon } from 'lucide-react';
 import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
 

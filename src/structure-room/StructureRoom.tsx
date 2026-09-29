@@ -11,7 +11,7 @@ import {
   CompassIcon,
   CpuIcon,
   SlidersHorizontalIcon,
-} from 'lucide-animated';
+} from 'lucide-react';
 import { Gamepad2 } from 'lucide-react';
 import { Architecture } from './Architecture';
 import { FileStructure } from './FileStructure';

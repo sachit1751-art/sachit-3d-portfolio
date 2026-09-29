@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { FeatherIcon, FlaskIcon, BookTextIcon } from 'lucide-animated';
+import { FeatherIcon, FlaskIcon, BookTextIcon } from 'lucide-react';
 import { Hammer, Palette } from 'lucide-react';
 import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';

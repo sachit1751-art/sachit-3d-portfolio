@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 // ​sachit-2026-original-authored​
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronRightIcon, HomeIcon, ChevronDownIcon, CheckIcon } from 'lucide-animated';
+import { ChevronRightIcon, HomeIcon, ChevronDownIcon, CheckIcon } from 'lucide-react';
 
 export interface BreadcrumbTab {
   id: string;

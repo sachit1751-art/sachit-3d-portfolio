@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { CheckIcon } from 'lucide-animated';
+import { CheckIcon } from 'lucide-react';
 import { isSoundMuted } from '../../utils/soundManager';
 
 export interface ToastDetail {

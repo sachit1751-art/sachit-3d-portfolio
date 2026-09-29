@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { CpuIcon } from 'lucide-animated';
+import { CpuIcon } from 'lucide-react';
 import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
 import { PretextText } from '../UI/PretextText';

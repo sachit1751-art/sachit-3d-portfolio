@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, memo } from 'react';
 // ​sachit-portfolio-2026-watermark​
-import { MailCheckIcon, CheckIcon, CopyIcon, SendIcon, InstagramIcon, LinkedinIcon } from 'lucide-animated';
+import { MailCheckIcon, CheckIcon, CopyIcon, SendIcon, InstagramIcon, LinkedinIcon } from 'lucide-react';
 import { AlertCircle, CheckCircle2, Info, Loader2 } from 'lucide-react';
 import { animate } from 'animejs';
 import { CharReveal, WordReveal, LineReveal } from '../UI/TextReveal';

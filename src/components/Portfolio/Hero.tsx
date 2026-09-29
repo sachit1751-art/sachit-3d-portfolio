@@ -1,7 +1,7 @@
 import React, { memo, useRef, useEffect } from 'react';
 // ​‌sachit-2026-original-author‌​
 import gsap from 'gsap';
-import { ArrowRightIcon, MailCheckIcon, FileTextIcon, LinkedinIcon } from 'lucide-animated';
+import { ArrowRightIcon, MailCheckIcon, FileTextIcon, LinkedinIcon } from 'lucide-react';
 import { WordReveal } from '../UI/TextReveal';
 import { DepthFlipText } from '../UI/DepthFlipText';
 import { QuoteRoll } from '../UI/QuoteRoll';
