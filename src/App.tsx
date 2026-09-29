@@ -63,6 +63,174 @@ function HeavyFallback() {
   );
 }
 
+interface OverlaySwipeContainerProps {
+  id: string;
+  dataTheme?: PaperTheme;
+  onClose: () => void;
+  children: React.ReactNode;
+}
+
+/**
+ * Mobile-native swipe-down-to-close gesture container for overlay sheets (Resume, Privacy, Terms).
+ * Tracks touch gestures when scrolled to top, providing rubber-band drag physics, opacity fade,
+ * and fluid velocity-based dismissal on mobile touch devices.
+ */
+function OverlaySwipeContainer({
+  id,
+  dataTheme,
+  onClose,
+  children,
+}: OverlaySwipeContainerProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [offsetY, setOffsetY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
+
+  const startYRef = useRef(0);
+  const startXRef = useRef(0);
+  const startTimeRef = useRef(0);
+  const isEligibleRef = useRef(false);
+  const isDraggingRef = useRef(false);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length !== 1) return;
+      const touch = e.touches[0];
+      startYRef.current = touch.clientY;
+      startXRef.current = touch.clientX;
+      startTimeRef.current = performance.now();
+      // Only eligible to swipe down if scrolled at the very top (tolerance: 4px)
+      isEligibleRef.current = el.scrollTop <= 4;
+      isDraggingRef.current = false;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isEligibleRef.current || e.touches.length !== 1) return;
+      const touch = e.touches[0];
+      const deltaY = touch.clientY - startYRef.current;
+      const deltaX = touch.clientX - startXRef.current;
+
+      // Downward pull dominates horizontal swipe
+      if (deltaY > 6 && Math.abs(deltaY) > Math.abs(deltaX) * 1.1) {
+        if (el.scrollTop > 4) {
+          isEligibleRef.current = false;
+          if (isDraggingRef.current) {
+            isDraggingRef.current = false;
+            setIsDragging(false);
+            setOffsetY(0);
+          }
+          return;
+        }
+
+        // Prevent browser viewport pull-to-refresh
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+
+        isDraggingRef.current = true;
+        // Dampened resistance curve
+        const dampenedY = Math.min(deltaY * 0.72, 340);
+        setOffsetY(dampenedY);
+        setIsDragging(true);
+      } else if (deltaY < 0 && isDraggingRef.current) {
+        isDraggingRef.current = false;
+        setOffsetY(0);
+        setIsDragging(false);
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!isDraggingRef.current) {
+        isEligibleRef.current = false;
+        return;
+      }
+
+      const touch = e.changedTouches[0];
+      const deltaY = touch.clientY - startYRef.current;
+      const duration = Math.max(1, performance.now() - startTimeRef.current);
+      const velocity = deltaY / duration; // px per ms
+
+      isDraggingRef.current = false;
+      isEligibleRef.current = false;
+      setIsDragging(false);
+
+      // Dismiss if dragged down past threshold (70px) or flicked with sufficient velocity
+      if (deltaY > 70 || (velocity > 0.4 && deltaY > 25)) {
+        setIsExiting(true);
+        setOffsetY(window.innerHeight);
+        setTimeout(() => {
+          onCloseRef.current();
+        }, 220);
+      } else {
+        // Snap back to top position
+        setOffsetY(0);
+      }
+    };
+
+    el.addEventListener('touchstart', handleTouchStart, { passive: true });
+    el.addEventListener('touchmove', handleTouchMove, { passive: false });
+    el.addEventListener('touchend', handleTouchEnd, { passive: true });
+    el.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+
+    return () => {
+      el.removeEventListener('touchstart', handleTouchStart);
+      el.removeEventListener('touchmove', handleTouchMove);
+      el.removeEventListener('touchend', handleTouchEnd);
+      el.removeEventListener('touchcancel', handleTouchEnd);
+    };
+  }, []);
+
+  const opacity = isExiting
+    ? 0
+    : isDragging
+    ? Math.max(0.35, 1 - offsetY / 360)
+    : 1;
+
+  return (
+    <div
+      ref={containerRef}
+      id={id}
+      data-theme={dataTheme}
+      className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden bg-transparent"
+      style={{
+        transform: offsetY > 0 ? `translate3d(0, ${offsetY}px, 0)` : 'translate3d(0, 0, 0)',
+        opacity,
+        transition: isDragging
+          ? 'none'
+          : isExiting
+          ? 'transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.22s ease-out'
+          : 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.28s ease-out',
+        willChange: isDragging || isExiting ? 'transform, opacity' : undefined,
+      }}
+    >
+      {/* Mobile-Native Swipe-Down Handle */}
+      <div 
+        className="sm:hidden flex flex-col items-center justify-center pt-1 pb-3 cursor-grab active:cursor-grabbing select-none"
+        aria-label="Swipe down to close"
+        onClick={onClose}
+      >
+        <div 
+          className="w-12 h-1.5 rounded-full transition-transform active:scale-95"
+          style={{ backgroundColor: 'var(--c-border-hover)' }}
+        />
+        <span 
+          className="text-[9px] font-mono tracking-widest uppercase opacity-60 mt-1.5"
+          style={{ color: 'var(--c-muted)' }}
+        >
+          {isDragging ? 'Release to close' : 'Swipe down to close'}
+        </span>
+      </div>
+
+      {children}
+    </div>
+  );
+}
+
 // ﻿provenance:sachit-2026-original﻿
 export default function App() {
   const [is404, setIs404] = useState(false);
@@ -664,9 +832,9 @@ export default function App() {
 
           {/* Dedicated Resume Overlay Container */}
           {isViewingResume && (
-            <div
+            <OverlaySwipeContainer
               id="resume-scroll-container"
-              className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden bg-transparent"
+              onClose={handleCloseResume}
             >
               <Suspense fallback={<div className="flex items-center justify-center py-24"><HoneycombLoader size="md" label="PREPARING CV CANVAS..." color="var(--c-heading)" /></div>}>
                 <LazyResumeViewer
@@ -674,15 +842,15 @@ export default function App() {
                   onBack={handleCloseResume}
                 />
               </Suspense>
-            </div>
+            </OverlaySwipeContainer>
           )}
 
           {/* Dedicated Privacy Policy Overlay */}
           {isViewingPrivacy && (
-            <div
+            <OverlaySwipeContainer
               id="privacy-scroll-container"
-              data-theme={theme}
-              className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden bg-transparent"
+              dataTheme={theme}
+              onClose={handleClosePrivacy}
             >
               <Suspense fallback={<div className="flex items-center justify-center py-24"><HoneycombLoader size="md" label="LOADING PRIVACY POLICY..." color="var(--c-heading)" /></div>}>
                 <LazyPrivacyPolicy
@@ -690,15 +858,15 @@ export default function App() {
                   onBack={handleClosePrivacy}
                 />
               </Suspense>
-            </div>
+            </OverlaySwipeContainer>
           )}
 
           {/* Dedicated Terms of Service Overlay */}
           {isViewingTerms && (
-            <div
+            <OverlaySwipeContainer
               id="terms-scroll-container"
-              data-theme={theme}
-              className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden bg-transparent"
+              dataTheme={theme}
+              onClose={handleCloseTerms}
             >
               <Suspense fallback={<div className="flex items-center justify-center py-24"><HoneycombLoader size="md" label="LOADING TERMS..." color="var(--c-heading)" /></div>}>
                 <LazyTermsOfService
@@ -706,7 +874,7 @@ export default function App() {
                   onBack={handleCloseTerms}
                 />
               </Suspense>
-            </div>
+            </OverlaySwipeContainer>
           )}
 
 
