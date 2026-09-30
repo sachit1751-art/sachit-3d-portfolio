@@ -8,9 +8,7 @@ export const HAPTIC_PATTERNS = {
   unfold: [15, 30, 15],
   crumple: [20, 25, 35],
   dragTick: 8,
-  tear: [12, 20, 28],
   airplaneLaunch: [10, 20, 40],
-  waxCrack: [25, 45, 20],
   click: 10,
 };
 

@@ -8,6 +8,7 @@ import { GitHubIcon } from '../UI/Icons';
 import { AnimatedMenuIcon } from '../UI/AnimatedMenuIcon';
 import { WordReveal } from '../UI/TextReveal';
 import { usePerformance } from '../../hooks/usePerformance';
+import { useTiltParallax } from '../../hooks/useTiltParallax';
 import { ScrollReveal } from '../UI/ScrollReveal';
 import { observeElement } from '../../utils/observer';
 import { getTechStackSVG } from '../UI/TechIcons';
@@ -104,6 +105,16 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
   const detailsRef = useRef<HTMLDivElement>(null);
   const expandedContainerRef = useRef<HTMLDivElement>(null);
   const [dynMaxHeight, setDynMaxHeight] = useState('0px');
+  const { simplify } = usePerformance();
+
+  // Subtle 3D Gyroscopic & Cursor Tilt-Parallax
+  const { elementRef: tiltCardRef, glareRef } = useTiltParallax<HTMLDivElement>({
+    maxTilt: 10,
+    perspective: 800,
+    scaleOnHover: 1.025,
+    glare: true,
+    disabled: isExpanded || simplify,
+  });
 
   // Focus trap and auto-focus when modal expands
   useEffect(() => {
@@ -202,6 +213,7 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
     >
       {isIntersecting ? (
         <div
+          ref={tiltCardRef}
           id={`project-card-${project.id}`}
           data-project-card="true"
           data-project-index={idx}
@@ -214,17 +226,24 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
               onToggleExpand(project.id);
             }
           }}
-          className="gsap-project-card group relative p-5 sm:p-6 flex flex-col justify-between overflow-hidden w-full h-full rounded-[var(--radius-lg)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] outline-none touch-manipulation cursor-pointer"
+          className="gsap-project-card group relative p-5 sm:p-6 flex flex-col justify-between w-full h-full rounded-[var(--radius-lg)] focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] outline-none touch-manipulation cursor-pointer select-none transition-colors duration-200"
           style={{
             backgroundColor: 'var(--c-card)',
             border: '1px solid var(--c-border)',
             transformStyle: 'preserve-3d',
             backfaceVisibility: 'hidden',
             zIndex: isExpanded ? 10 : 1,
-            contain: typeof window !== 'undefined' && window.innerWidth < 768 ? 'layout paint' : 'none',
           }}
         >
-          <div>
+          {/* Dynamic physical paper glare sheen */}
+          <div
+            ref={glareRef}
+            className="pointer-events-none absolute inset-0 z-30 rounded-[var(--radius-lg)] opacity-0 overflow-hidden"
+            style={{ mixBlendMode: 'overlay' }}
+            aria-hidden="true"
+          />
+
+          <div style={{ transform: 'translateZ(18px)', transformStyle: 'preserve-3d' }}>
             {/* Header Meta: Category + Index */}
             <div className="flex items-center justify-between text-xs font-handwriting mb-3" style={{ color: 'var(--c-subtle)' }}>
               <div className="flex items-center gap-1.5 flex-wrap">
@@ -257,7 +276,7 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
               className="cursor-pointer outline-none group/title focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] rounded-md py-1 select-none"
               aria-label={`Toggle quick details for ${project.title}`}
             >
-              <h3 className="font-sans text-xl sm:text-2xl font-bold transition-colors mb-2 flex items-center justify-between tracking-tight" style={{ color: 'var(--c-heading)', overflow: 'visible' }}>
+              <h3 className="font-sans text-xl sm:text-2xl font-bold transition-colors mb-2 flex items-center justify-between tracking-tight" style={{ color: 'var(--c-heading)', overflow: 'visible', transform: 'translateZ(8px)' }}>
                 <span className="line-clamp-1 pr-1.5" style={{ paddingRight: '0.15em' }}>{project.title}</span>
                 <span className="font-mono text-[10px] uppercase tracking-wider opacity-60 ml-2 shrink-0" style={{ color: 'var(--c-muted)' }}>
                   {project.year}
@@ -352,7 +371,7 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
           </div>
 
           {/* Bottom Tech Tags & Quick Action Strip */}
-          <div className="space-y-3 pt-3 mt-auto" style={{ borderTop: '1px solid var(--c-border)' }}>
+          <div className="space-y-3 pt-3 mt-auto" style={{ transform: 'translateZ(16px)', transformStyle: 'preserve-3d', borderTop: '1px solid var(--c-border)' }}>
             {/* Tech Badges with Authentic SVG Icons */}
             <div className="flex flex-wrap gap-1.5">
               {project.tags.map((tag) => {
