@@ -35,50 +35,55 @@ export const Hero = memo<HeroProps>(({
       const tl = gsap.timeline({
         defaults: {
           ease: 'power3.out',
-          duration: 0.55,
         },
       });
 
+      // 1. Quote area appears after header spring finishes landing (~0.32s)
       tl.fromTo(
         '.gsap-hero-status',
-        { opacity: 0, y: -12 },
-        { opacity: 1, y: 0, duration: 0.5, delay: 0.05 }
+        { opacity: 0, y: -10 },
+        { opacity: 1, y: 0, duration: 0.5, delay: 0.32 }
       )
+      // 2. Subtitle & H1 tag arrive right after the quote area
       .fromTo(
         '.gsap-hero-subtitle',
         { opacity: 0, y: 14 },
-        { opacity: 1, y: 0, duration: 0.5 },
-        '-=0.35'
+        { opacity: 1, y: 0, duration: 0.45 },
+        '-=0.15'
       )
       .fromTo(
         '.gsap-hero-title',
         { opacity: 0, y: 18 },
-        { opacity: 1, y: 0, duration: 0.65 },
-        '-=0.4'
+        { opacity: 1, y: 0, duration: 0.6 },
+        '-=0.2'
       )
+      // 3. Description sentence
       .fromTo(
         '.gsap-hero-desc',
-        { opacity: 0, y: 14 },
-        { opacity: 0.9, y: 0, duration: 0.55 },
-        '-=0.4'
+        { opacity: 0, y: 12 },
+        { opacity: 0.9, y: 0, duration: 0.45 },
+        '-=0.15'
       )
+      // 4. Action buttons in sequential order
       .fromTo(
         '.gsap-hero-btn',
-        { opacity: 0, y: 12, scale: 0.96 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.07 },
-        '-=0.35'
+        { opacity: 0, y: 12, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.4, stagger: 0.08, ease: 'back.out(1.4)' },
+        '-=0.1'
       )
+      // 5. Social icons & email badges
       .fromTo(
         '.gsap-hero-social',
         { opacity: 0, y: 10 },
-        { opacity: 1, y: 0, duration: 0.45, stagger: 0.05 },
-        '-=0.25'
+        { opacity: 1, y: 0, duration: 0.4, stagger: 0.06 },
+        '-=0.15'
       )
+      // 6. Focus Bento Cards
       .fromTo(
         '.gsap-hero-card',
-        { opacity: 0, y: 20, scale: 0.98 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.09 },
-        '-=0.25'
+        { opacity: 0, y: 18, scale: 0.98 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.1 },
+        '-=0.15'
       );
     }, heroRef);
 

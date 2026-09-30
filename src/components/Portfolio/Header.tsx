@@ -247,13 +247,11 @@ export const Header = memo<HeaderProps>(({
   return (
     <>
       <motion.header
-        initial={{ y: -24, opacity: 0 }}
+        initial={{ y: 4, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{
-          type: 'spring',
-          stiffness: 280,
-          damping: 26,
-          mass: 0.8,
+          duration: 0.22,
+          ease: [0.16, 1, 0.3, 1],
         }}
         className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300"
         style={{

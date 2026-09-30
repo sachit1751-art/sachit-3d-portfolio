@@ -226,7 +226,7 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
               onToggleExpand(project.id);
             }
           }}
-          className="gsap-project-card group relative p-5 sm:p-6 flex flex-col justify-between w-full h-full rounded-[var(--radius-lg)] focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] outline-none touch-manipulation cursor-pointer select-none transition-colors duration-200"
+          className="gsap-project-card group relative p-5 sm:p-6 flex flex-col justify-between w-full h-full rounded-[var(--radius-lg)] hover:border-[var(--c-border-hover)] focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] outline-none touch-manipulation cursor-pointer select-none transition-colors duration-200"
           style={{
             backgroundColor: 'var(--c-card)',
             border: '1px solid var(--c-border)',

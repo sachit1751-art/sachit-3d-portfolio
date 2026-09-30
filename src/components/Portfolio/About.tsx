@@ -13,19 +13,12 @@ export const About = memo(() => {
   const mascotWrapperRef = useRef<HTMLDivElement>(null);
   const mascotBreathRef = useRef<HTMLDivElement>(null);
 
-  // 3D Tilt-Parallax for Polaroid Photo & Snapshot Card
-  const { elementRef: polaroidRef, glareRef: polaroidGlareRef } = useTiltParallax<HTMLDivElement>({
-    maxTilt: 12,
-    perspective: 800,
-    scaleOnHover: 1.03,
-    glare: true,
-  });
-
-  const { elementRef: snapshotCardRef, glareRef: snapshotGlareRef } = useTiltParallax<HTMLDivElement>({
+  // 3D Tilt-Parallax for Snapshot Card
+  const { elementRef: snapshotCardRef } = useTiltParallax<HTMLDivElement>({
     maxTilt: 8,
     perspective: 800,
     scaleOnHover: 1.02,
-    glare: true,
+    glare: false,
   });
 
   useEffect(() => {
@@ -76,84 +69,29 @@ export const About = memo(() => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12 items-center">
-        {/* Physical Scrapbook Polaroid Photo with 3D Tilt-Parallax */}
-        <div className="lg:col-span-3 flex flex-col items-center lg:items-start justify-center">
+        {/* Interactive Mascot */}
+        <div className="lg:col-span-3 flex flex-col items-center justify-center">
           <div
-            ref={polaroidRef}
-            className="group relative p-3 pb-4 rounded-[var(--radius-md)] cursor-pointer select-none transition-colors duration-200"
-            style={{
-              backgroundColor: 'var(--c-card)',
-              border: '1px solid var(--c-border)',
-              transformStyle: 'preserve-3d',
-              backfaceVisibility: 'hidden',
-            }}
-            title="Interactive Mascot Polaroid"
+            ref={mascotWrapperRef}
+            className="relative flex items-center justify-center bg-transparent will-change-transform cursor-pointer"
           >
-            {/* Washi Tape Corner Accent */}
-            <div 
-              className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-16 h-5 opacity-80 pointer-events-none z-20 shadow-xs"
-              style={{
-                backgroundColor: 'rgba(215, 195, 165, 0.65)',
-                transform: 'rotate(-2deg) translateZ(24px)',
-                borderLeft: '2px dashed rgba(180, 160, 130, 0.4)',
-                borderRight: '2px dashed rgba(180, 160, 130, 0.4)',
-              }}
-            />
-
-            {/* Specular glare sheen */}
             <div
-              ref={polaroidGlareRef}
-              className="pointer-events-none absolute inset-0 z-30 rounded-[var(--radius-md)] opacity-0 overflow-hidden"
-              style={{ mixBlendMode: 'overlay' }}
-              aria-hidden="true"
-            />
-
-            {/* Inner Photo Frame */}
-            <div 
-              className="relative w-40 h-40 sm:w-44 sm:h-44 rounded-sm flex items-center justify-center overflow-hidden"
-              style={{
-                backgroundColor: 'var(--c-input-bg)',
-                border: '1px solid var(--c-border)',
-                transform: 'translateZ(14px)',
-                transformStyle: 'preserve-3d',
-              }}
+              ref={mascotBreathRef}
+              className="flex items-center justify-center relative bg-transparent will-change-transform"
             >
-              {/* Mascot Container with Subtle Float & Breathing Animations */}
-              <div 
-                ref={mascotWrapperRef}
-                className="relative w-full h-full flex items-center justify-center bg-transparent will-change-transform"
-                style={{ 
-                  backgroundColor: 'transparent',
-                  transform: 'translateZ(20px)',
-                }}
-              >
-                <div 
-                  ref={mascotBreathRef}
-                  className="w-full h-full flex items-center justify-center relative bg-transparent will-change-transform"
-                  style={{
-                    backgroundColor: 'transparent',
-                  }}
-                >
-                  <LocalMascot
-                    directions="/mascots/cap-directions.webp"
-                    reactions="/mascots/cap-reactions.webp"
-                    size={140}
-                    label="Sachit Cap Mascot"
-                  />
-                </div>
-              </div>
+              <LocalMascot
+                directions="/mascots/cap-directions.webp"
+                reactions="/mascots/cap-reactions.webp"
+                size={140}
+                label="Sachit Cap Mascot"
+              />
             </div>
-
-            {/* Polaroid Bottom Handwritten Caption */}
-            <div 
-              className="pt-2 text-center text-xs font-handwriting select-none"
-              style={{
-                color: 'var(--c-heading)',
-                transform: 'translateZ(18px)',
-              }}
-            >
-              Sachit ( tap me! )
-            </div>
+          </div>
+          <div
+            className="mt-3 text-center text-xs font-handwriting select-none opacity-60"
+            style={{ color: 'var(--c-muted)' }}
+          >
+            ( tap me! )
           </div>
         </div>
 
@@ -182,20 +120,12 @@ export const About = memo(() => {
           ref={snapshotCardRef}
           className="lg:col-span-4 p-6 relative flex flex-col justify-between rounded-[var(--radius-lg)] overflow-hidden transition-all duration-300" 
           style={{ 
-            backgroundColor: 'var(--c-card)',
+            backgroundColor: 'transparent',
             border: '1px solid var(--c-border)',
             transformStyle: 'preserve-3d',
             backfaceVisibility: 'hidden',
           }}
         >
-          {/* Subtle paper glare sheen */}
-          <div
-            ref={snapshotGlareRef}
-            className="pointer-events-none absolute inset-0 z-30 rounded-[var(--radius-lg)] opacity-0"
-            style={{ mixBlendMode: 'overlay' }}
-            aria-hidden="true"
-          />
-
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.25em] mb-4 flex items-center gap-1.5 font-semibold" style={{ color: 'var(--c-subtle)' }}>
               <Feather className="w-3.5 h-3.5" style={{ color: 'var(--c-heading)' }} />

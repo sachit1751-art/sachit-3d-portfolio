@@ -4,7 +4,7 @@ interface TiltOptions {
   maxTilt?: number; // Maximum rotation in degrees (e.g. 10 - 12)
   perspective?: number; // Perspective distance in px (e.g. 800)
   scaleOnHover?: number; // Scale factor on hover (e.g. 1.03)
-  glare?: boolean; // Whether to render dynamic paper sheen
+  glare?: boolean; // Whether to render dynamic paper sheen (disabled)
   disabled?: boolean;
 }
 
@@ -13,7 +13,7 @@ export function useTiltParallax<T extends HTMLElement = HTMLDivElement>(options:
     maxTilt = 10,
     perspective = 800,
     scaleOnHover = 1.025,
-    glare = true,
+    glare = false,
     disabled = false,
   } = options;
 
