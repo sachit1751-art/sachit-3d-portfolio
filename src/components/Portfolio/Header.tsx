@@ -246,16 +246,23 @@ export const Header = memo<HeaderProps>(({
   // ── Render ─────────────────────────────────────────────────────────
   return (
     <>
-      <header
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      <motion.header
+        initial={{ y: -24, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{
+          type: 'spring',
+          stiffness: 280,
+          damping: 26,
+          mass: 0.8,
+        }}
+        className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300"
         style={{
           backgroundColor: (scrolled || mobileMenuOpen) ? 'var(--c-header-bg)' : 'transparent',
           backdropFilter: (scrolled || mobileMenuOpen) ? 'blur(12px)' : 'none',
           WebkitBackdropFilter: (scrolled || mobileMenuOpen) ? 'blur(12px)' : 'none',
           borderBottom: (scrolled || mobileMenuOpen) ? '1px solid var(--c-header-border)' : '1px solid transparent',
           boxShadow: (scrolled || mobileMenuOpen) ? '0 2px 10px rgba(0,0,0,0.05)' : 'none',
-          transform: 'translateZ(0)',
-          willChange: 'transform',
+          willChange: 'transform, opacity',
         }}
       >
         <div className="max-w-[calc(100%-24px)] sm:max-w-[min(88vw,1100px)] md:max-w-[min(82vw,1100px)] mx-auto px-4 sm:px-10 md:px-14 flex items-center justify-between h-[60px] sm:h-[68px]">
@@ -344,7 +351,7 @@ export const Header = memo<HeaderProps>(({
             </button>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       {/* Mobile Menu Drawer */}
       <AnimatePresence>

@@ -24,6 +24,67 @@ export const Hero = memo<HeroProps>(({
 }) => {
   const heroRef = useRef<HTMLElement>(null);
 
+  useEffect(() => {
+    if (!heroRef.current) return;
+
+    // Honor reduced-motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        defaults: {
+          ease: 'power3.out',
+          duration: 0.55,
+        },
+      });
+
+      tl.fromTo(
+        '.gsap-hero-status',
+        { opacity: 0, y: -12 },
+        { opacity: 1, y: 0, duration: 0.5, delay: 0.05 }
+      )
+      .fromTo(
+        '.gsap-hero-subtitle',
+        { opacity: 0, y: 14 },
+        { opacity: 1, y: 0, duration: 0.5 },
+        '-=0.35'
+      )
+      .fromTo(
+        '.gsap-hero-title',
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.65 },
+        '-=0.4'
+      )
+      .fromTo(
+        '.gsap-hero-desc',
+        { opacity: 0, y: 14 },
+        { opacity: 0.9, y: 0, duration: 0.55 },
+        '-=0.4'
+      )
+      .fromTo(
+        '.gsap-hero-btn',
+        { opacity: 0, y: 12, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.07 },
+        '-=0.35'
+      )
+      .fromTo(
+        '.gsap-hero-social',
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, duration: 0.45, stagger: 0.05 },
+        '-=0.25'
+      )
+      .fromTo(
+        '.gsap-hero-card',
+        { opacity: 0, y: 20, scale: 0.98 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.09 },
+        '-=0.25'
+      );
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section ref={heroRef} id="hero" className="relative mb-4 pt-0 pb-4">
       <div className="mb-6">
