@@ -42,6 +42,7 @@
     "tsx": "^4.23.13",
     "ttf2woff2": "^8.0.1",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vite-plugin-compression": "^0.5.1"
   }
 }

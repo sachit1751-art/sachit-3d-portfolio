@@ -46,7 +46,15 @@ export const PaperIntro = memo<PaperIntroProps>(({
   const { playUnfold, playCrumple } = usePaperSound();
   const { isMuted, toggleMute } = useSound();
   const { simplify } = usePerformance();
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const touchStartDistRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const checkTouch = () => {
+      return typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    };
+    setIsTouchDevice(checkTouch());
+  }, []);
 
   const formattedDate = React.useMemo(() => {
     const today = new Date();
@@ -90,18 +98,9 @@ export const PaperIntro = memo<PaperIntroProps>(({
     const v = videoRef.current;
     if (!v) return;
     if (paperState === 'crumpled') {
-      console.log('[PaperIntro Video Effect] paperState = crumpled -> Playing ambient video loop deferred');
+      console.log('[PaperIntro Video Effect] paperState = crumpled -> Playing ambient video loop');
       v.currentTime = 0;
-      const playVideo = () => {
-        if (videoRef.current) {
-          videoRef.current.play().catch((err) => console.warn('[PaperIntro Video Effect] Play catch:', err));
-        }
-      };
-      if ('requestIdleCallback' in window) {
-        window.requestIdleCallback(() => playVideo(), { timeout: 2000 });
-      } else {
-        setTimeout(playVideo, 1000);
-      }
+      v.play().catch((err) => console.warn('[PaperIntro Video Effect] Play catch:', err));
     } else {
       console.log('[PaperIntro Video Effect] paperState = ' + paperState + ' -> Pausing ambient video');
       v.pause();
@@ -240,10 +239,10 @@ export const PaperIntro = memo<PaperIntroProps>(({
         {paperState === 'crumpled' && !simplify && (
           <video
             ref={videoRef}
+            autoPlay
             loop
             muted
             playsInline
-            preload="none"
             className="absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-700 mix-blend-multiply opacity-80"
             style={{ opacity: paperState === 'crumpled' ? 0.8 : 0 }}
             src="/scrapbook-bg.mp4"
@@ -350,6 +349,29 @@ export const PaperIntro = memo<PaperIntroProps>(({
 
           {/* Unfold CTA Button (Rich tactile carbon ink finish matching screenshot) */}
           <div className="flex flex-col items-center gap-2 sm:gap-2.5 text-center mb-6 sm:mb-12 pointer-events-auto select-none">
+            {/* Subtle 'Touch to Unfold' call-to-action specifically for mobile touch users */}
+            {isTouchDevice && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleButtonClick();
+                }}
+                className="md:hidden pointer-events-auto inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-handwriting font-bold tracking-wide transition-all duration-200 active:scale-95 shadow-sm border focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] mb-0.5"
+                style={{
+                  backgroundColor: 'var(--c-card, rgba(255, 255, 255, 0.85))',
+                  color: 'var(--c-heading, #24211e)',
+                  borderColor: 'var(--c-border, rgba(0, 0, 0, 0.15))',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
+                  backdropFilter: 'blur(4px)',
+                }}
+                aria-label="Touch to Unfold"
+              >
+                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'var(--c-dot, #b25e3b)' }} />
+                <span>Touch to Unfold</span>
+              </button>
+            )}
+
             <button
               ref={btnRef}
               id="unfold-paper-btn"
@@ -367,10 +389,11 @@ export const PaperIntro = memo<PaperIntroProps>(({
               aria-label="Click to unfold portfolio"
             >
               <span className="font-handwriting text-xl sm:text-2xl font-bold tracking-wide text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]">
-                click to unfold
+                <span className="hidden sm:inline">click to unfold</span>
+                <span className="sm:hidden">{isTouchDevice ? 'touch to unfold' : 'click to unfold'}</span>
               </span>
 
-              <div className="flex items-center gap-2 sm:gap-2.5">
+              <div className="hidden sm:flex items-center gap-2 sm:gap-2.5">
                 <span
                   className="px-2.5 py-1 text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider text-white rounded-[6px]"
                   style={{

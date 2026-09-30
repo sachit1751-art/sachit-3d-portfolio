@@ -84,6 +84,7 @@ export const About = memo(() => {
                   size={160}
                   label="Sachit Cap Mascot"
                 />
+                {/* Note: LocalMascot uses CSS background-images for sprite sheets, explicit dimensions provided to parent container above to prevent layout shift. */}
               </div>
             </div>
           </div>

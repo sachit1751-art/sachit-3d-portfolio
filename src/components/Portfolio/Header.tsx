@@ -246,13 +246,7 @@ export const Header = memo<HeaderProps>(({
   // ── Render ─────────────────────────────────────────────────────────
   return (
     <>
-      <motion.header
-        initial={{ y: -28, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{
-          y: { type: 'spring', damping: 22, stiffness: 180, mass: 0.8 },
-          opacity: { duration: 0.5, ease: 'easeOut' },
-        }}
+      <header
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{
           backgroundColor: (scrolled || mobileMenuOpen) ? 'var(--c-header-bg)' : 'transparent',
@@ -350,7 +344,7 @@ export const Header = memo<HeaderProps>(({
             </button>
           </div>
         </div>
-      </motion.header>
+      </header>
 
       {/* Mobile Menu Drawer */}
       <AnimatePresence>

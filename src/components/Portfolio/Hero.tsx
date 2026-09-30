@@ -24,50 +24,6 @@ export const Hero = memo<HeroProps>(({
 }) => {
   const heroRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    if (!heroRef.current) return;
-
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-      const heroHeader = gsap.utils.toArray<HTMLElement>('.gsap-hero-header', heroRef.current);
-      const heroStatus = gsap.utils.toArray<HTMLElement>('.gsap-hero-status', heroRef.current);
-      const heroSubtitle = gsap.utils.toArray<HTMLElement>('.gsap-hero-subtitle', heroRef.current);
-      const heroTitle = gsap.utils.toArray<HTMLElement>('.gsap-hero-title', heroRef.current);
-      const heroDesc = gsap.utils.toArray<HTMLElement>('.gsap-hero-desc', heroRef.current);
-      const heroBtn = gsap.utils.toArray<HTMLElement>('.gsap-hero-btn', heroRef.current);
-      const heroSocial = gsap.utils.toArray<HTMLElement>('.gsap-hero-social', heroRef.current);
-      const heroCard = gsap.utils.toArray<HTMLElement>('.gsap-hero-card', heroRef.current);
-
-      if (heroHeader.length) {
-        tl.fromTo(heroHeader, { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.55, stagger: 0.1 });
-      }
-      if (heroStatus.length) {
-        tl.fromTo(heroStatus, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45 }, '-=0.3');
-      }
-      if (heroSubtitle.length) {
-        tl.fromTo(heroSubtitle, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45 }, '-=0.35');
-      }
-      if (heroTitle.length) {
-        tl.fromTo(heroTitle, { opacity: 0, y: 16, scale: 0.98 }, { opacity: 1, y: 0, scale: 1, duration: 0.65 }, '-=0.35');
-      }
-      if (heroDesc.length) {
-        tl.fromTo(heroDesc, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.55 }, '-=0.4');
-      }
-      if (heroBtn.length) {
-        tl.fromTo(heroBtn, { opacity: 0, y: 12, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.08 }, '-=0.35');
-      }
-      if (heroSocial.length) {
-        tl.fromTo(heroSocial, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45, stagger: 0.06, clearProps: 'transform' }, '-=0.3');
-      }
-      if (heroCard.length) {
-        tl.fromTo(heroCard, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.55, stagger: 0.1, clearProps: 'transform' }, '-=0.3');
-      }
-    }, heroRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <section ref={heroRef} id="hero" className="relative mb-4 pt-0 pb-4">
       <div className="mb-6">
@@ -107,7 +63,7 @@ export const Hero = memo<HeroProps>(({
                 "Opensource Dev",
                 "LLM Integration Developer",
                 "Web & Mobile Developer",
-                "UI & Motion Engineer",
+                "UI & UX Designer",
                 "Best Vibecoder"
               ]}
               interval={3800}
@@ -115,10 +71,7 @@ export const Hero = memo<HeroProps>(({
           </span>
         </h1>
         <p className="gsap-hero-desc max-w-[540px] leading-relaxed text-lg sm:text-xl font-body opacity-90 mt-5" style={{ color: 'var(--c-heading)' }}>
-          <WordReveal
-            text="I build full-stack web applications, architect AI integrations, and automate workflows."
-            baseDelay={0.1}
-          />
+          I build full-stack web applications, architect AI integrations, and automate workflows.
         </p>
       </div>
 

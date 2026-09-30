@@ -581,17 +581,15 @@ h2.sm\:text-5xl,
 @keyframes portfolioFadeEnter {
   0% {
     opacity: 0;
-    transform: translateY(4px);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
 .animate-portfolio-enter {
-  animation: portfolioFadeEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: transform, opacity;
+  animation: portfolioFadeEnter 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: opacity;
 }
 
 /* Typewriter animation */

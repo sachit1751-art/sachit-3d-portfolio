@@ -9,6 +9,7 @@ import {
   createPaperUnfoldTimeline,
   createPaperCrumpleTimeline,
   PaperAnimationController,
+  AnimationTimeline,
 } from './paperAnimation';
 
 export interface PaperSceneAPI {
@@ -39,7 +40,7 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
   moodGameActive = false,
 }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const animTimelineRef = useRef<gsap.core.Timeline | null>(null);
+  const animTimelineRef = useRef<AnimationTimeline | null>(null);
   const { simplify } = usePerformance();
 
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -421,13 +422,24 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
     document.addEventListener('visibilitychange', handleVisibility);
 
     // Animation loop — renders frames smoothly, settles on opened flat sheet, pauses when idle
-    const animate = () => {
+    let lastTime = performance.now();
+
+    const animate = (timestamp?: number) => {
       if (tabHidden) {
         reqAnimFrameRef.current = null;
         return;
       }
 
-      timeRef.current += 0.016;
+      const now = timestamp || performance.now();
+      // High-precision delta time clamped to prevent jumps when tab is hidden or backgrounded
+      const dt = Math.min(Math.max((now - lastTime) / 1000, 0.001), 0.1);
+      lastTime = now;
+
+      // dtScale normalizes physics and damping to a 60fps baseline
+      // On 60fps: dtScale = 1.0; on 120fps: dtScale = 0.5; on 144fps: dtScale = 0.416
+      const dtScale = dt / (1 / 60);
+
+      timeRef.current += dt;
 
       const currentState = paperStateRef.current;
       const ctrl = animControllerRef.current;
@@ -435,8 +447,9 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
       const isAnimating = animTimelineRef.current && animTimelineRef.current.isActive();
       const isIdle = currentState === 'opened' && isFullyOpen && !isAnimating && !moodGameActiveRef.current;
 
-      mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.06;
-      mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.06;
+      const mouseLerp = 1 - Math.pow(1 - 0.06, dtScale);
+      mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * mouseLerp;
+      mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * mouseLerp;
       const skipHover = isFullyOpen && Math.abs(mouseRef.current.x) < 0.01 && Math.abs(mouseRef.current.y) < 0.01;
 
       const inter = interactionRef.current;
@@ -449,21 +462,23 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
         const pos = geometry.attributes.position;
         const arr = pos.array as Float32Array;
 
-        // Interactive rotation physics
+        // Interactive rotation physics with refresh-rate independent damping
         if (!inter.isDragging) {
-          inter.velX *= 0.95;
-          inter.velY *= 0.95;
+          const velDamping = Math.pow(0.95, dtScale);
+          inter.velX *= velDamping;
+          inter.velY *= velDamping;
         }
         
         // Reset interactive rotation when unfolding
         if (prog > 0.1) {
-          inter.rotX *= 0.9;
-          inter.rotY *= 0.9;
-          inter.velX *= 0.9;
-          inter.velY *= 0.9;
+          const resetDamping = Math.pow(0.9, dtScale);
+          inter.rotX *= resetDamping;
+          inter.rotY *= resetDamping;
+          inter.velX *= resetDamping;
+          inter.velY *= resetDamping;
         } else {
-          inter.rotX += inter.velX;
-          inter.rotY += inter.velY;
+          inter.rotX += inter.velX * dtScale;
+          inter.rotY += inter.velY * dtScale;
         }
 
         // Smooth continuous lerp with smoothstep
@@ -511,10 +526,11 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
         paperMesh.scale.setScalar(ctrl.paperScale);
       }
 
-      // Camera zoom
+      // Camera zoom with refresh-rate independent lerping
       if (camera) {
         const targetZ = ctrl.cameraZ;
-        camera.position.z += (targetZ - camera.position.z) * 0.08;
+        const camLerp = 1 - Math.pow(1 - 0.08, dtScale);
+        camera.position.z += (targetZ - camera.position.z) * camLerp;
       }
 
       // Shadow
@@ -552,12 +568,14 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
     const resumeRender = () => {
       if (!reqAnimFrameRef.current) {
         idleFrameCountRef.current = 0;
-        animate();
+        lastTime = performance.now();
+        reqAnimFrameRef.current = requestAnimationFrame(animate);
       }
     };
     resumeRenderRef.current = resumeRender;
 
-    animate();
+    lastTime = performance.now();
+    animate(lastTime);
 
     cleanupFn = () => {
       window.removeEventListener('resize', handleResize);
@@ -587,23 +605,13 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
     };
   };
 
-    const scheduleInit = () => {
-      if ('requestIdleCallback' in window) {
-        window.requestIdleCallback(() => initScene(), { timeout: 1500 });
-      } else {
-        setTimeout(initScene, 350);
-      }
-    };
-
-    if (document.readyState === 'complete') {
-      scheduleInit();
-    } else {
-      window.addEventListener('load', scheduleInit);
-    }
+    const rafId = requestAnimationFrame(() => {
+      initScene();
+    });
 
     return () => {
       active = false;
-      window.removeEventListener('load', scheduleInit);
+      cancelAnimationFrame(rafId);
       if (cleanupFn) {
         cleanupFn();
       }
@@ -794,15 +802,16 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
     getCamera: () => cameraRef.current,
   }), []);
 
-  // Handle state changes → trigger GSAP animations + resume render loop
+  // Handle state changes → trigger RAF animations + resume render loop
   useEffect(() => {
     if (paperState === 'opening') {
       if (animTimelineRef.current) {
         animTimelineRef.current.kill();
       }
       animTimelineRef.current = createPaperUnfoldTimeline(animControllerRef.current, {
-          onSound: () => onSound?.('unfold'),
+        onSound: () => onSound?.('unfold'),
         onStateChange: (st) => onStateChange(st),
+        onUpdate: () => resumeRenderRef.current?.(),
       });
       animTimelineRef.current.play();
       resumeRenderRef.current?.();
@@ -814,6 +823,7 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
         animTimelineRef.current = createPaperCrumpleTimeline(animControllerRef.current, {
           onSound: () => onSound?.('crumple'),
           onStateChange: (st) => onStateChange(st),
+          onUpdate: () => resumeRenderRef.current?.(),
         });
         animTimelineRef.current.play();
         resumeRenderRef.current?.();

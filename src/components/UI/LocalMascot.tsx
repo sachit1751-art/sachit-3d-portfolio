@@ -228,6 +228,8 @@ export function LocalMascot(props: LocalMascotProps) {
             backgroundImage: `url(${directions})`,
             ...cell(DIRECTIONS.indexOf(direction)),
             opacity: reaction ? 0 : 1,
+            width: `${size}px`,
+            height: `${size}px`,
           }}
         />
         <span
@@ -236,6 +238,8 @@ export function LocalMascot(props: LocalMascotProps) {
             backgroundImage: `url(${reactions})`,
             ...cell(REACTIONS.indexOf(reaction ?? 'blink')),
             opacity: reaction ? 1 : 0,
+            width: `${size}px`,
+            height: `${size}px`,
           }}
         />
       </span>

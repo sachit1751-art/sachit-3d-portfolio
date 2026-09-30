@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react'
 // ​‌‍sachit-portfolio-2026-original-author‍‌​
 import { PaperState, PaperTheme } from './types';
 import { Header } from './components/Portfolio/Header';
+import { PortfolioContainer } from './components/Portfolio/PortfolioContainer';
 import { NotFound } from './components/Portfolio/NotFound';
 import { HoneycombLoader } from './components/UI/HoneycombLoader';
 import { SEOHead } from './components/SEO/SEOHead';
@@ -16,8 +17,6 @@ import { initSecurity } from './utils/security';
 import { initFontLoader } from './utils/fontLoader';
 import { resetSharedObservers } from './utils/observer';
 import { initAuthorshipVerification } from './utils/watermark';
-
-import { PortfolioContainer } from './components/Portfolio/PortfolioContainer';
 
 const SESSION_CACHE_KEY = 'portfolio_intro_unfolded_cache';
 
@@ -394,6 +393,19 @@ export default function App() {
     });
   }, []);
 
+  // Preload PortfolioContainer on idle so it's ready the moment the user clicks unfold
+  useEffect(() => {
+    const prewarm = () => {
+      import('./components/Portfolio/PortfolioContainer');
+    };
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(prewarm, { timeout: 2500 });
+    } else {
+      const timer = setTimeout(prewarm, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   // Preload ResumeViewer module once portfolio is revealed to ensure instantaneous transitions
   useEffect(() => {
     if (showContent && introCompleted) {
@@ -645,13 +657,11 @@ export default function App() {
             aria-hidden={isViewingResume || isViewingPrivacy || isViewingTerms}
             tabIndex={isViewingResume || isViewingPrivacy || isViewingTerms ? -1 : undefined}
           >
-            <Suspense fallback={<div className="flex items-center justify-center py-24"><HoneycombLoader size="md" label="UNFOLDING PORTFOLIO..." color="var(--c-heading)" /></div>}>
-              <PortfolioContainer
-                theme={theme}
-                paperState={paperState}
-                onViewResume={handleOpenResume}
-              />
-            </Suspense>
+            <PortfolioContainer
+              theme={theme}
+              paperState={paperState}
+              onViewResume={handleOpenResume}
+            />
           </div>
 
           {/* Dedicated Resume Overlay Container */}

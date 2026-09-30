@@ -19,7 +19,7 @@ const FILE_TREE: FileNode[] = [
         children: [
           { name: 'PaperIntro.tsx', type: 'file', description: 'Container managing the intro lifecycle — video bg, 3D scene, overlay UI, cursor hints.' },
           { name: 'PaperScene.tsx', type: 'file', description: 'Three.js canvas — camera, lighting, shadows, render loop optimization (stops after idle).' },
-          { name: 'paperAnimation.ts', type: 'file', description: 'GSAP + anime.js timelines — unfold is 2 stages (squeeze + burst), crumple is pure GSAP.' },
+          { name: 'paperAnimation.ts', type: 'file', description: 'requestAnimationFrame interpolation loops — unfold is 2 stages (squeeze + burst), crumple is pure RAF with delta-time physical easing.' },
         ],
       },
       {
