@@ -25,6 +25,7 @@ import {
 import { PaperTheme } from '../../types';
 import { resumeData, generateResumePlainText } from '../../data/resume';
 import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
+import { WaxSealStamp } from './WaxSealStamp';
 
 /**
  * Editorial framer-motion variants applying a soft fade-in and subtle slide-up effect
@@ -78,6 +79,7 @@ interface ResumeViewerProps {
 export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [zoomLevel, setZoomLevel] = useState<number>(100);
+  const [isWaxSealBroken, setIsWaxSealBroken] = useState(false);
   const toastTimeoutRef = useRef<number | null>(null);
 
   // Swipe-to-dismiss gesture on touch-enabled mobile devices
@@ -306,6 +308,24 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
               <ExternalLink className="w-4 h-4" />
               <span className="hidden md:inline">Open PDF</span>
             </a>
+
+            {isWaxSealBroken && (
+              <button
+                onClick={() => {
+                  setIsWaxSealBroken(false);
+                  triggerToast('Document re-sealed with physical wax stamp');
+                }}
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-mono uppercase tracking-wider rounded-[var(--radius-md)] transition-all hover:bg-[var(--c-input-bg)] active:scale-95 cursor-pointer"
+                style={{
+                  color: 'var(--c-heading)',
+                  border: '1px solid var(--c-border)',
+                  backgroundColor: 'transparent',
+                }}
+                title="Re-seal document with physical wax stamp"
+              >
+                <span>Re-seal</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -351,7 +371,7 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
             {/* PAGE 1: HEADER, SUMMARY, SKILLS, PROJECTS                    */}
             {/* ============================================================ */}
             <article
-              className="resume-page-card resume-sheet w-full max-w-[850px] p-4 sm:p-8 transition-all select-text rounded-[var(--radius-lg)]"
+              className="resume-page-card resume-sheet relative w-full max-w-[850px] p-4 sm:p-8 transition-all select-text rounded-[var(--radius-lg)]"
               style={{
                 backgroundColor: 'var(--c-card)',
                 border: '1px solid var(--c-border)',
@@ -359,6 +379,8 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
                 boxShadow: '0 20px 40px -15px rgba(0,0,0,0.1)',
               }}
             >
+              {/* Interactive Physical Wax Seal Stamp & Ribbon */}
+              <WaxSealStamp isBroken={isWaxSealBroken} onBreak={() => setIsWaxSealBroken(true)} />
               {/* Top Banner (Screen Only) */}
               <div className="no-print flex items-center justify-between text-[11px] font-mono pb-4 mb-6 border-b border-[var(--c-border)] opacity-60">
                 <span>Curriculum Vitae (Page 1 of 2)</span>

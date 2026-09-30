@@ -8,6 +8,7 @@ import { HoneycombLoader } from '../UI/HoneycombLoader';
 import { GitHubIcon } from '../UI/Icons';
 import { WATERMARKED_NAME } from '../../utils/watermark';
 import { copyEmailToClipboard } from '../UI/Toast';
+import { triggerHaptic, HAPTIC_PATTERNS } from '../../utils/haptics';
 
 const EMAIL = 'sachit1751@gmail.com';
 const GITHUB = 'https://github.com/sachit1751-art';
@@ -60,6 +61,7 @@ export const Contact = memo(() => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isAutoTypingForm, setIsAutoTypingForm] = useState(false);
+  const [isAirplaneFlying, setIsAirplaneFlying] = useState(false);
 
   // Field validation helper
   const validateField = (name: string, value: string): string => {
@@ -186,11 +188,17 @@ export const Contact = memo(() => {
         const data = await response.json();
 
         if (data.success) {
-          setIsSuccess(true);
-          setFormData({ name: '', email: '', message: '' });
-          setTouched({ name: false, email: false, message: false });
-          setErrors({ name: '', email: '', message: '' });
-          setSubmitError(null);
+          triggerHaptic(HAPTIC_PATTERNS.airplaneLaunch);
+          setIsAirplaneFlying(true);
+
+          setTimeout(() => {
+            setIsAirplaneFlying(false);
+            setIsSuccess(true);
+            setFormData({ name: '', email: '', message: '' });
+            setTouched({ name: false, email: false, message: false });
+            setErrors({ name: '', email: '', message: '' });
+            setSubmitError(null);
+          }, 1300);
         } else {
           setSubmitError(data.message || 'Failed to transmit message. Please try again or reach out via email directly.');
         }
@@ -266,7 +274,42 @@ export const Contact = memo(() => {
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleFormSubmit} className="space-y-4 p-6 sm:p-8 rounded-[var(--radius-lg)] shadow-sm" style={{ border: '1px solid var(--c-border)', backgroundColor: 'var(--c-card)' }}>
+                <div className="relative">
+                  {/* Physical Origami Paper Airplane "Send" Animation */}
+                  {isAirplaneFlying && (
+                    <div 
+                      className="absolute inset-0 z-30 pointer-events-none flex items-center justify-center overflow-visible"
+                      style={{ perspective: '1000px' }}
+                    >
+                      <div className="relative animate-paper-airplane-fly" style={{ transformStyle: 'preserve-3d' }}>
+                        <svg 
+                          viewBox="0 0 240 180" 
+                          className="w-48 h-36 drop-shadow-[0_20px_35px_rgba(20,16,10,0.55)]"
+                        >
+                          {/* Left Wing */}
+                          <polygon points="120,10 10,130 120,100" fill="#f4ebd9" stroke="#d5c7b3" strokeWidth="1" />
+                          {/* Center fold crease */}
+                          <line x1="120" y1="10" x2="120" y2="150" stroke="#b09f89" strokeWidth="1.5" />
+                          {/* Right Wing */}
+                          <polygon points="120,10 230,130 120,100" fill="#e6d9c4" stroke="#cbbca8" strokeWidth="1" />
+                          {/* Underbody keel / center fold */}
+                          <polygon points="120,10 120,150 115,100" fill="#c4b49f" />
+                          <polygon points="120,10 120,150 125,100" fill="#bfae99" />
+                          {/* Wing fold creases */}
+                          <polygon points="120,100 10,130 65,150 120,150" fill="#dbcdb8" opacity="0.9" />
+                          <polygon points="120,100 230,130 175,150 120,150" fill="#cfc0a9" opacity="0.9" />
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+
+                  <form 
+                    onSubmit={handleFormSubmit} 
+                    className={`space-y-4 p-6 sm:p-8 rounded-[var(--radius-lg)] shadow-sm transition-transform duration-300 ${
+                      isAirplaneFlying ? 'animate-card-fold pointer-events-none' : ''
+                    }`} 
+                    style={{ border: '1px solid var(--c-border)', backgroundColor: 'var(--c-card)' }}
+                  >
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-mono text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--c-heading)' }}>
                       DIRECT DISPATCH FORM
@@ -492,6 +535,7 @@ export const Contact = memo(() => {
                     )}
                   </button>
                 </form>
+              </div>
               )}
             </LineReveal>
           </div>

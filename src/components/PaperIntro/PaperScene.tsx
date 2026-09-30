@@ -11,6 +11,7 @@ import {
   PaperAnimationController,
   AnimationTimeline,
 } from './paperAnimation';
+import { triggerHaptic, HAPTIC_PATTERNS } from '../../utils/haptics';
 
 export interface PaperSceneAPI {
   getPaperWorldBounds: () => { center: THREE.Vector3; halfWidth: number; halfHeight: number } | null;
@@ -49,6 +50,9 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
   const paperMeshRef = useRef<THREE.Mesh | null>(null);
   const shadowMeshRef = useRef<THREE.Mesh | null>(null);
   const materialRef = useRef<THREE.MeshStandardMaterial | null>(null);
+  const mainLightRef = useRef<THREE.DirectionalLight | null>(null);
+  const creaseHighlightRef = useRef<number>(0);
+  const hapticDistRef = useRef<number>(0);
 
   const interactionRef = useRef({
     isDragging: false,
@@ -158,6 +162,7 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
       mainLight.shadow.bias = -0.0008;
     }
     scene.add(mainLight);
+    mainLightRef.current = mainLight;
 
     if (!simplify) {
       const fillLight = new THREE.DirectionalLight(0xebe2d8, 0.6);
@@ -356,10 +361,18 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
       if (interactionRef.current.isDragging && interactionRef.current.startedOnBall) {
         const dx = e.clientX - interactionRef.current.lastX;
         const dy = e.clientY - interactionRef.current.lastY;
+        const stepDist = Math.sqrt(dx * dx + dy * dy);
         
         interactionRef.current.velX = dy * 0.015;
         interactionRef.current.velY = dx * 0.015;
-        interactionRef.current.dragDistance += Math.sqrt(dx * dx + dy * dy);
+        interactionRef.current.dragDistance += stepDist;
+
+        // Audio Tactile Haptics: trigger subtle micro-vibration as ball rolls in hand
+        hapticDistRef.current += stepDist;
+        if (hapticDistRef.current > 38) {
+          triggerHaptic(HAPTIC_PATTERNS.dragTick);
+          hapticDistRef.current = 0;
+        }
 
         interactionRef.current.lastX = e.clientX;
         interactionRef.current.lastY = e.clientY;
@@ -524,6 +537,32 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
         paperMesh.position.y = ctrl.positionY + idlePosY;
         paperMesh.position.z = ctrl.positionZ;
         paperMesh.scale.setScalar(ctrl.paperScale);
+
+        // Dynamic Crease Highlighting on Drag:
+        // Real-time specular highlights on procedural crease lines when dragging the paper ball,
+        // making individual origami-style fold ridges catch ambient and directional light dynamically.
+        const isDraggingBall = inter.isDragging && inter.startedOnBall;
+        const dragSpeed = Math.hypot(inter.velX, inter.velY);
+        const targetCreaseHighlight = isDraggingBall
+          ? Math.min(0.40 + dragSpeed * 20, 1.0)
+          : Math.min(dragSpeed * 12, 0.85);
+
+        creaseHighlightRef.current += (targetCreaseHighlight - creaseHighlightRef.current) * Math.min(0.12 * dtScale, 1.0);
+        const creaseHl = creaseHighlightRef.current;
+
+        if (materialRef.current && !simplify) {
+          const mat = materialRef.current;
+          mat.bumpScale = THREE.MathUtils.lerp(0.12, 0.28, creaseHl);
+          mat.roughness = THREE.MathUtils.lerp(0.75, 0.38, creaseHl);
+          mat.metalness = creaseHl * 0.20;
+          mat.emissive.setRGB(0.12 * creaseHl, 0.10 * creaseHl, 0.06 * creaseHl);
+        }
+
+        if (mainLightRef.current && !simplify) {
+          mainLightRef.current.intensity = THREE.MathUtils.lerp(1.8, 2.45, creaseHl);
+          mainLightRef.current.position.x = 4 + inter.rotY * 0.8;
+          mainLightRef.current.position.y = 6 - inter.rotX * 0.8;
+        }
       }
 
       // Camera zoom with refresh-rate independent lerping
@@ -809,7 +848,10 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
         animTimelineRef.current.kill();
       }
       animTimelineRef.current = createPaperUnfoldTimeline(animControllerRef.current, {
-        onSound: () => onSound?.('unfold'),
+        onSound: () => {
+          onSound?.('unfold');
+          triggerHaptic(HAPTIC_PATTERNS.unfold);
+        },
         onStateChange: (st) => onStateChange(st),
         onUpdate: () => resumeRenderRef.current?.(),
       });
@@ -821,7 +863,10 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
           animTimelineRef.current.kill();
         }
         animTimelineRef.current = createPaperCrumpleTimeline(animControllerRef.current, {
-          onSound: () => onSound?.('crumple'),
+          onSound: () => {
+            onSound?.('crumple');
+            triggerHaptic(HAPTIC_PATTERNS.crumple);
+          },
           onStateChange: (st) => onStateChange(st),
           onUpdate: () => resumeRenderRef.current?.(),
         });
