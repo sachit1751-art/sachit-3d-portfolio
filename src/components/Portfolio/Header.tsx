@@ -162,6 +162,8 @@ export const Header = memo<HeaderProps>(({
       }
     };
 
+    let rafId: number | null = null;
+
     const observerCallback: IntersectionObserverCallback = (entries) => {
       entries.forEach((entry) => {
         if (entry.target.id) {
@@ -175,21 +177,24 @@ export const Header = memo<HeaderProps>(({
 
       if (isScrollingRef.current) return;
 
-      if (visibleSections.size > 0) {
-        let maxRatio = -1;
-        let bestSection = 'hero';
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        if (visibleSections.size > 0) {
+          let maxRatio = -1;
+          let bestSection = 'hero';
 
-        // Check sections in DOM order to prefer earlier sections if tied
-        for (const sectionId of ALL_SECTIONS) {
-          const ratio = visibleSections.get(sectionId) || 0;
-          if (ratio > maxRatio && ratio > 0.05) {
-            maxRatio = ratio;
-            bestSection = sectionId;
+          // Check sections in DOM order to prefer earlier sections if tied
+          for (const sectionId of ALL_SECTIONS) {
+            const ratio = visibleSections.get(sectionId) || 0;
+            if (ratio > maxRatio && ratio > 0.05) {
+              maxRatio = ratio;
+              bestSection = sectionId;
+            }
           }
-        }
 
-        updateHashAndSection(bestSection);
-      }
+          updateHashAndSection(bestSection);
+        }
+      });
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
@@ -199,16 +204,37 @@ export const Header = memo<HeaderProps>(({
       if (el) observer.observe(el);
     });
 
-    // Handle background blur on scroll > 20px
+    // Handle background blur on scroll > 20px and throttled precise active section tracking
     const handleScroll = () => {
       const isScrolled = container.scrollTop > 20;
       setScrolled(prev => prev !== isScrolled ? isScrolled : prev);
+
+      if (isScrollingRef.current) return;
+
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const scrollPos = container.scrollTop;
+        let currentActive = 'hero';
+
+        for (const sectionId of ALL_SECTIONS) {
+          const el = document.getElementById(sectionId);
+          if (el) {
+            const top = el.offsetTop - container.offsetTop;
+            if (scrollPos >= top - 180) {
+              currentActive = sectionId;
+            }
+          }
+        }
+
+        setActiveSection(prev => prev !== currentActive ? currentActive : prev);
+      });
     };
 
     container.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId);
       observer.disconnect();
       container.removeEventListener('scroll', handleScroll);
     };
@@ -291,10 +317,17 @@ export const Header = memo<HeaderProps>(({
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}
-                  className="sm:hidden flex items-center gap-1.5 min-w-0"
+                  className="sm:hidden flex items-center gap-2 min-w-0"
                 >
-                  <span className="w-1 h-1 rounded-full bg-[var(--c-dot)] flex-shrink-0" />
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest opacity-60 truncate max-w-[110px]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--c-dot)] flex-shrink-0 shadow-[0_0_6px_var(--c-dot)]" />
+                  <span 
+                    className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] px-2 py-0.5 rounded-[var(--radius-sm)] truncate max-w-[130px] shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
+                    style={{ 
+                      color: 'var(--c-heading)', 
+                      backgroundColor: 'var(--c-input-bg)',
+                      border: '1px solid var(--c-border)'
+                    }}
+                  >
                     {activeSection.replace('-', ' ')}
                   </span>
                 </motion.div>
@@ -343,11 +376,11 @@ export const Header = memo<HeaderProps>(({
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(prev => !prev)}
-              className="md:hidden p-2 rounded-md border border-[var(--c-border)] hover:border-[var(--c-border-hover)] transition-all cursor-pointer"
+              className="md:hidden min-w-[44px] min-h-[44px] p-2.5 rounded-lg border border-[var(--c-border)] hover:border-[var(--c-border-hover)] active:scale-95 transition-all cursor-pointer flex items-center justify-center touch-manipulation"
               style={{ color: 'var(--c-heading)', backgroundColor: 'var(--c-card)' }}
               aria-label={mobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
             >
-              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
@@ -361,7 +394,7 @@ export const Header = memo<HeaderProps>(({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="fixed inset-x-0 top-[60px] z-40 md:hidden border-b shadow-2xl p-6"
+            className="fixed inset-x-0 top-[60px] sm:top-[68px] z-40 md:hidden border-b shadow-2xl p-4 sm:p-6 max-h-[calc(100vh-68px)] overflow-y-auto overscroll-contain"
             style={{
               backgroundColor: 'var(--c-header-bg)',
               borderColor: 'var(--c-border)',
@@ -370,29 +403,34 @@ export const Header = memo<HeaderProps>(({
               ...swipeDrawerStyle,
             }}
           >
-            <div className="flex flex-col space-y-3">
+            <div className="flex flex-col space-y-2">
               {NAV_ITEMS.map(({ id, label, subtitle, isResume }) => {
                 const isActive = currentActive === id;
                 return (
                   <button
                     key={id}
                     onClick={() => handleNavClick(id, isResume)}
-                    className="flex flex-col items-start px-4 py-3 rounded-xl transition-all text-left"
+                    className="w-full flex items-center justify-between px-4 py-3 min-h-[48px] rounded-xl transition-all text-left cursor-pointer active:scale-[0.99] touch-manipulation"
                     style={{
                       backgroundColor: isActive ? 'var(--c-input-bg)' : 'transparent',
                       border: isActive ? '1px solid var(--c-border-hover)' : '1px solid transparent',
                     }}
                   >
-                    <span 
-                      className="text-base font-handwriting font-bold tracking-wide"
-                      style={{ color: isActive ? 'var(--c-heading)' : 'var(--c-body)' }}
-                    >
-                      {label}
-                    </span>
-                    {subtitle && (
-                      <span className="text-[11px] font-mono opacity-60 tracking-wider">
-                        {subtitle}
+                    <div className="flex flex-col">
+                      <span 
+                        className="text-base sm:text-lg font-handwriting font-bold tracking-wide"
+                        style={{ color: isActive ? 'var(--c-heading)' : 'var(--c-body)' }}
+                      >
+                        {label}
                       </span>
+                      {subtitle && (
+                        <span className="text-[11px] font-mono opacity-60 tracking-wider">
+                          {subtitle}
+                        </span>
+                      )}
+                    </div>
+                    {isActive && (
+                      <span className="w-2 h-2 rounded-full bg-[var(--c-dot)] flex-shrink-0" />
                     )}
                   </button>
                 );

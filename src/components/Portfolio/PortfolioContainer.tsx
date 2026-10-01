@@ -55,6 +55,11 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (typeof window !== 'undefined' && window.innerWidth >= 768) return;
+    const targetEl = e.target as HTMLElement | null;
+    if (targetEl && targetEl.closest('input, textarea, select, form, .overflow-x-auto, [data-prevent-swipe]')) {
+      touchStartXRef.current = 0;
+      return;
+    }
     if (e.touches.length === 1) {
       touchStartXRef.current = e.touches[0].clientX;
       touchStartYRef.current = e.touches[0].clientY;
@@ -63,6 +68,7 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (typeof window !== 'undefined' && window.innerWidth >= 768) return;
+    if (!touchStartXRef.current) return;
     if (e.changedTouches.length === 1) {
       const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
       const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;

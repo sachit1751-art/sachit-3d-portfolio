@@ -95,48 +95,71 @@ const projects: Project[] = [
 interface ProjectCardProps {
   project: Project;
   idx: number;
+  totalProjects: number;
   isExpanded: boolean;
   onToggleExpand: (id: string, e?: React.MouseEvent | React.KeyboardEvent) => void;
+  onCardNavigate: (currentIndex: number, e: React.KeyboardEvent<HTMLElement>) => void;
 }
 
-const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggleExpand }) => {
+const ProjectCard = memo<ProjectCardProps>(({ 
+  project, 
+  idx, 
+  totalProjects,
+  isExpanded, 
+  onToggleExpand,
+  onCardNavigate
+}) => {
   const expandedContainerRef = useRef<HTMLDivElement>(null);
+  const lastActiveElementRef = useRef<HTMLElement | null>(null);
 
   // Focus trap and auto-focus when modal expands
   useEffect(() => {
-    if (isExpanded && expandedContainerRef.current) {
-      const focusableElements = expandedContainerRef.current.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      if (focusableElements.length > 0) {
-        (focusableElements[0] as HTMLElement).focus();
+    if (isExpanded) {
+      lastActiveElementRef.current = document.activeElement as HTMLElement;
+      if (expandedContainerRef.current) {
+        const focusableElements = expandedContainerRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusableElements.length > 0) {
+          focusableElements[0].focus();
+        }
       }
+    } else if (lastActiveElementRef.current && document.contains(lastActiveElementRef.current)) {
+      // Gracefully restore focus to the toggle or card trigger upon collapse
+      lastActiveElementRef.current.focus();
     }
   }, [isExpanded]);
 
   const handleModalKeyDown = (e: React.KeyboardEvent) => {
     if (!isExpanded || !expandedContainerRef.current) return;
     if (e.key === 'Tab') {
-      const focusableElements = expandedContainerRef.current.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
+      const focusableElements = Array.from(
+        expandedContainerRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter(el => !el.hasAttribute('disabled') && el.offsetParent !== null);
+
       if (focusableElements.length === 0) return;
-      const firstElement = focusableElements[0] as HTMLElement;
-      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
 
       if (e.shiftKey) {
-        if (document.activeElement === firstElement) {
+        if (document.activeElement === firstElement || !expandedContainerRef.current.contains(document.activeElement)) {
           lastElement.focus();
           e.preventDefault();
         }
       } else {
-        if (document.activeElement === lastElement) {
+        if (document.activeElement === lastElement || !expandedContainerRef.current.contains(document.activeElement)) {
           firstElement.focus();
           e.preventDefault();
         }
       }
     } else if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
       onToggleExpand(project.id);
+      const cardEl = document.getElementById(`project-card-${project.id}`);
+      cardEl?.focus();
     }
   };
 
@@ -148,11 +171,15 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
         data-project-index={idx}
         tabIndex={0}
         role="article"
-        aria-label={`${project.title} (${project.category}, ${project.year})`}
+        aria-setsize={totalProjects}
+        aria-posinset={idx + 1}
+        aria-label={`${project.title} (${project.category}, ${project.year}). Press Enter or Space to toggle details. Use arrow keys to navigate projects.`}
         onKeyDown={(e) => {
           if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
             e.preventDefault();
             onToggleExpand(project.id);
+          } else {
+            onCardNavigate(idx, e);
           }
         }}
         className="gsap-project-card group relative flex flex-col justify-between w-full h-full rounded-[var(--radius-lg)] focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] outline-none transition-colors duration-200"
@@ -183,6 +210,7 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
           <div
             role="button"
             tabIndex={0}
+            data-project-title-btn="true"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -193,6 +221,8 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 onToggleExpand(project.id);
+              } else {
+                onCardNavigate(idx, e);
               }
             }}
             className="cursor-pointer outline-none group/title focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] rounded-md py-1 select-none"
@@ -235,6 +265,8 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
               ref={expandedContainerRef}
               onKeyDown={handleModalKeyDown}
               tabIndex={-1}
+              role="region"
+              aria-label={`${project.title} extended specifications`}
               className="p-4 rounded-[var(--radius-md)] text-xs font-body leading-relaxed space-y-3 outline-none"
               style={{
                 backgroundColor: 'var(--c-input-bg)',
@@ -395,6 +427,22 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
 
 ProjectCard.displayName = 'ProjectCard';
 
+function getGridColumnCount(container: HTMLElement | null): number {
+  if (!container) return 1;
+  const cards = container.querySelectorAll<HTMLElement>('[data-project-card="true"]');
+  if (cards.length < 2) return 1;
+  const firstTop = cards[0].offsetTop;
+  let count = 0;
+  for (let i = 0; i < cards.length; i++) {
+    if (Math.abs(cards[i].offsetTop - firstTop) < 6) {
+      count++;
+    } else {
+      break;
+    }
+  }
+  return count || 1;
+}
+
 // author:sachit-2026-original
 export const Projects = memo(() => {
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
@@ -411,6 +459,60 @@ export const Projects = memo(() => {
       console.log(`[Projects] Card expansion updated: previous='${prev}' -> next='${next}'`);
       return next;
     });
+  }, []);
+
+  const handleCardNavigate = useCallback((currentIndex: number, e: React.KeyboardEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    const isCardContainer = target.getAttribute('data-project-card') === 'true';
+    const isCardTitle = target.getAttribute('data-project-title-btn') === 'true';
+
+    // Allow arrow navigation when focused on the card outline or title
+    if (!isCardContainer && !isCardTitle) return;
+
+    const total = projects.length;
+    let targetIndex: number | null = null;
+    const cols = getGridColumnCount(cardsGridRef.current);
+
+    switch (e.key) {
+      case 'ArrowRight':
+        targetIndex = (currentIndex + 1) % total;
+        break;
+      case 'ArrowLeft':
+        targetIndex = (currentIndex - 1 + total) % total;
+        break;
+      case 'ArrowDown':
+        if (currentIndex + cols < total) {
+          targetIndex = currentIndex + cols;
+        } else {
+          targetIndex = (currentIndex + cols) % total;
+        }
+        break;
+      case 'ArrowUp':
+        if (currentIndex - cols >= 0) {
+          targetIndex = currentIndex - cols;
+        } else {
+          targetIndex = (currentIndex - cols + total) % total;
+        }
+        break;
+      case 'Home':
+        targetIndex = 0;
+        break;
+      case 'End':
+        targetIndex = total - 1;
+        break;
+      default:
+        return;
+    }
+
+    if (targetIndex !== null && targetIndex >= 0 && targetIndex < total) {
+      e.preventDefault();
+      const targetCard = cardsGridRef.current?.querySelector<HTMLElement>(`[data-project-index="${targetIndex}"]`);
+      if (targetCard) {
+        targetCard.focus();
+        targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+        triggerHaptic(HAPTIC_PATTERNS.dragTick);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -486,14 +588,27 @@ export const Projects = memo(() => {
         </h2>
       </div>
 
-      <div ref={cardsGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start" style={{ gap: 'clamp(1rem, 2.5vw + 0.25rem, 1.5rem)' }}>
+      {/* Screen reader keyboard instructions */}
+      <div className="sr-only" aria-live="polite">
+        Use Arrow keys (Up, Down, Left, Right) to navigate between project cards in the grid. Press Enter or Space to open project details, and Escape to close.
+      </div>
+
+      <div 
+        ref={cardsGridRef} 
+        role="region"
+        aria-label="Project cards navigation grid"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start" 
+        style={{ gap: 'clamp(1rem, 2.5vw + 0.25rem, 1.5rem)' }}
+      >
         {projects.map((project, idx) => (
           <ProjectCard
             key={project.id}
             project={project}
             idx={idx}
+            totalProjects={projects.length}
             isExpanded={expandedCardId === project.id}
             onToggleExpand={toggleExpandCard}
+            onCardNavigate={handleCardNavigate}
           />
         ))}
       </div>

@@ -7,7 +7,7 @@ import { ScrollReveal } from '../UI/ScrollReveal';
 import { HoneycombLoader } from '../UI/HoneycombLoader';
 import { GitHubIcon } from '../UI/Icons';
 import { WATERMARKED_NAME } from '../../utils/watermark';
-import { copyEmailToClipboard } from '../UI/Toast';
+import { copyEmailToClipboard, showSuccessToast } from '../UI/Toast';
 import { triggerHaptic, HAPTIC_PATTERNS } from '../../utils/haptics';
 
 const EMAIL = 'sachit1751@gmail.com';
@@ -61,7 +61,6 @@ export const Contact = memo(() => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isAutoTypingForm, setIsAutoTypingForm] = useState(false);
-  const [isAirplaneFlying, setIsAirplaneFlying] = useState(false);
 
   // Field validation helper
   const validateField = (name: string, value: string): string => {
@@ -188,17 +187,13 @@ export const Contact = memo(() => {
         const data = await response.json();
 
         if (data.success) {
-          triggerHaptic(HAPTIC_PATTERNS.airplaneLaunch);
-          setIsAirplaneFlying(true);
-
-          setTimeout(() => {
-            setIsAirplaneFlying(false);
-            setIsSuccess(true);
-            setFormData({ name: '', email: '', message: '' });
-            setTouched({ name: false, email: false, message: false });
-            setErrors({ name: '', email: '', message: '' });
-            setSubmitError(null);
-          }, 1300);
+          triggerHaptic(HAPTIC_PATTERNS.click);
+          showSuccessToast('Message Sent Successfully!');
+          setIsSuccess(true);
+          setFormData({ name: '', email: '', message: '' });
+          setTouched({ name: false, email: false, message: false });
+          setErrors({ name: '', email: '', message: '' });
+          setSubmitError(null);
         } else {
           setSubmitError(data.message || 'Failed to transmit message. Please try again or reach out via email directly.');
         }
@@ -275,39 +270,9 @@ export const Contact = memo(() => {
                 </div>
               ) : (
                 <div className="relative">
-                  {/* Physical Origami Paper Airplane "Send" Animation */}
-                  {isAirplaneFlying && (
-                    <div 
-                      className="absolute inset-0 z-30 pointer-events-none flex items-center justify-center overflow-visible"
-                      style={{ perspective: '1000px' }}
-                    >
-                      <div className="relative animate-paper-airplane-fly" style={{ transformStyle: 'preserve-3d' }}>
-                        <svg 
-                          viewBox="0 0 240 180" 
-                          className="w-48 h-36 drop-shadow-[0_20px_35px_rgba(20,16,10,0.55)]"
-                        >
-                          {/* Left Wing */}
-                          <polygon points="120,10 10,130 120,100" fill="#f4ebd9" stroke="#d5c7b3" strokeWidth="1" />
-                          {/* Center fold crease */}
-                          <line x1="120" y1="10" x2="120" y2="150" stroke="#b09f89" strokeWidth="1.5" />
-                          {/* Right Wing */}
-                          <polygon points="120,10 230,130 120,100" fill="#e6d9c4" stroke="#cbbca8" strokeWidth="1" />
-                          {/* Underbody keel / center fold */}
-                          <polygon points="120,10 120,150 115,100" fill="#c4b49f" />
-                          <polygon points="120,10 120,150 125,100" fill="#bfae99" />
-                          {/* Wing fold creases */}
-                          <polygon points="120,100 10,130 65,150 120,150" fill="#dbcdb8" opacity="0.9" />
-                          <polygon points="120,100 230,130 175,150 120,150" fill="#cfc0a9" opacity="0.9" />
-                        </svg>
-                      </div>
-                    </div>
-                  )}
-
                   <form 
                     onSubmit={handleFormSubmit} 
-                    className={`space-y-4 p-6 sm:p-8 rounded-[var(--radius-lg)] shadow-sm transition-transform duration-300 ${
-                      isAirplaneFlying ? 'animate-card-fold pointer-events-none' : ''
-                    }`} 
+                    className="space-y-4 p-6 sm:p-8 rounded-[var(--radius-lg)] shadow-sm transition-transform duration-300"
                     style={{ border: '1px solid var(--c-border)', backgroundColor: 'var(--c-card)' }}
                   >
                   <div className="flex items-center justify-between mb-2">
@@ -350,7 +315,7 @@ export const Contact = memo(() => {
                         value={formData.name}
                         onChange={handleInputChange}
                         onBlur={handleBlur}
-                        className="w-full p-3 pr-10 font-body outline-none transition-all rounded-[var(--radius-md)] text-sm focus:border-[var(--c-border-focus)]"
+                        className="w-full p-3 pr-10 font-body outline-none transition-all rounded-[var(--radius-md)] text-base sm:text-sm focus:border-[var(--c-border-focus)]"
                         style={{ 
                           backgroundColor: 'var(--c-input-bg)',
                           border: `1px solid ${
@@ -399,7 +364,7 @@ export const Contact = memo(() => {
                         value={formData.email}
                         onChange={handleInputChange}
                         onBlur={handleBlur}
-                        className="w-full p-3 pr-10 font-body outline-none transition-all rounded-[var(--radius-md)] text-sm focus:border-[var(--c-border-focus)]"
+                        className="w-full p-3 pr-10 font-body outline-none transition-all rounded-[var(--radius-md)] text-base sm:text-sm focus:border-[var(--c-border-focus)]"
                         style={{ 
                           backgroundColor: 'var(--c-input-bg)',
                           border: `1px solid ${
@@ -460,7 +425,7 @@ export const Contact = memo(() => {
                         onChange={handleInputChange}
                         onBlur={handleBlur}
                         rows={4}
-                        className="w-full p-3 font-body outline-none transition-all resize-none rounded-[var(--radius-md)] text-sm leading-relaxed focus:border-[var(--c-border-focus)]"
+                        className="w-full p-3 font-body outline-none transition-all resize-none rounded-[var(--radius-md)] text-base sm:text-sm leading-relaxed focus:border-[var(--c-border-focus)]"
                         style={{ 
                           backgroundColor: 'var(--c-input-bg)',
                           border: `1px solid ${
@@ -649,6 +614,28 @@ export const Contact = memo(() => {
                   style={{ color: 'var(--c-heading)' }}
                 >
                   Terms of Service
+                </button>
+                <span>•</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const container = document.getElementById('content-scroll-container');
+                    if (container) {
+                      container.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                    triggerHaptic(HAPTIC_PATTERNS.click);
+                  }}
+                  className="inline-flex items-center gap-1 underline hover:opacity-100 cursor-pointer"
+                  style={{ color: 'var(--c-heading)' }}
+                  aria-label="Back to top of page"
+                >
+                  <span>Back to Top</span>
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="12" y1="19" x2="12" y2="5"></line>
+                    <polyline points="5 12 12 5 19 12"></polyline>
+                  </svg>
                 </button>
               </div>
               <p className="text-sm font-handwriting tracking-wide" style={{ color: 'var(--c-muted)' }}>

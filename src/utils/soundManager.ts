@@ -6,9 +6,11 @@ const SOUND_EVENT = 'portfolio_sound_toggle';
 // In-memory cache for ultra-fast synchronous checks inside requestAnimationFrame loops
 let isMutedMemory: boolean = (() => {
   try {
-    return localStorage.getItem(SOUND_MUTED_KEY) === 'true';
+    const val = localStorage.getItem(SOUND_MUTED_KEY);
+    if (val === null) return true; // Mute by default on first load
+    return val === 'true';
   } catch {
-    return false;
+    return true;
   }
 })();
 

@@ -393,19 +393,6 @@ export default function App() {
     });
   }, []);
 
-  // Preload PortfolioContainer on idle so it's ready the moment the user clicks unfold
-  useEffect(() => {
-    const prewarm = () => {
-      import('./components/Portfolio/PortfolioContainer');
-    };
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(prewarm, { timeout: 2500 });
-    } else {
-      const timer = setTimeout(prewarm, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, []);
-
   // Preload ResumeViewer module once portfolio is revealed to ensure instantaneous transitions
   useEffect(() => {
     if (showContent && introCompleted) {

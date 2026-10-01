@@ -967,7 +967,7 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about Sachit's projects, tech stack, or philosophy..."
-                className="w-full py-3 sm:py-3.5 pl-4 sm:pl-5 pr-12 rounded-full border outline-none transition-all font-body text-xs sm:text-sm focus:border-[var(--c-border-focus)]"
+                className="w-full py-3 sm:py-3.5 pl-4 sm:pl-5 pr-12 rounded-full border outline-none transition-all font-body text-base sm:text-sm focus:border-[var(--c-border-focus)]"
                 style={{ 
                   backgroundColor: 'var(--c-bg)',
                   borderColor: 'var(--c-border)',
