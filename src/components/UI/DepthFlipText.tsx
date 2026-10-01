@@ -37,7 +37,6 @@ export const DepthFlipText = memo<DepthFlipTextProps>(({
   style,
 }) => {
   const [index, setIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
   const { simplify } = usePerformance();
 
   const activePhrases = singleText ? [singleText] : phrases;
@@ -54,14 +53,14 @@ export const DepthFlipText = memo<DepthFlipTextProps>(({
   }, [activePhrases.length]);
 
   useEffect(() => {
-    if (simplify || activePhrases.length <= 1 || isHovered) return;
+    if (simplify || activePhrases.length <= 1) return;
 
     const timer = setInterval(() => {
       triggerNext();
     }, interval);
 
     return () => clearInterval(timer);
-  }, [activePhrases.length, interval, isHovered, simplify, triggerNext]);
+  }, [activePhrases.length, interval, simplify, triggerNext]);
 
   if (simplify) {
     return <span className={className} style={style}>{currentPhrase}</span>;
@@ -80,9 +79,7 @@ export const DepthFlipText = memo<DepthFlipTextProps>(({
         ...style,
       }}
       onClick={triggerNext}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      title="Click or hover to flip 3D title"
+      title="Click to flip immediately"
     >
       <AnimatePresence mode="wait">
         <motion.span

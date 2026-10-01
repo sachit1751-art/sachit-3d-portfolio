@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, RotateCcw, Home, Sparkles, Layers, FileText, ArrowUpRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+import { Home } from 'lucide-react';
 import { PaperTheme } from '../../types';
 import { usePaperSound } from '../../hooks/usePaperSound';
 
@@ -13,38 +13,24 @@ export interface NotFoundProps {
   onViewResume?: () => void;
 }
 
-const THEMES: { id: PaperTheme; label: string; swatch: string }[] = [
-  { id: 'kraft', label: 'Kraft Paper', swatch: '#d6bfa2' },
-];
-
 export const NotFound: React.FC<NotFoundProps> = ({
   theme: propTheme,
-  setTheme: propSetTheme,
   onNavigateHome,
   onNavigateSection,
-  onRecrumple,
   onViewResume,
 }) => {
   // Local fallback theme state if not provided via props
-  const [internalTheme, setInternalTheme] = useState<PaperTheme>('kraft');
+  const [internalTheme] = useState<PaperTheme>('kraft');
 
   const activeTheme = propTheme || internalTheme;
-  const { playUnfold, playCrumple } = usePaperSound();
+  const { playUnfold } = usePaperSound();
 
-  // Animation trigger key to allow re-dropping the domino digits
-  const [dropKey, setDropKey] = useState<number>(0);
-
-  // Play subtle paper sound on initial drop
+  // Play subtle paper sound on mount
   useEffect(() => {
     try {
       playUnfold();
     } catch {}
-  }, [dropKey, playUnfold]);
-
-  // Handler for the "Switch" theme toggle (inspired directly by Domino New York's Switch toggle)
-  const handleSwitchTheme = (e: React.MouseEvent) => {
-    // No-op: Kraft is the only theme
-  };
+  }, [playUnfold]);
 
   const handleGoHome = () => {
     if (onNavigateHome) {
@@ -72,19 +58,6 @@ export const NotFound: React.FC<NotFoundProps> = ({
     }
   };
 
-  const handleFold = () => {
-    playCrumple();
-    if (onRecrumple) {
-      onRecrumple();
-    } else {
-      handleGoHome();
-    }
-  };
-
-  const handleReDrop = () => {
-    setDropKey((prev) => prev + 1);
-  };
-
   return (
     <div
       data-theme={activeTheme}
@@ -94,16 +67,33 @@ export const NotFound: React.FC<NotFoundProps> = ({
         color: 'var(--c-heading, #241f1a)',
       }}
     >
-      {/* Background Architectural Grid & Subtle Paper Grain */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.035] dark:opacity-[0.06] overflow-hidden">
-        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="grid-pattern" width="48" height="48" patternUnits="userSpaceOnUse">
-              <path d="M 48 0 L 0 0 0 48" fill="none" stroke="currentColor" strokeWidth="1" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-        </svg>
+      {/* Hand-Drawn Kraft Paper 404 Illustration Background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <img
+          src="/src/assets/images/kraft_paper_404_illustration_1790872312462.jpg"
+          alt="Hand-drawn kraft paper 404 illustration"
+          referrerPolicy="no-referrer"
+          className="w-full h-full object-cover object-center opacity-40 mix-blend-multiply dark:mix-blend-luminosity dark:opacity-20 transition-opacity duration-700 scale-105"
+        />
+        {/* Soft Vignette and Parchment Ambient Gradient */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(239, 230, 213, 0.4) 0%, rgba(239, 230, 213, 0.85) 75%, rgba(214, 191, 162, 0.95) 100%)',
+            mixBlendMode: 'normal',
+          }}
+        />
+        {/* Architectural Blueprint Grid Overlay */}
+        <div className="absolute inset-0 opacity-[0.04] dark:opacity-[0.08]">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="grid-pattern-404" width="48" height="48" patternUnits="userSpaceOnUse">
+                <path d="M 48 0 L 0 0 0 48" fill="none" stroke="currentColor" strokeWidth="1" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid-pattern-404)" />
+          </svg>
+        </div>
       </div>
 
       {/* Perimeter Folio Register Marks (Architectural Print Aesthetic) */}
@@ -126,11 +116,8 @@ export const NotFound: React.FC<NotFoundProps> = ({
         <span>STATUS: UNRESOLVED ROUTE</span>
       </div>
 
-      {/* ── TOP NAVIGATION BAR (Inspired by Domino New York Header) ── */}
-      <motion.header
-        initial={{ opacity: 0, y: -24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      {/* ── TOP NAVIGATION BAR ── */}
+      <header
         className="relative z-10 w-full px-6 sm:px-10 md:px-14 pt-6 sm:pt-8 flex items-center justify-between"
       >
         {/* Left: Branding Wordmark */}
@@ -165,122 +152,42 @@ export const NotFound: React.FC<NotFoundProps> = ({
           </span>
         </button>
 
-        {/* Right Navigation Controls: Switch, Fold, Projects, Inquire */}
-        <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
-          {/* Re-Drop Dominoes Action */}
+        {/* Right: Clean Home Navigation */}
+        <div className="flex items-center gap-3">
           <button
-            onClick={handleReDrop}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider transition-all border hover:scale-105 active:scale-95"
-            style={{
-              borderColor: 'var(--c-border)',
-              backgroundColor: 'var(--c-card, transparent)',
-              color: 'var(--c-body)',
-            }}
-            title="Drop Dominoes Again"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span className="hidden md:inline">Re-drop</span>
-          </button>
-
-          {/* Switch Button (Inspired by Domino NY's "Switch" Toggle) */}
-          <button
-            onClick={handleSwitchTheme}
-            className="group relative flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-sm"
-            style={{
-              borderColor: 'var(--c-border)',
-              backgroundColor: 'var(--c-card, #ffffff)',
-              color: 'var(--c-heading)',
-            }}
-            title="Toggle Paper Theme Palette"
-          >
-            <span
-              className="w-2.5 h-2.5 rounded-full border border-black/10 transition-colors duration-300"
-              style={{ backgroundColor: THEMES.find((t) => t.id === activeTheme)?.swatch || '#d6bfa2' }}
-            />
-            <span className="tracking-widest">Switch</span>
-            <span className="hidden lg:inline text-[10px] font-mono opacity-60">
-              ({THEMES.find((t) => t.id === activeTheme)?.label.split(' ')[0]})
-            </span>
-          </button>
-
-          {/* Fold Button with Paper Crumple Action */}
-          <button
-            onClick={handleFold}
-            className="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95"
+            onClick={handleGoHome}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
             style={{
               borderColor: 'var(--c-border)',
               backgroundColor: 'var(--c-btn-bg, #241f1a)',
               color: 'var(--c-btn-text, #efe6d5)',
             }}
-            title="Fold Paper and Recrumple"
+            title="Return to Portfolio Home"
           >
-            <Layers className="w-3.5 h-3.5" />
-            <span>Fold</span>
+            <Home className="w-3.5 h-3.5" />
+            <span>Home</span>
           </button>
-
-          {/* Direct Email Inquiry */}
-          <a
-            href="mailto:sachit1751@gmail.com"
-            className="hidden md:flex items-center gap-1 text-xs font-bold uppercase tracking-wider opacity-80 hover:opacity-100 transition-opacity"
-            style={{ color: 'var(--c-heading)' }}
-          >
-            <span>Inquire</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </a>
         </div>
-      </motion.header>
+      </header>
 
-      {/* ── CENTER STAGE: GIANT DOMINO 4 0 4 (Matching Domino New York layout) ── */}
+      {/* ── CENTER STAGE: STATIC 4 0 4 ── */}
       <main
-        key={dropKey}
-        className="relative z-10 flex-1 flex flex-col items-center justify-center w-full px-4 overflow-hidden"
+        className="relative z-10 flex-1 flex flex-col items-center justify-center w-full px-4 select-none"
       >
-        <div className="w-full flex items-center justify-center select-none">
-          <div className="flex items-center justify-center tracking-[-0.05em] leading-[0.72] font-black">
-            {/* Digit 4 (First) */}
-            <DominoDigit
-              char="4"
-              delay={0.12}
-              rotateInit={-3}
-              color="var(--c-heading)"
-            />
-
-            {/* Digit 0 (Center) */}
-            <DominoDigit
-              char="0"
-              delay={0.28}
-              rotateInit={1}
-              color="var(--c-heading)"
-            />
-
-            {/* Digit 4 (Second) */}
-            <DominoDigit
-              char="4"
-              delay={0.44}
-              rotateInit={3}
-              color="var(--c-heading)"
-            />
-          </div>
-        </div>
-
-        {/* Tactile hint for interactivity */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 0.7, y: 0 }}
-          transition={{ delay: 1.6, duration: 0.8 }}
-          className="mt-4 md:mt-6 text-center"
-        >
-          <span
-            className="font-mono text-[11px] uppercase tracking-widest opacity-60 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-dashed"
+        <div className="w-full flex items-center justify-center">
+          <div 
+            className="flex items-center justify-center tracking-[-0.05em] leading-[0.72] font-black"
             style={{
-              borderColor: 'var(--c-border)',
-              color: 'var(--c-muted)',
+              fontSize: 'clamp(8.5rem, 28vw, 32rem)',
+              color: 'var(--c-heading, #241f1a)',
+              textShadow: '0 12px 36px rgba(0, 0, 0, 0.12)',
             }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
-            Drag & Tilt the Dominoes
-          </span>
-        </motion.div>
+            <span className="font-serif font-black tracking-tighter drop-shadow-sm select-none">
+              404
+            </span>
+          </div>
+        </div>
       </main>
 
       {/* ── BOTTOM FOOTER: DOMINO NEW YORK EDITORIAL MESSAGE & LINKS ── */}
@@ -387,80 +294,5 @@ export const NotFound: React.FC<NotFoundProps> = ({
         </nav>
       </motion.footer>
     </div>
-  );
-};
-
-interface DominoDigitProps {
-  char: string;
-  delay: number;
-  rotateInit: number;
-  color: string;
-}
-
-/**
- * Individual Domino Digit with physical bounce drop-in entrance and draggable elastic physics
- */
-const DominoDigit: React.FC<DominoDigitProps> = ({ char, delay, rotateInit, color }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [wobbleKey, setWobbleKey] = useState(0);
-
-  const handleClick = () => {
-    setWobbleKey((k) => k + 1);
-  };
-
-  return (
-    <motion.div
-      key={wobbleKey}
-      drag
-      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-      dragElastic={0.45}
-      dragTransition={{ bounceStiffness: 300, bounceDamping: 15 }}
-      whileDrag={{ scale: 1.08, zIndex: 50, cursor: 'grabbing' }}
-      whileHover={{ scale: 1.03, cursor: 'grab' }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      onClick={handleClick}
-      initial={{
-        y: '-110vh',
-        opacity: 0,
-        rotate: rotateInit * 2,
-        scale: 0.9,
-      }}
-      animate={{
-        y: 0,
-        opacity: 1,
-        rotate: isHovered ? rotateInit * 1.5 : rotateInit,
-        scale: 1,
-      }}
-      transition={{
-        y: {
-          type: 'spring',
-          stiffness: 110,
-          damping: 10,
-          mass: 1.25,
-          delay,
-        },
-        opacity: { duration: 0.3, delay },
-        rotate: { type: 'spring', stiffness: 200, damping: 12 },
-        scale: { type: 'spring', stiffness: 250, damping: 15 },
-      }}
-      className="relative inline-block touch-none select-none transition-transform"
-      style={{
-        fontSize: 'clamp(8.5rem, 29vw, 34rem)',
-        lineHeight: 0.72,
-        color,
-        textShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
-      }}
-    >
-      <span className="block font-serif font-black tracking-tighter drop-shadow-sm">
-        {char}
-      </span>
-      {/* Subtle Domino dots or paper fold deboss line */}
-      <span
-        aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 h-1 opacity-20 pointer-events-none rounded-full"
-        style={{ backgroundColor: 'var(--c-heading)' }}
-      />
-    </motion.div>
   );
 };
