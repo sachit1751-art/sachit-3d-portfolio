@@ -1,10 +1,11 @@
-import React, { memo, useCallback, useRef, lazy, Suspense } from 'react';
+import React, { memo, useCallback, useRef, useEffect, lazy, Suspense } from 'react';
 import { PaperTheme, PaperState } from '../../types';
 import { Hero } from './Hero';
 import { ScrollTextPath } from '../UI/ScrollTextPath';
 import { About } from './About';
 import { Philosophy } from './Philosophy';
 import { ScrollReveal } from '../UI/ScrollReveal';
+import { attachPointerEventInspector } from '../../utils/pointerEventHandler';
 
 // Dynamic dynamic imports for below-the-fold content blocks to defer heavy JS execution
 const Projects = lazy(() => import('./Projects').then(m => ({ default: m.Projects })));
@@ -41,8 +42,16 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
     }
   }, []);
 
+  const mainRef = useRef<HTMLElement>(null);
   const touchStartXRef = useRef<number>(0);
   const touchStartYRef = useRef<number>(0);
+
+  // Unified PointerEventHandler Inspector for tracking and diagnosing button pointer events
+  useEffect(() => {
+    if (!mainRef.current) return;
+    const cleanup = attachPointerEventInspector(mainRef.current, 'PortfolioContainer');
+    return cleanup;
+  }, []);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (typeof window !== 'undefined' && window.innerWidth >= 768) return;
@@ -105,6 +114,7 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
 
   return (
     <main
+      ref={mainRef}
       data-theme={theme}
       className="relative w-full min-h-screen transition-colors duration-500"
       onTouchStart={handleTouchStart}
@@ -112,9 +122,9 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
     >
       <div
         id="physical-paper-sheet"
-        className="relative w-full max-w-[calc(100%-24px)] sm:max-w-[min(88vw,1100px)] md:max-w-[min(82vw,1100px)] mx-auto overflow-x-hidden pt-20 pb-10 sm:pt-24 sm:pb-14 md:pt-28 md:pb-20 px-4 sm:px-10 md:px-14"
+        className="relative w-full max-w-[calc(100%-24px)] sm:max-w-[min(88vw,1100px)] md:max-w-[min(82vw,1100px)] mx-auto overflow-x-hidden pt-20 pb-10 sm:pt-24 sm:pb-14 md:pt-28 md:pb-20 px-4 sm:px-10 md:px-14 pointer-events-auto"
       >
-        <div className="relative z-10">
+        <div className="relative z-10 pointer-events-auto">
           <Hero
             onExploreProjects={handleExploreProjects}
             onContactClick={handleContactClick}

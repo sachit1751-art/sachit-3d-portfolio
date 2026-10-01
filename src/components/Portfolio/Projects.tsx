@@ -100,12 +100,7 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggleExpand }) => {
-  const [isIntersecting, setIsIntersecting] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const detailsRef = useRef<HTMLDivElement>(null);
   const expandedContainerRef = useRef<HTMLDivElement>(null);
-  const [dynMaxHeight, setDynMaxHeight] = useState('0px');
-  const { simplify } = usePerformance();
 
   // Focus trap and auto-focus when modal expands
   useEffect(() => {
@@ -145,309 +140,255 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
     }
   };
 
-  useEffect(() => {
-    let frameId: number;
-    if (isExpanded) {
-      const animateOpen = () => {
-        if (detailsRef.current) {
-          const scrollHeight = detailsRef.current.scrollHeight;
-          // Dynamically compute exact scrollHeight with a responsive, scrollable fallback maximum of 350px
-          const targetHeight = Math.min(scrollHeight, 350);
-          setDynMaxHeight(`${targetHeight}px`);
-        }
-      };
-      frameId = requestAnimationFrame(animateOpen);
-    } else {
-      const animateClose = () => {
-        setDynMaxHeight('0px');
-      };
-      frameId = requestAnimationFrame(animateClose);
-    }
-    return () => {
-      if (frameId) {
-        cancelAnimationFrame(frameId);
-      }
-    };
-  }, [isExpanded]);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const scroller = document.getElementById('content-scroll-container');
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsIntersecting(true);
-          observer.disconnect();
-        }
-      },
-      {
-        root: scroller || null,
-        rootMargin: '150px',
-        threshold: 0.01,
-      }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div
-      ref={containerRef}
-      className="project-card-aspect-container relative w-full h-full min-h-[320px] sm:min-h-[340px] md:min-h-[360px] aspect-auto flex flex-col"
-      style={{
-        containIntrinsicSize: '350px 360px',
-        contentVisibility: 'auto',
-      }}
-    >
-      {isIntersecting ? (
-        <div
-          id={`project-card-${project.id}`}
-          data-project-card="true"
-          data-project-index={idx}
-          tabIndex={0}
-          role="article"
-          aria-label={`${project.title} (${project.category}, ${project.year})`}
-          onKeyDown={(e) => {
-            if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
-              e.preventDefault();
-              onToggleExpand(project.id);
-            }
-          }}
-          className="gsap-project-card group relative flex flex-col justify-between w-full h-full rounded-[var(--radius-lg)] focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] outline-none touch-manipulation cursor-pointer select-none transition-colors duration-200"
-          style={{
-            backgroundColor: 'var(--c-card)',
-            border: '1px solid var(--c-border)',
-            padding: 'clamp(1rem, 2vw + 0.5rem, 1.5rem)',
-            zIndex: isExpanded ? 10 : 1,
-          }}
-        >
-          <div>
-            {/* Header Meta: Category + Index */}
-            <div className="flex items-center justify-between text-xs font-handwriting mb-3" style={{ color: 'var(--c-subtle)' }}>
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <span
-                  className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-[var(--radius-sm)]"
-                  style={{ backgroundColor: 'var(--c-input-bg)', border: '1px solid var(--c-border)' }}
-                >
-                  {project.category}
-                </span>
-              </div>
-              <span className="text-[10px] uppercase tracking-widest font-mono font-bold" style={{ color: 'var(--c-faint)' }}>
-                {String(idx + 1).padStart(2, '0')}
+    <div className="relative w-full h-full min-h-[320px] sm:min-h-[340px] md:min-h-[360px] flex flex-col">
+      <div
+        id={`project-card-${project.id}`}
+        data-project-card="true"
+        data-project-index={idx}
+        tabIndex={0}
+        role="article"
+        aria-label={`${project.title} (${project.category}, ${project.year})`}
+        onKeyDown={(e) => {
+          if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            onToggleExpand(project.id);
+          }
+        }}
+        className="gsap-project-card group relative flex flex-col justify-between w-full h-full rounded-[var(--radius-lg)] focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] outline-none transition-colors duration-200"
+        style={{
+          backgroundColor: 'var(--c-card)',
+          border: '1px solid var(--c-border)',
+          padding: 'clamp(1rem, 2vw + 0.5rem, 1.5rem)',
+          zIndex: isExpanded ? 10 : 1,
+        }}
+      >
+        <div>
+          {/* Header Meta: Category + Index */}
+          <div className="flex items-center justify-between text-xs font-handwriting mb-3" style={{ color: 'var(--c-subtle)' }}>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span
+                className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-[var(--radius-sm)]"
+                style={{ backgroundColor: 'var(--c-input-bg)', border: '1px solid var(--c-border)' }}
+              >
+                {project.category}
               </span>
             </div>
+            <span className="text-[10px] uppercase tracking-widest font-mono font-bold" style={{ color: 'var(--c-faint)' }}>
+              {String(idx + 1).padStart(2, '0')}
+            </span>
+          </div>
 
-            {/* Project Title & Short Description */}
+          {/* Project Title & Short Description */}
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              triggerHaptic(HAPTIC_PATTERNS.click);
+              onToggleExpand(project.id, e);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onToggleExpand(project.id);
+              }
+            }}
+            className="cursor-pointer outline-none group/title focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] rounded-md py-1 select-none"
+            aria-label={`Toggle quick details for ${project.title}`}
+          >
+            <h3 className="font-sans text-xl sm:text-2xl font-bold transition-colors mb-2 flex items-center justify-between tracking-tight" style={{ color: 'var(--c-heading)' }}>
+              <span className="line-clamp-1 pr-1.5" style={{ paddingRight: '0.15em' }}>{project.title}</span>
+              <span className="font-mono text-[10px] uppercase tracking-wider opacity-60 ml-2 shrink-0" style={{ color: 'var(--c-muted)' }}>
+                {project.year}
+              </span>
+            </h3>
+
+            <p
+              className="text-sm sm:text-base leading-relaxed mb-4 font-body opacity-85"
+              style={{
+                color: 'var(--c-body)',
+                wordBreak: 'normal',
+                overflowWrap: 'break-word',
+                textWrap: 'pretty',
+              }}
+            >
+              {project.description}
+            </p>
+          </div>
+
+          {/* Print-only Full Details (Always visible on paper) */}
+          <div className="hidden print:block mt-4 text-xs leading-relaxed space-y-2 border-t border-gray-100 pt-3">
+            <p className="whitespace-pre-line font-body text-gray-700">
+              {project.longDescription || project.description}
+            </p>
+          </div>
+
+          {/* Inline Quick Details Dropdown (UI Only) */}
+          <div
+            className={`project-details-wrapper transition-all duration-300 ease-in-out print:hidden overflow-hidden ${
+              isExpanded ? 'max-h-[600px] opacity-100 my-3' : 'max-h-0 opacity-0 my-0'
+            }`}
+          >
             <div
-              role="button"
-              tabIndex={0}
+              ref={expandedContainerRef}
+              onKeyDown={handleModalKeyDown}
+              tabIndex={-1}
+              className="p-4 rounded-[var(--radius-md)] text-xs font-body leading-relaxed space-y-3 outline-none"
+              style={{
+                backgroundColor: 'var(--c-input-bg)',
+                border: '1px solid var(--c-border)',
+              }}
+            >
+              <div>
+                <p className="whitespace-pre-line leading-relaxed" style={{ color: 'var(--c-body)' }}>
+                  {project.longDescription || project.description}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-2.5" style={{ borderTop: '1px solid var(--c-border)' }}>
+                <span className="font-mono text-[10px] uppercase tracking-wider opacity-70" style={{ color: 'var(--c-muted)' }}>
+                  YEAR: {project.year}
+                </span>
+                <div className="flex items-center gap-3">
+                  {project.githubUrl && (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-action="github"
+                      className="project-btn-github font-mono text-[11px] font-bold inline-flex items-center gap-1 hover:underline cursor-pointer pointer-events-auto"
+                      style={{ color: 'var(--c-heading)' }}
+                      onClick={(e) => {
+                        console.log(`[ProjectCard] Dropdown 'Source Code' link clicked for project id: ${project.id}, url: ${project.githubUrl}`);
+                        e.stopPropagation();
+                      }}
+                    >
+                      <GitHubIcon className="w-3 h-3" />
+                      <span>Source Code</span>
+                    </a>
+                  )}
+                  {project.demoUrl && (
+                    <a
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-action="live-demo"
+                      className="project-btn-live-demo font-mono text-[11px] font-bold inline-flex items-center gap-1 hover:underline text-emerald-600 dark:text-emerald-400 cursor-pointer pointer-events-auto"
+                      onClick={(e) => {
+                        console.log(`[ProjectCard] Dropdown 'Live Demo' link clicked for project id: ${project.id}, url: ${project.demoUrl}`);
+                        e.stopPropagation();
+                      }}
+                    >
+                      <span>Open Live Demo</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Tech Tags & Quick Action Strip */}
+        <div className="space-y-3 pt-3 mt-auto relative z-10" style={{ borderTop: '1px solid var(--c-border)' }}>
+          {/* Tech Badges with Authentic SVG Icons */}
+          <div className="flex flex-wrap gap-1.5">
+            {project.tags.map((tag) => {
+              const TechIcon = getTechStackSVG(tag);
+              return (
+                <span
+                  key={tag}
+                  className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-mono tracking-wider rounded-[var(--radius-sm)] transition-colors hover:border-[var(--c-border-hover)] select-none"
+                  style={{
+                    border: '1px solid var(--c-border)',
+                    color: 'var(--c-body)',
+                    backgroundColor: 'var(--c-input-bg)',
+                  }}
+                >
+                  <TechIcon className="w-3 h-3 opacity-80 flex-shrink-0" style={{ color: 'var(--c-heading)' }} />
+                  <span>{tag}</span>
+                </span>
+              );
+            })}
+          </div>
+
+          {/* Quick Details Action Strip */}
+          <div className="flex items-center justify-between gap-2 pt-1">
+            <button
+              type="button"
+              data-action="quick-details"
               onClick={(e) => {
+                console.log(`[ProjectCard] 'Quick Details' clicked for project id: ${project.id} (currently isExpanded: ${isExpanded})`);
+                e.preventDefault();
                 e.stopPropagation();
                 triggerHaptic(HAPTIC_PATTERNS.click);
                 onToggleExpand(project.id, e);
               }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  onToggleExpand(project.id);
-                }
-              }}
-              className="cursor-pointer outline-none group/title focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] rounded-md py-1 select-none"
-              aria-label={`Toggle quick details for ${project.title}`}
-            >
-              <h3 className="font-sans text-xl sm:text-2xl font-bold transition-colors mb-2 flex items-center justify-between tracking-tight" style={{ color: 'var(--c-heading)', overflow: 'visible', transform: 'translateZ(8px)' }}>
-                <span className="line-clamp-1 pr-1.5" style={{ paddingRight: '0.15em' }}>{project.title}</span>
-                <span className="font-mono text-[10px] uppercase tracking-wider opacity-60 ml-2 shrink-0" style={{ color: 'var(--c-muted)' }}>
-                  {project.year}
-                </span>
-              </h3>
-
-              <p
-                className="text-sm sm:text-base leading-relaxed mb-4 font-body opacity-85"
-                style={{
-                  color: 'var(--c-body)',
-                  wordBreak: 'normal',
-                  overflowWrap: 'break-word',
-                  textWrap: 'pretty',
-                }}
-              >
-                {project.description}
-              </p>
-            </div>
-
-            {/* Print-only Full Details (Always visible on paper) */}
-            <div className="hidden print:block mt-4 text-xs leading-relaxed space-y-2 border-t border-gray-100 pt-3">
-              <p className="whitespace-pre-line font-body text-gray-700">
-                {project.longDescription || project.description}
-              </p>
-            </div>
-
-            {/* Inline Quick Details Dropdown (UI Only) */}
-            <div
-              ref={detailsRef}
-              className="project-details-wrapper overflow-hidden transition-all duration-300 ease-in-out print:hidden"
+              className="project-btn-quick-details flex-1 min-h-[38px] px-3 py-2 text-xs font-mono uppercase tracking-wider rounded-[var(--radius-md)] flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 hover:border-[var(--c-border-focus)] select-none pointer-events-auto relative z-20"
               style={{
-                height: isExpanded ? 'auto' : '0px',
-                maxHeight: dynMaxHeight,
-                opacity: isExpanded ? 1 : 0,
-                marginTop: isExpanded ? '12px' : '0px',
-                marginBottom: isExpanded ? '12px' : '0px',
-                contain: 'content',
-                overflowY: isExpanded ? 'auto' : 'hidden',
+                border: '1px solid var(--c-border)',
+                backgroundColor: 'var(--c-input-bg)',
+                color: 'var(--c-heading)',
               }}
+              aria-expanded={isExpanded}
             >
-              <div
-                ref={expandedContainerRef}
-                onKeyDown={handleModalKeyDown}
-                tabIndex={-1}
-                className="p-4 rounded-[var(--radius-md)] text-xs font-body leading-relaxed space-y-3 outline-none"
+              <span>{isExpanded ? 'Hide Details' : 'Quick Details'}</span>
+              <AnimatedMenuIcon isOpen={isExpanded} variant="chevron" size={14} />
+            </button>
+
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-action="github"
+                className={`project-btn-github min-h-[38px] px-3 py-2 text-xs font-mono uppercase tracking-wider rounded-[var(--radius-md)] flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 pointer-events-auto relative z-20 ${
+                  !project.demoUrl 
+                    ? 'hover:brightness-105' 
+                    : 'hover:border-[var(--c-border-focus)]'
+                }`}
                 style={{
-                  backgroundColor: 'var(--c-input-bg)',
-                  border: '1px solid var(--c-border)',
-                  contain: 'content',
+                  border: !project.demoUrl ? 'none' : '1px solid var(--c-border)',
+                  backgroundColor: !project.demoUrl ? 'var(--c-btn-bg)' : 'var(--c-input-bg)',
+                  color: !project.demoUrl ? 'var(--c-btn-text)' : 'var(--c-heading)',
                 }}
-              >
-                <div>
-                  <p className="whitespace-pre-line leading-relaxed" style={{ color: 'var(--c-body)' }}>
-                    {project.longDescription || project.description}
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-2.5" style={{ borderTop: '1px solid var(--c-border)' }}>
-                  <span className="font-mono text-[10px] uppercase tracking-wider opacity-70" style={{ color: 'var(--c-muted)' }}>
-                    YEAR: {project.year}
-                  </span>
-                  <div className="flex items-center gap-3">
-                    {project.githubUrl && (
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="font-mono text-[11px] font-bold inline-flex items-center gap-1 hover:underline"
-                        style={{ color: 'var(--c-heading)' }}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <GitHubIcon className="w-3 h-3" />
-                        <span>Source Code</span>
-                      </a>
-                    )}
-                    {project.demoUrl && (
-                      <a
-                        href={project.demoUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="font-mono text-[11px] font-bold inline-flex items-center gap-1 hover:underline text-emerald-600 dark:text-emerald-400"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <span>Open Live Demo</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Tech Tags & Quick Action Strip */}
-          <div className="space-y-3 pt-3 mt-auto" style={{ transform: 'translateZ(16px)', transformStyle: 'preserve-3d', borderTop: '1px solid var(--c-border)' }}>
-            {/* Tech Badges with Authentic SVG Icons */}
-            <div className="flex flex-wrap gap-1.5">
-              {project.tags.map((tag) => {
-                const TechIcon = getTechStackSVG(tag);
-                return (
-                  <span
-                    key={tag}
-                    className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-mono tracking-wider rounded-[var(--radius-sm)] transition-colors hover:border-[var(--c-border-hover)] select-none"
-                    style={{
-                      border: '1px solid var(--c-border)',
-                      color: 'var(--c-body)',
-                      backgroundColor: 'var(--c-input-bg)',
-                    }}
-                  >
-                    <TechIcon className="w-3 h-3 opacity-80 flex-shrink-0" style={{ color: 'var(--c-heading)' }} />
-                    <span>{tag}</span>
-                  </span>
-                );
-              })}
-            </div>
-
-            {/* Quick Details Action Strip */}
-            <div className="flex items-center justify-between gap-2 pt-1">
-              <button
-                type="button"
                 onClick={(e) => {
+                  console.log(`[ProjectCard] 'GitHub Code' link clicked for project id: ${project.id}, url: ${project.githubUrl}`);
                   e.stopPropagation();
-                  triggerHaptic(HAPTIC_PATTERNS.click);
-                  onToggleExpand(project.id, e);
                 }}
-                className="flex-1 min-h-[38px] px-3 py-2 text-xs font-mono uppercase tracking-wider rounded-[var(--radius-md)] flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 hover:border-[var(--c-border-focus)]"
-                style={{
-                  border: '1px solid var(--c-border)',
-                  backgroundColor: 'var(--c-input-bg)',
-                  color: 'var(--c-heading)',
-                }}
-                aria-expanded={isExpanded}
+                title="View GitHub Repository"
+                aria-label="View GitHub Repository"
               >
-                <span>{isExpanded ? 'Hide Details' : 'Quick Details'}</span>
-                <AnimatedMenuIcon isOpen={isExpanded} variant="chevron" size={14} />
-              </button>
+                <GitHubIcon className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Code</span>
+              </a>
+            )}
 
-              {project.githubUrl && (
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={`min-h-[38px] px-3 py-2 text-xs font-mono uppercase tracking-wider rounded-[var(--radius-md)] flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 ${
-                    !project.demoUrl 
-                      ? 'hover:brightness-105' 
-                      : 'hover:border-[var(--c-border-focus)]'
-                  }`}
-                  style={{
-                    border: !project.demoUrl ? 'none' : '1px solid var(--c-border)',
-                    backgroundColor: !project.demoUrl ? 'var(--c-btn-bg)' : 'var(--c-input-bg)',
-                    color: !project.demoUrl ? 'var(--c-btn-text)' : 'var(--c-heading)',
-                  }}
-                  onClick={(e) => e.stopPropagation()}
-                  title="View GitHub Repository"
-                  aria-label="View GitHub Repository"
-                >
-                  <GitHubIcon className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Code</span>
-                </a>
-              )}
-
-              {project.demoUrl && (
-                <a
-                  href={project.demoUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="min-h-[38px] px-3.5 py-2 text-xs font-mono uppercase tracking-wider rounded-[var(--radius-md)] flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:brightness-105 active:scale-95"
-                  style={{
-                    backgroundColor: 'var(--c-btn-bg)',
-                    color: 'var(--c-btn-text)',
-                  }}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <span>Live Demo</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              )}
-            </div>
+            {project.demoUrl && (
+              <a
+                href={project.demoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-action="live-demo"
+                className="project-btn-live-demo min-h-[38px] px-3.5 py-2 text-xs font-mono uppercase tracking-wider rounded-[var(--radius-md)] flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:brightness-105 active:scale-95 pointer-events-auto relative z-20"
+                style={{
+                  backgroundColor: 'var(--c-btn-bg)',
+                  color: 'var(--c-btn-text)',
+                }}
+                onClick={(e) => {
+                  console.log(`[ProjectCard] 'Live Demo' link clicked for project id: ${project.id}, url: ${project.demoUrl}`);
+                  e.stopPropagation();
+                }}
+              >
+                <span>Live Demo</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            )}
           </div>
         </div>
-      ) : (
-        <div
-          className="w-full h-full rounded-[var(--radius-lg)] animate-pulse"
-          style={{
-            backgroundColor: 'var(--c-card)',
-            border: '1px solid var(--c-border)',
-          }}
-        />
-      )}
+      </div>
     </div>
   );
 });
@@ -461,8 +402,15 @@ export const Projects = memo(() => {
   const { simplify } = usePerformance();
 
   const toggleExpandCard = useCallback((id: string, e?: React.MouseEvent | React.KeyboardEvent) => {
-    if (e) e.stopPropagation();
-    setExpandedCardId((prev) => (prev === id ? null : id));
+    if (e) {
+      e.stopPropagation();
+    }
+    console.log(`[Projects] toggleExpandCard invoked for id: '${id}'. Toggling card expansion state.`);
+    setExpandedCardId((prev) => {
+      const next = prev === id ? null : id;
+      console.log(`[Projects] Card expansion updated: previous='${prev}' -> next='${next}'`);
+      return next;
+    });
   }, []);
 
   useEffect(() => {
@@ -525,33 +473,31 @@ export const Projects = memo(() => {
   }, [simplify]);
 
   return (
-    <ScrollReveal>
-      <section id="projects" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
-        <div className="mb-8">
-          <div className="flex justify-center mb-3">
-            <Code2 className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
-          </div>
-          <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
-            [ 03 / PROJECTS ]
-          </span>
-          <h2 className="font-sans text-4xl sm:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
-            <WordReveal text="Featured Projects" baseDelay={0.1} />
-          </h2>
+    <section id="projects" className="relative mb-16 sm:mb-20 pt-8 sm:pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
+      <div className="mb-6 sm:mb-8">
+        <div className="flex justify-center mb-2.5">
+          <Code2 className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'var(--c-dot)' }} />
         </div>
+        <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-1.5" style={{ color: 'var(--c-muted)' }}>
+          [ 03 / PROJECTS ]
+        </span>
+        <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
+          <WordReveal text="Featured Projects" baseDelay={0.1} />
+        </h2>
+      </div>
 
-        <div ref={cardsGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start" style={{ gap: 'clamp(1rem, 2.5vw + 0.25rem, 1.5rem)' }}>
-          {projects.map((project, idx) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              idx={idx}
-              isExpanded={expandedCardId === project.id}
-              onToggleExpand={toggleExpandCard}
-            />
-          ))}
-        </div>
-      </section>
-    </ScrollReveal>
+      <div ref={cardsGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start" style={{ gap: 'clamp(1rem, 2.5vw + 0.25rem, 1.5rem)' }}>
+        {projects.map((project, idx) => (
+          <ProjectCard
+            key={project.id}
+            project={project}
+            idx={idx}
+            isExpanded={expandedCardId === project.id}
+            onToggleExpand={toggleExpandCard}
+          />
+        ))}
+      </div>
+    </section>
   );
 });
 

@@ -46,20 +46,20 @@ export const About = memo(() => {
 
   return (
     <ScrollReveal>
-    <section id="about" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
-      <div className="mb-8">
-        <div className="flex justify-center mb-3">
-          <User className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
+    <section id="about" className="relative mb-16 sm:mb-20 pt-8 sm:pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
+      <div className="mb-6 sm:mb-8">
+        <div className="flex justify-center mb-2.5">
+          <User className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'var(--c-dot)' }} />
         </div>
-        <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
+        <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-1.5" style={{ color: 'var(--c-muted)' }}>
           [ 01 / BACKGROUND ]
         </span>
-        <h2 className="font-sans text-4xl sm:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
+        <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
           <WordReveal text="About Me" baseDelay={0.1} />
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
         {/* Physical Scrapbook Polaroid Photo */}
         <div className="lg:col-span-3 flex flex-col items-center lg:items-start justify-center">
           <div

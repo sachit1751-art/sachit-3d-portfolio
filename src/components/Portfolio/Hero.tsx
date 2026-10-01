@@ -117,14 +117,14 @@ export const Hero = memo<HeroProps>(({
               phrases={[
                 "Full-Stack Web Developer",
                 "AI & Looping Engineer",
+                "UI & UX Designer",
                 "Frontend Developer",
+                "Web & Mobile Developer",
                 "Android Developer",
                 "Backend Engineer",
                 "Product Engineer",
                 "Opensource Dev",
                 "LLM Integration Developer",
-                "Web & Mobile Developer",
-                "UI & UX Designer",
                 "Best Vibecoder"
               ]}
               interval={3800}
@@ -177,7 +177,7 @@ export const Hero = memo<HeroProps>(({
           <a
             href="https://github.com/sachit1751-art"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             aria-label="GitHub"
             className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
             style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
@@ -187,7 +187,7 @@ export const Hero = memo<HeroProps>(({
           <a
             href="https://www.linkedin.com/in/sachit"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             aria-label="LinkedIn"
             className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
             style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}

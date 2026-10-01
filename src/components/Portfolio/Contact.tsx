@@ -582,7 +582,7 @@ export const Contact = memo(() => {
                 ref={githubRef}
                 href={GITHUB}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="w-11 h-11 flex items-center justify-center rounded-[var(--radius-md)] transition-colors cursor-pointer hover:border-[var(--c-border-focus)] shadow-sm"
                 style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)', backgroundColor: 'var(--c-card)' }}
                 onMouseEnter={handleSocialHover}
@@ -595,7 +595,7 @@ export const Contact = memo(() => {
                 ref={linkedinRef}
                 href={LINKEDIN}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="w-11 h-11 flex items-center justify-center rounded-[var(--radius-md)] transition-colors cursor-pointer hover:border-[var(--c-border-focus)] shadow-sm"
                 style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)', backgroundColor: 'var(--c-card)' }}
                 onMouseEnter={handleSocialHover}
@@ -607,7 +607,7 @@ export const Contact = memo(() => {
               <a
                 href={INSTAGRAM}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="w-11 h-11 flex items-center justify-center rounded-[var(--radius-md)] transition-colors cursor-pointer hover:border-[var(--c-border-focus)] shadow-sm"
                 style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)', backgroundColor: 'var(--c-card)' }}
                 onMouseEnter={handleSocialHover}

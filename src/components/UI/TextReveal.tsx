@@ -19,13 +19,23 @@ function useScrollReveal() {
 
     const scroller = document.getElementById('content-scroll-container');
     
-    return observeElement(
+    const unobserve = observeElement(
       el, 
       (isIntersecting) => {
         if (isIntersecting) setVisible(true);
       },
-      { root: scroller, threshold: 0, rootMargin: '0px 0px -5% 0px' }
+      { root: scroller, threshold: 0.01, rootMargin: '100px 0px 100px 0px' }
     );
+
+    // Safety fallback: ensure text is always visible within 200ms
+    const timer = setTimeout(() => {
+      setVisible(true);
+    }, 200);
+
+    return () => {
+      if (unobserve) unobserve();
+      clearTimeout(timer);
+    };
   }, [simplify]);
 
   return { ref, visible, simplify };
