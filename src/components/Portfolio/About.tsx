@@ -5,21 +5,12 @@ import gsap from 'gsap';
 import { LocalMascot } from '../UI/LocalMascot';
 import { WordReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
-import { useTiltParallax } from '../../hooks/useTiltParallax';
 import { WATERMARKED_NAME } from '../../utils/watermark';
 
 // ﻿watermark:sachit-2026﻿
 export const About = memo(() => {
   const mascotWrapperRef = useRef<HTMLDivElement>(null);
   const mascotBreathRef = useRef<HTMLDivElement>(null);
-
-  // 3D Tilt-Parallax for Snapshot Card
-  const { elementRef: snapshotCardRef } = useTiltParallax<HTMLDivElement>({
-    maxTilt: 8,
-    perspective: 800,
-    scaleOnHover: 1.02,
-    glare: false,
-  });
 
   useEffect(() => {
     if (!mascotWrapperRef.current || !mascotBreathRef.current) return;
@@ -69,29 +60,58 @@ export const About = memo(() => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12 items-center">
-        {/* Interactive Mascot */}
-        <div className="lg:col-span-3 flex flex-col items-center justify-center">
+        {/* Physical Scrapbook Polaroid Photo */}
+        <div className="lg:col-span-3 flex flex-col items-center lg:items-start justify-center">
           <div
-            ref={mascotWrapperRef}
-            className="relative flex items-center justify-center bg-transparent will-change-transform cursor-pointer"
+            className="group relative pb-4 cursor-pointer select-none transition-colors duration-200"
+            style={{
+              backgroundColor: 'transparent',
+              border: 'none',
+            }}
+            title="Interactive Mascot"
           >
-            <div
-              ref={mascotBreathRef}
-              className="flex items-center justify-center relative bg-transparent will-change-transform"
+            {/* Inner Photo Frame */}
+            <div 
+              className="relative w-40 h-40 sm:w-44 sm:h-44 flex items-center justify-center overflow-visible"
+              style={{
+                backgroundColor: 'transparent',
+                border: 'none',
+              }}
             >
-              <LocalMascot
-                directions="/mascots/cap-directions.webp"
-                reactions="/mascots/cap-reactions.webp"
-                size={140}
-                label="Sachit Cap Mascot"
-              />
+              {/* Mascot Container with Subtle Float & Breathing Animations */}
+              <div 
+                ref={mascotWrapperRef}
+                className="relative w-full h-full flex items-center justify-center bg-transparent will-change-transform"
+                style={{ 
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <div 
+                  ref={mascotBreathRef}
+                  className="w-full h-full flex items-center justify-center relative bg-transparent will-change-transform"
+                  style={{
+                    backgroundColor: 'transparent',
+                  }}
+                >
+                  <LocalMascot
+                    directions="/mascots/cap-directions.webp"
+                    reactions="/mascots/cap-reactions.webp"
+                    size={140}
+                    label="Sachit Cap Mascot"
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-          <div
-            className="mt-3 text-center text-xs font-handwriting select-none opacity-60"
-            style={{ color: 'var(--c-muted)' }}
-          >
-            ( tap me! )
+
+            {/* Polaroid Bottom Handwritten Caption */}
+            <div 
+              className="pt-2 text-center text-xs font-handwriting select-none"
+              style={{
+                color: 'var(--c-subtle)',
+              }}
+            >
+              ( tap me! )
+            </div>
           </div>
         </div>
 
@@ -117,13 +137,10 @@ export const About = memo(() => {
         </div>
 
         <div 
-          ref={snapshotCardRef}
           className="lg:col-span-4 p-6 relative flex flex-col justify-between rounded-[var(--radius-lg)] overflow-hidden transition-all duration-300" 
           style={{ 
             backgroundColor: 'transparent',
             border: '1px solid var(--c-border)',
-            transformStyle: 'preserve-3d',
-            backfaceVisibility: 'hidden',
           }}
         >
           <div>

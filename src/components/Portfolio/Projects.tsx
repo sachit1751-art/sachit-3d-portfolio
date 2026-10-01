@@ -8,10 +8,10 @@ import { GitHubIcon } from '../UI/Icons';
 import { AnimatedMenuIcon } from '../UI/AnimatedMenuIcon';
 import { WordReveal } from '../UI/TextReveal';
 import { usePerformance } from '../../hooks/usePerformance';
-import { useTiltParallax } from '../../hooks/useTiltParallax';
 import { ScrollReveal } from '../UI/ScrollReveal';
 import { observeElement } from '../../utils/observer';
 import { getTechStackSVG } from '../UI/TechIcons';
+import { triggerHaptic, HAPTIC_PATTERNS } from '../../utils/haptics';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -106,15 +106,6 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
   const expandedContainerRef = useRef<HTMLDivElement>(null);
   const [dynMaxHeight, setDynMaxHeight] = useState('0px');
   const { simplify } = usePerformance();
-
-  // Subtle 3D Gyroscopic & Cursor Tilt-Parallax
-  const { elementRef: tiltCardRef, glareRef } = useTiltParallax<HTMLDivElement>({
-    maxTilt: 10,
-    perspective: 800,
-    scaleOnHover: 1.025,
-    glare: true,
-    disabled: isExpanded || simplify,
-  });
 
   // Focus trap and auto-focus when modal expands
   useEffect(() => {
@@ -213,7 +204,6 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
     >
       {isIntersecting ? (
         <div
-          ref={tiltCardRef}
           id={`project-card-${project.id}`}
           data-project-card="true"
           data-project-index={idx}
@@ -226,24 +216,15 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
               onToggleExpand(project.id);
             }
           }}
-          className="gsap-project-card group relative p-5 sm:p-6 flex flex-col justify-between w-full h-full rounded-[var(--radius-lg)] hover:border-[var(--c-border-hover)] focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] outline-none touch-manipulation cursor-pointer select-none transition-colors duration-200"
+          className="gsap-project-card group relative flex flex-col justify-between w-full h-full rounded-[var(--radius-lg)] focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] outline-none touch-manipulation cursor-pointer select-none transition-colors duration-200"
           style={{
             backgroundColor: 'var(--c-card)',
             border: '1px solid var(--c-border)',
-            transformStyle: 'preserve-3d',
-            backfaceVisibility: 'hidden',
+            padding: 'clamp(1rem, 2vw + 0.5rem, 1.5rem)',
             zIndex: isExpanded ? 10 : 1,
           }}
         >
-          {/* Dynamic physical paper glare sheen */}
-          <div
-            ref={glareRef}
-            className="pointer-events-none absolute inset-0 z-30 rounded-[var(--radius-lg)] opacity-0 overflow-hidden"
-            style={{ mixBlendMode: 'overlay' }}
-            aria-hidden="true"
-          />
-
-          <div style={{ transform: 'translateZ(18px)', transformStyle: 'preserve-3d' }}>
+          <div>
             {/* Header Meta: Category + Index */}
             <div className="flex items-center justify-between text-xs font-handwriting mb-3" style={{ color: 'var(--c-subtle)' }}>
               <div className="flex items-center gap-1.5 flex-wrap">
@@ -265,6 +246,7 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
               tabIndex={0}
               onClick={(e) => {
                 e.stopPropagation();
+                triggerHaptic(HAPTIC_PATTERNS.click);
                 onToggleExpand(project.id, e);
               }}
               onKeyDown={(e) => {
@@ -399,6 +381,7 @@ const ProjectCard = memo<ProjectCardProps>(({ project, idx, isExpanded, onToggle
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
+                  triggerHaptic(HAPTIC_PATTERNS.click);
                   onToggleExpand(project.id, e);
                 }}
                 className="flex-1 min-h-[38px] px-3 py-2 text-xs font-mono uppercase tracking-wider rounded-[var(--radius-md)] flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 hover:border-[var(--c-border-focus)]"
@@ -556,7 +539,7 @@ export const Projects = memo(() => {
           </h2>
         </div>
 
-        <div ref={cardsGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+        <div ref={cardsGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start" style={{ gap: 'clamp(1rem, 2.5vw + 0.25rem, 1.5rem)' }}>
           {projects.map((project, idx) => (
             <ProjectCard
               key={project.id}

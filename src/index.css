@@ -4143,3 +4143,18 @@ section[id] {
   contain-intrinsic-size: 0 150px;
 }
 
+/* Touch device accessibility hit-box expansion (adds 8px of invisible click margin) */
+@media (pointer: coarse) {
+  .touch-hitbox-expansion::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    pointer-events: auto;
+    z-index: 10;
+  }
+  .touch-hitbox-expansion {
+    position: relative !important;
+  }
+}
+
+

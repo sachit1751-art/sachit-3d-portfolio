@@ -121,7 +121,7 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
             onViewResume={onViewResume}
           />
 
-          <ScrollTextPath text="Coding • Building • Creating • Designing" className="-my-8" />
+          <ScrollTextPath text="Coding • Building • Creating • Designing" className="my-10 md:-my-8" />
 
           <ScrollReveal>
             <About />

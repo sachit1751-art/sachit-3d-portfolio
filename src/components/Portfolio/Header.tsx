@@ -247,11 +247,13 @@ export const Header = memo<HeaderProps>(({
   return (
     <>
       <motion.header
-        initial={{ y: 4, opacity: 0 }}
+        initial={{ y: -24, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{
-          duration: 0.22,
-          ease: [0.16, 1, 0.3, 1],
+          type: 'spring',
+          stiffness: 280,
+          damping: 26,
+          mass: 0.8,
         }}
         className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300"
         style={{
@@ -314,7 +316,7 @@ export const Header = memo<HeaderProps>(({
                   ref={(el) => { navBtns.current[id] = el; }}
                   onClick={() => handleNavClick(id, isResume)}
                   onMouseEnter={isResume ? () => { import('./ResumeViewer'); } : undefined}
-                  className="relative px-3.5 py-1.5 text-sm font-body transition-colors cursor-pointer rounded-md"
+                  className="relative px-3.5 py-1.5 text-sm font-body transition-colors cursor-pointer rounded-md touch-hitbox-expansion"
                   style={{
                     color: isActive ? 'var(--c-heading)' : 'var(--c-subtle)',
                     fontWeight: isActive ? 600 : 400,

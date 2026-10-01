@@ -25,9 +25,12 @@ export const ScrollTextPath = memo(({ text, className = '' }: ScrollTextPathProp
 
   // Measure single unit text length accurately using Pretext (instant, no DOM reflow)
   const measureUnitWidth = useCallback(() => {
-    // 22px bold monospace with 0.2em letter spacing
-    const fontStr = 'bold 22px "Space Mono", "Courier New", monospace';
-    const pretextWidth = measureTextWidth(unitText, fontStr, { letterSpacing: 4.4 });
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+    const fontSize = isMobile ? '32px' : '22px';
+    const letterSpacingVal = isMobile ? 6.4 : 4.4;
+    // bold monospace with 0.2em letter spacing
+    const fontStr = `bold ${fontSize} "Space Mono", "Courier New", monospace`;
+    const pretextWidth = measureTextWidth(unitText, fontStr, { letterSpacing: letterSpacingVal });
 
     if (pretextWidth > 0) {
       unitWidthRef.current = pretextWidth;
@@ -151,10 +154,9 @@ export const ScrollTextPath = memo(({ text, className = '' }: ScrollTextPathProp
           stroke="transparent"
         />
         <text
-          className="font-mono font-bold uppercase"
+          className="font-mono font-bold uppercase text-[32px] sm:text-[22px]"
           style={{
             fill: 'var(--c-subtle)',
-            fontSize: '22px',
             letterSpacing: '0.2em',
           }}
         >

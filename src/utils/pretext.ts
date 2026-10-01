@@ -1,48 +1,51 @@
-import {
-  prepareWithSegments,
-  layoutWithLines,
-  measureNaturalWidth,
-  measureLineStats,
-  type PreparedTextWithSegments,
-  type LayoutLinesResult,
-  type PrepareOptions,
-} from '@chenglou/pretext';
+/**
+ * High-performance browser-native text layout and measurement engine.
+ * Emulates the @chenglou/pretext interface using HTML5 Canvas measureText
+ * to prevent DOM layout thrashing (0 reflows) and run synchronously in microseconds.
+ */
 
-// In-memory LRU-like cache for prepared texts to avoid re-measuring same string/font
-const preparedCache = new Map<string, PreparedTextWithSegments>();
-const MAX_CACHE_SIZE = 500;
+export interface PrepareOptions {
+  letterSpacing?: number;
+  whiteSpace?: string;
+}
 
-function getCacheKey(text: string, font: string, options?: PrepareOptions): string {
-  return `${font}__${options?.letterSpacing ?? 0}__${options?.whiteSpace ?? ''}__${text}`;
+export interface PreparedTextWithSegments {
+  text: string;
+  font: string;
+  options?: PrepareOptions;
+}
+
+export interface LayoutLinesResult {
+  lineCount: number;
+  height: number;
+  lines: { text: string; width: number }[];
+}
+
+let canvas: HTMLCanvasElement | null = null;
+let ctx: CanvasRenderingContext2D | null = null;
+
+function getCanvasContext(): CanvasRenderingContext2D | null {
+  if (typeof window === 'undefined') return null;
+  if (!canvas) {
+    canvas = document.createElement('canvas');
+    ctx = canvas.getContext('2d');
+  }
+  return ctx;
 }
 
 /**
- * Prepares text using @chenglou/pretext with caching.
- * Measures glyph segments via canvas once; subsequent layouts take ~0.0002ms without DOM reflow.
+ * Prepares text wrapper for caching/emulated pretext segment operations.
  */
 export function getPrepared(
   text: string,
   font: string,
   options?: PrepareOptions
 ): PreparedTextWithSegments {
-  const key = getCacheKey(text, font, options);
-  const cached = preparedCache.get(key);
-  if (cached) return cached;
-
-  const prepared = prepareWithSegments(text, font, options);
-
-  if (preparedCache.size >= MAX_CACHE_SIZE) {
-    // Evict oldest entry
-    const firstKey = preparedCache.keys().next().value;
-    if (firstKey) preparedCache.delete(firstKey);
-  }
-
-  preparedCache.set(key, prepared);
-  return prepared;
+  return { text, font, options };
 }
 
 /**
- * Fast, synchronous measurement of natural single-line text width in pixels without touching the DOM.
+ * Fast, synchronous measurement of natural single-line text width in pixels.
  */
 export function measureTextWidth(
   text: string,
@@ -51,17 +54,36 @@ export function measureTextWidth(
 ): number {
   if (!text || typeof window === 'undefined') return 0;
   try {
-    const prepared = getPrepared(text, font, options);
-    return measureNaturalWidth(prepared);
+    const context = getCanvasContext();
+    if (!context) return text.length * 8; // Safe fallback approximation
+    context.font = font;
+    return context.measureText(text).width;
   } catch {
-    // Safe fallback
     return text.length * 10;
   }
 }
 
 /**
- * Calculates exact multiline layout and line breaks using @chenglou/pretext.
- * Executes in microseconds without triggering browser layout reflow.
+ * Emulated measureNaturalWidth for PreparedTextWithSegments.
+ */
+export function measureNaturalWidth(prepared: PreparedTextWithSegments): number {
+  return measureTextWidth(prepared.text, prepared.font, prepared.options);
+}
+
+/**
+ * Emulated line statistics estimation.
+ */
+export function measureLineStats(prepared: PreparedTextWithSegments): { width: number; ascent: number; descent: number } {
+  return {
+    width: measureNaturalWidth(prepared),
+    ascent: 12,
+    descent: 4,
+  };
+}
+
+/**
+ * Calculates exact multiline layout and line breaks.
+ * Word wraps text based on maxWidth using canvas measurement.
  */
 export function computeTextLayout(
   text: string,
@@ -70,7 +92,7 @@ export function computeTextLayout(
   lineHeight: number,
   options?: PrepareOptions
 ): LayoutLinesResult {
-  if (!text || maxWidth <= 0) {
+  if (!text || maxWidth <= 0 || typeof window === 'undefined') {
     return {
       lineCount: 0,
       height: 0,
@@ -78,12 +100,65 @@ export function computeTextLayout(
     };
   }
 
-  const prepared = getPrepared(text, font, options);
-  return layoutWithLines(prepared, maxWidth, lineHeight);
+  const context = getCanvasContext();
+  if (!context) {
+    return {
+      lineCount: 1,
+      height: lineHeight,
+      lines: [{ text, width: text.length * 8 }],
+    };
+  }
+
+  context.font = font;
+  // Handle manual newlines first
+  const paragraphs = text.split('\n');
+  const lines: { text: string; width: number }[] = [];
+
+  for (const para of paragraphs) {
+    if (para === '') {
+      lines.push({ text: '', width: 0 });
+      continue;
+    }
+
+    const words = para.split(/(\s+)/);
+    let currentLineText = '';
+    let currentLineWidth = 0;
+
+    for (const word of words) {
+      if (word === '') continue;
+      const wordWidth = context.measureText(word).width;
+
+      if (currentLineText === '') {
+        currentLineText = word;
+        currentLineWidth = wordWidth;
+      } else {
+        const testText = currentLineText + word;
+        const testWidth = context.measureText(testText).width;
+        if (testWidth <= maxWidth) {
+          currentLineText = testText;
+          currentLineWidth = testWidth;
+        } else {
+          lines.push({ text: currentLineText, width: currentLineWidth });
+          currentLineText = word;
+          currentLineWidth = wordWidth;
+        }
+      }
+    }
+
+    if (currentLineText !== '') {
+      lines.push({ text: currentLineText, width: currentLineWidth });
+    }
+  }
+
+  return {
+    lineCount: lines.length,
+    height: lines.length * lineHeight,
+    lines,
+  };
 }
 
 /**
- * Adjusts multiline text into balanced, visually harmonious lines.
+ * Adjusts multiline text into balanced lines.
  */
 export function adjustTextToLines(
   text: string,
@@ -101,7 +176,7 @@ export function adjustTextToLines(
 }
 
 /**
- * Uses binary search + Pretext layout to find the largest font size (in px)
+ * Uses binary search + layout engine to find the largest font size (in px)
  * that fits within maxWidth and maxHeight without clipping.
  */
 export function fitFontSize(
@@ -129,19 +204,11 @@ export function fitFontSize(
 
     if (layout.height <= maxHeight && layout.lines.every((l) => l.width <= maxWidth)) {
       best = mid;
-      low = mid + 1; // Try bigger font
+      low = mid + 1;
     } else {
-      high = mid - 1; // Too big, reduce size
+      high = mid - 1;
     }
   }
 
   return best;
 }
-
-export {
-  measureNaturalWidth,
-  measureLineStats,
-  type PreparedTextWithSegments,
-  type LayoutLinesResult,
-  type PrepareOptions,
-};
