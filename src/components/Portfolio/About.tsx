@@ -118,20 +118,20 @@ export const About = memo(() => {
         <div className="lg:col-span-5 space-y-4 text-base sm:text-lg leading-relaxed font-handwriting" style={{ color: 'var(--c-body)' }}>
           <p>
             <WordReveal
-              text={`I'm ${WATERMARKED_NAME}, a student software developer focused on building practical software and exploring AI, web development, automation, and open-source technologies.`}
+              text={`I’m ${WATERMARKED_NAME} — a student and developer who enjoys building things from the ground up.`}
               baseDelay={0.2}
             />
           </p>
           <p>
             <WordReveal
-              text="I work with Python, JavaScript, TypeScript, React, Supabase, PostgreSQL, and AI APIs, while experimenting with tools such as Claude API and MCP."
-              baseDelay={0.5}
+              text="I work across web development, AI, automation, and open-source software, mostly learning through projects I build myself. I like taking an idea, figuring out how it could work, learning whatever I need along the way, and turning it into something real."
+              baseDelay={0.4}
             />
           </p>
           <p>
             <WordReveal
-              text="I enjoy turning ideas into working projects, learning by building, and exploring how AI can make software more useful and efficient."
-              baseDelay={0.8}
+              text="Most of what I learn comes from building — whether it’s a full-stack application, an automation system, an AI-powered tool, or an experiment that started as a simple idea. I care less about having projects on a résumé and more about making things that actually work, understanding what breaks, and improving them until they’re worth using."
+              baseDelay={0.6}
             />
           </p>
         </div>
