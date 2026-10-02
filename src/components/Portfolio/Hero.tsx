@@ -27,59 +27,42 @@ export const Hero = memo<HeroProps>(({
   useEffect(() => {
     if (!heroRef.current) return;
 
-    // Honor reduced-motion preference
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        defaults: {
-          ease: 'power3.out',
-          duration: 0.55,
-        },
-      });
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      tl.fromTo(
-        '.gsap-hero-status',
-        { opacity: 0, y: -12 },
-        { opacity: 1, y: 0, duration: 0.5, delay: 0.05 }
-      )
-      .fromTo(
-        '.gsap-hero-subtitle',
-        { opacity: 0, y: 14 },
-        { opacity: 1, y: 0, duration: 0.5 },
-        '-=0.35'
-      )
-      .fromTo(
-        '.gsap-hero-title',
-        { opacity: 0, y: 18 },
-        { opacity: 1, y: 0, duration: 0.65 },
-        '-=0.4'
-      )
-      .fromTo(
-        '.gsap-hero-desc',
-        { opacity: 0, y: 14 },
-        { opacity: 0.9, y: 0, duration: 0.55 },
-        '-=0.4'
-      )
-      .fromTo(
-        '.gsap-hero-btn',
-        { opacity: 0, y: 12, scale: 0.96 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.07 },
-        '-=0.35'
-      )
-      .fromTo(
-        '.gsap-hero-social',
-        { opacity: 0, y: 10 },
-        { opacity: 1, y: 0, duration: 0.45, stagger: 0.05 },
-        '-=0.25'
-      )
-      .fromTo(
-        '.gsap-hero-card',
-        { opacity: 0, y: 20, scale: 0.98 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.09 },
-        '-=0.25'
-      );
+      const heroHeader = gsap.utils.toArray<HTMLElement>('.gsap-hero-header', heroRef.current);
+      const heroStatus = gsap.utils.toArray<HTMLElement>('.gsap-hero-status', heroRef.current);
+      const heroSubtitle = gsap.utils.toArray<HTMLElement>('.gsap-hero-subtitle', heroRef.current);
+      const heroTitle = gsap.utils.toArray<HTMLElement>('.gsap-hero-title', heroRef.current);
+      const heroDesc = gsap.utils.toArray<HTMLElement>('.gsap-hero-desc', heroRef.current);
+      const heroBtn = gsap.utils.toArray<HTMLElement>('.gsap-hero-btn', heroRef.current);
+      const heroSocial = gsap.utils.toArray<HTMLElement>('.gsap-hero-social', heroRef.current);
+      const heroCard = gsap.utils.toArray<HTMLElement>('.gsap-hero-card', heroRef.current);
+
+      if (heroHeader.length) {
+        tl.fromTo(heroHeader, { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.55, stagger: 0.1 });
+      }
+      if (heroStatus.length) {
+        tl.fromTo(heroStatus, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45 }, '-=0.3');
+      }
+      if (heroSubtitle.length) {
+        tl.fromTo(heroSubtitle, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45 }, '-=0.35');
+      }
+      if (heroTitle.length) {
+        tl.fromTo(heroTitle, { opacity: 0, y: 16, scale: 0.98 }, { opacity: 1, y: 0, scale: 1, duration: 0.65 }, '-=0.35');
+      }
+      if (heroDesc.length) {
+        tl.fromTo(heroDesc, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.55 }, '-=0.4');
+      }
+      if (heroBtn.length) {
+        tl.fromTo(heroBtn, { opacity: 0, y: 12, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.08 }, '-=0.35');
+      }
+      if (heroSocial.length) {
+        tl.fromTo(heroSocial, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45, stagger: 0.06, clearProps: 'transform' }, '-=0.3');
+      }
+      if (heroCard.length) {
+        tl.fromTo(heroCard, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.55, stagger: 0.1, clearProps: 'transform' }, '-=0.3');
+      }
     }, heroRef);
 
     return () => ctx.revert();
@@ -117,14 +100,14 @@ export const Hero = memo<HeroProps>(({
               phrases={[
                 "Full-Stack Web Developer",
                 "AI & Looping Engineer",
-                "UI & UX Designer",
                 "Frontend Developer",
-                "Web & Mobile Developer",
                 "Android Developer",
                 "Backend Engineer",
                 "Product Engineer",
                 "Opensource Dev",
                 "LLM Integration Developer",
+                "Web & Mobile Developer",
+                "UI & Motion Engineer",
                 "Best Vibecoder"
               ]}
               interval={3800}
@@ -132,7 +115,10 @@ export const Hero = memo<HeroProps>(({
           </span>
         </h1>
         <p className="gsap-hero-desc max-w-[540px] leading-relaxed text-lg sm:text-xl font-body opacity-90 mt-5" style={{ color: 'var(--c-heading)' }}>
-          I build full-stack web applications, architect AI integrations, and automate workflows.
+          <WordReveal
+            text="I build full-stack web applications, architect AI integrations, and automate workflows."
+            baseDelay={0.1}
+          />
         </p>
       </div>
 
@@ -140,7 +126,7 @@ export const Hero = memo<HeroProps>(({
         <button
           onClick={onExploreProjects}
           aria-label="View Projects"
-          className="gsap-hero-btn view-projects-btn px-5 sm:px-6 py-3 min-h-[44px] font-body text-sm sm:text-base transition-all hover:-translate-y-0.5 active:translate-y-0 hover:bg-[var(--c-btn-bg-hover)] flex items-center gap-2 cursor-pointer rounded-[var(--radius-md)] touch-manipulation"
+          className="gsap-hero-btn view-projects-btn px-5 sm:px-6 py-3 font-body text-sm sm:text-base transition-all hover:-translate-y-0.5 active:translate-y-0 hover:bg-[var(--c-btn-bg-hover)] flex items-center gap-2 cursor-pointer rounded-[var(--radius-md)]"
           style={{ backgroundColor: 'var(--c-btn-bg)', color: 'var(--c-btn-text)' }}
         >
           <span>View Projects</span>
@@ -150,7 +136,7 @@ export const Hero = memo<HeroProps>(({
         {onViewResume && (
           <button
             onClick={onViewResume}
-            className="gsap-hero-btn px-5 sm:px-6 py-3 min-h-[44px] font-body text-sm sm:text-base font-medium transition-all hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 cursor-pointer rounded-[var(--radius-md)] touch-manipulation"
+            className="gsap-hero-btn px-5 sm:px-6 py-3 font-body text-sm sm:text-base font-medium transition-all hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 cursor-pointer rounded-[var(--radius-md)]"
             style={{
               border: '1px solid var(--c-border)',
               backgroundColor: 'var(--c-input-bg)',
@@ -166,20 +152,20 @@ export const Hero = memo<HeroProps>(({
         <button
           onClick={onContactClick}
           aria-label="Contact Me"
-          className="gsap-hero-btn jellyfish-btn px-5 sm:px-6 py-3 min-h-[44px] bg-transparent font-handwriting text-base cursor-pointer flex items-center touch-manipulation"
+          className="gsap-hero-btn jellyfish-btn px-5 sm:px-6 py-3 bg-transparent font-handwriting text-base cursor-pointer"
         >
           <span>Contact Me</span>
         </button>
       </div>
 
       <div className="relative z-10 flex flex-col gap-3 mb-8">
-        <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           <a
             href="https://github.com/sachit1751-art"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noreferrer"
             aria-label="GitHub"
-            className="gsap-hero-social w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors touch-manipulation"
+            className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
             style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
           >
             <GitHubIcon className="w-4 h-4" />
@@ -187,9 +173,9 @@ export const Hero = memo<HeroProps>(({
           <a
             href="https://www.linkedin.com/in/sachit"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noreferrer"
             aria-label="LinkedIn"
-            className="gsap-hero-social w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors touch-manipulation"
+            className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
             style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
@@ -202,7 +188,7 @@ export const Hero = memo<HeroProps>(({
             }}
             aria-label="Copy email address: sachit1751@gmail.com"
             title="Click to copy email address to clipboard"
-            className="gsap-hero-social w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors touch-manipulation"
+            className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
             style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
           >
             <Mail className="w-4 h-4" />
@@ -260,7 +246,7 @@ export const Hero = memo<HeroProps>(({
               AI & Automation
             </h3>
             <p className="text-xs mt-1 font-mono uppercase tracking-wider" style={{ color: 'var(--c-body)' }}>
-              Claude · MCP · Looping Engineering
+              Claude API · MCP · Prompt Engineering
             </p>
           </div>
         </div>

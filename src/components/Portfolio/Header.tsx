@@ -62,35 +62,66 @@ export const Header = memo<HeaderProps>(({
   const isScrollingRef = useRef(false);
   const lastActiveSectionRef = useRef('hero');
 
-  // Memoized section boundary & visibility calculation function for rapid scroll events
-  const calculateActiveSection = useCallback((container: HTMLElement) => {
+  // Memoized section boundary & visibility calculation function optimized for rapid scroll events
+  const calculateActiveSection = useCallback((container: HTMLElement): string => {
     if (container.scrollTop < 80) {
       return 'hero';
     }
+
     const containerRect = container.getBoundingClientRect();
-    let activeId = 'hero';
-    let maxVisibleArea = -1;
-    const viewTop = containerRect.top + 70; // Offset below header
+    const isNearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 60;
+
+    // When scrolled to the very bottom, always prioritize contact
+    if (isNearBottom) {
+      return 'contact';
+    }
+
+    const viewTop = containerRect.top + 72; // Header offset
     const viewBottom = containerRect.bottom;
+    const viewHeight = Math.max(1, viewBottom - viewTop);
+    // Focal probe line where the user is actively reading content (upper 35% of viewport below header)
+    const probeY = viewTop + Math.min(220, Math.max(90, viewHeight * 0.32));
+
+    let probeSection = '';
+    let dominantSection = '';
+    let maxDominanceScore = -1;
 
     for (const sectionId of ALL_SECTIONS) {
+      if (sectionId === 'hero') continue;
       const el = document.getElementById(sectionId);
       if (el) {
         const rect = el.getBoundingClientRect();
+
+        // 1. Direct focal line intersection
+        if (rect.top <= probeY && rect.bottom > probeY) {
+          probeSection = sectionId;
+        }
+
+        // 2. Visibility and coverage scoring
         const visibleTop = Math.max(rect.top, viewTop);
         const visibleBottom = Math.min(rect.bottom, viewBottom);
         const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-        const totalHeight = rect.height || 1;
-        const ratio = visibleHeight / totalHeight;
+        const sectionHeight = Math.max(1, rect.height);
+        const sectionRatio = visibleHeight / sectionHeight;
+        const viewportRatio = visibleHeight / viewHeight;
 
-        // Prioritize sections well in view or passing the top threshold with tolerance
-        if (visibleHeight > 0 && (ratio > maxVisibleArea || (rect.top <= viewTop + 120 && rect.bottom > viewTop + 50))) {
-          maxVisibleArea = ratio;
-          activeId = sectionId;
+        // Composite dominance score: balances section ratio and viewport coverage
+        const dominanceScore = sectionRatio * 0.6 + viewportRatio * 0.4;
+
+        if (sectionId === 'contact') {
+          if (sectionRatio >= 0.5 && dominanceScore > maxDominanceScore) {
+            maxDominanceScore = dominanceScore;
+            dominantSection = sectionId;
+          }
+        } else if (visibleHeight > 0 && dominanceScore > maxDominanceScore) {
+          maxDominanceScore = dominanceScore;
+          dominantSection = sectionId;
         }
       }
     }
-    return activeId;
+
+    // Direct probe section is preferred during rapid scroll if it exists and has visible presence
+    return probeSection || dominantSection || (container.scrollTop < 80 ? 'hero' : lastActiveSectionRef.current);
   }, []);
 
   // Swipe-to-dismiss gesture on touch-enabled mobile devices for navigation drawer
@@ -111,11 +142,11 @@ export const Header = memo<HeaderProps>(({
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
   const getNavParentId = (secId: string): string => {
-    if (!secId || secId === 'hero') return '';
+    if (!secId || secId === 'hero' || secId === 'top') return '';
     if (secId === 'about' || secId === 'philosophy') return 'about';
     if (secId === 'projects') return 'projects';
-    if (secId === 'skills' || secId === 'currently-building' || secId === 'github' || secId === 'experience' || secId === 'strengths') return 'skills';
-    if (secId === 'education' || secId === 'building-in-public' || secId === 'chat-about-me') return 'building-in-public';
+    if (secId === 'skills' || secId === 'currently-building' || secId === 'github' || secId === 'experience' || secId === 'education' || secId === 'strengths') return 'skills';
+    if (secId === 'building-in-public' || secId === 'chat-about-me') return 'building-in-public';
     if (secId === 'contact') return 'contact';
     return '';
   };
@@ -124,9 +155,17 @@ export const Header = memo<HeaderProps>(({
 
   // ── Measure active indicator position ────────────────────────────────
   useEffect(() => {
+    if (!currentActive) {
+      setIndicatorStyle({ left: 0, width: 0 });
+      return;
+    }
+
     const btn = navBtns.current[currentActive];
     const nav = navContainerRef.current;
-    if (!btn || !nav) return;
+    if (!btn || !nav) {
+      setIndicatorStyle({ left: 0, width: 0 });
+      return;
+    }
 
     const navRect = nav.getBoundingClientRect();
     const btnRect = btn.getBoundingClientRect();
@@ -189,8 +228,8 @@ export const Header = memo<HeaderProps>(({
 
     const observerOptions: IntersectionObserverInit = {
       root: container,
-      rootMargin: '-70px 0px -40% 0px',
-      threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0],
+      rootMargin: '-70px 0px -25% 0px',
+      threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
     };
 
     const updateHashAndSection = (sectionId: string) => {
@@ -211,6 +250,7 @@ export const Header = memo<HeaderProps>(({
     };
 
     let rafId: number | null = null;
+    let isTicking = false;
 
     const observerCallback: IntersectionObserverCallback = (entries) => {
       entries.forEach((entry) => {
@@ -227,20 +267,38 @@ export const Header = memo<HeaderProps>(({
 
       if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
-        if (visibleSections.size > 0) {
-          let maxRatio = -1;
-          let bestSection = 'hero';
+        // No menu highlight at the top of the page (scrollTop < 80)
+        if (container.scrollTop < 80) {
+          updateHashAndSection('hero');
+          return;
+        }
 
-          // Check sections in DOM order to prefer earlier sections if tied
-          for (const sectionId of ALL_SECTIONS) {
-            const ratio = visibleSections.get(sectionId) || 0;
-            if (ratio > maxRatio && ratio > 0.05) {
+        const isNearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 50;
+        let maxRatio = -1;
+        let dominantSection = '';
+
+        // Prioritize the dominant section with greatest intersection ratio
+        for (const sectionId of ALL_SECTIONS) {
+          if (sectionId === 'hero') continue;
+          const ratio = visibleSections.get(sectionId) || 0;
+
+          if (sectionId === 'contact') {
+            if ((ratio >= 0.5 || isNearBottom) && ratio > maxRatio) {
               maxRatio = ratio;
-              bestSection = sectionId;
+              dominantSection = sectionId;
+            }
+          } else {
+            if (ratio > maxRatio && ratio >= 0.15) {
+              maxRatio = ratio;
+              dominantSection = sectionId;
             }
           }
+        }
 
-          updateHashAndSection(bestSection);
+        if (dominantSection) {
+          updateHashAndSection(dominantSection);
+        } else if (container.scrollTop < 80) {
+          updateHashAndSection('hero');
         }
       });
     };
@@ -252,26 +310,48 @@ export const Header = memo<HeaderProps>(({
       if (el) observer.observe(el);
     });
 
-    let isTicking = false;
+    let scrollDebounceTimer: NodeJS.Timeout | null = null;
 
-    // Handle background blur on scroll > 20px and RAF-throttled viewport visibility tracking
+    // Handle background blur on scroll > 20px with RAF throttle & rapid-scroll settling
     const handleScroll = () => {
       const isScrolled = container.scrollTop > 20;
       setScrolled(prev => prev !== isScrolled ? isScrolled : prev);
 
-      if (isScrollingRef.current) return;
-      if (isTicking) return;
-
-      isTicking = true;
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        const activeId = calculateActiveSection(container);
-        if (lastActiveSectionRef.current !== activeId) {
-          lastActiveSectionRef.current = activeId;
-          setActiveSection(activeId);
+      if (container.scrollTop < 80) {
+        if (lastActiveSectionRef.current !== 'hero') {
+          lastActiveSectionRef.current = 'hero';
+          setActiveSection('hero');
         }
-        isTicking = false;
-      });
+        return;
+      }
+
+      if (isScrollingRef.current) return;
+
+      // Real-time RAF-throttled active section detection during rapid scrolling
+      if (!isTicking) {
+        isTicking = true;
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+          const activeId = calculateActiveSection(container);
+          if (activeId && lastActiveSectionRef.current !== activeId) {
+            updateHashAndSection(activeId);
+          }
+          isTicking = false;
+        });
+      }
+
+      // Settling debounce: ensures when rapid/inertial scrolling halts, the exact section is locked in
+      if (scrollDebounceTimer) clearTimeout(scrollDebounceTimer);
+      scrollDebounceTimer = setTimeout(() => {
+        if (container.scrollTop < 80) {
+          updateHashAndSection('hero');
+          return;
+        }
+        const settledActiveId = calculateActiveSection(container);
+        if (settledActiveId && lastActiveSectionRef.current !== settledActiveId) {
+          updateHashAndSection(settledActiveId);
+        }
+      }, 50);
     };
 
     container.addEventListener('scroll', handleScroll, { passive: true });
@@ -279,6 +359,7 @@ export const Header = memo<HeaderProps>(({
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
+      if (scrollDebounceTimer) clearTimeout(scrollDebounceTimer);
       observer.disconnect();
       container.removeEventListener('scroll', handleScroll);
     };
@@ -411,6 +492,7 @@ export const Header = memo<HeaderProps>(({
                 backgroundColor: 'var(--c-dot)',
                 left: indicatorStyle.left,
                 width: indicatorStyle.width,
+                opacity: (indicatorStyle.width > 0 && currentActive) ? 1 : 0,
               }}
             />
           </nav>

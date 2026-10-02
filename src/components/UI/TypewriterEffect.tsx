@@ -69,21 +69,6 @@ export const TypewriterEffect = ({
       style={{ minWidth: naturalWidth > 0 ? `${Math.ceil(naturalWidth)}px` : undefined }}
     >
       {displayedText}
-      {!simplify && (
-        <motion.span
-          animate={isTyping ? { opacity: [1, 1, 0, 0, 1] } : { opacity: [1, 1, 0, 0, 1] }}
-          transition={{ 
-            repeat: isTyping ? Infinity : 3, 
-            duration: 0.8, 
-            ease: "linear",
-            times: [0, 0.49, 0.5, 0.99, 1]
-          }}
-          className={`inline-block w-[0.08em] h-[0.85em] bg-current ml-[4px] align-baseline translate-y-[0.1em] ${cursorClassName}`}
-          style={{ 
-            display: (hideCursorOnComplete && !isTyping && hasStarted) ? 'none' : 'inline-block' 
-          }}
-        />
-      )}
     </span>
   );
 };

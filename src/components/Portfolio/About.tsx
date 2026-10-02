@@ -115,24 +115,15 @@ export const About = memo(() => {
           </div>
         </div>
 
-        <div className="lg:col-span-5 space-y-4 text-base sm:text-lg leading-relaxed font-handwriting" style={{ color: 'var(--c-body)' }}>
+        <div className="lg:col-span-5 space-y-4 text-sm sm:text-base leading-relaxed font-body" style={{ color: 'var(--c-body)' }}>
           <p>
-            <WordReveal
-              text={`I’m ${WATERMARKED_NAME} — a student and developer who enjoys building things from the ground up.`}
-              baseDelay={0.2}
-            />
+            I’m <span className="font-handwriting font-bold text-lg sm:text-xl" style={{ color: 'var(--c-heading)' }}>{WATERMARKED_NAME}</span> — a student and developer who enjoys building things from the ground up.
           </p>
           <p>
-            <WordReveal
-              text="I work across web development, AI, automation, and open-source software, mostly learning through projects I build myself. I like taking an idea, figuring out how it could work, learning whatever I need along the way, and turning it into something real."
-              baseDelay={0.4}
-            />
+            I work across web development, AI, automation, and open-source software, mostly learning through projects I build myself. I like taking an idea, figuring out how it could work, learning whatever I need along the way, and turning it into something real.
           </p>
           <p>
-            <WordReveal
-              text="Most of what I learn comes from building — whether it’s a full-stack application, an automation system, an AI-powered tool, or an experiment that started as a simple idea. I care less about having projects on a résumé and more about making things that actually work, understanding what breaks, and improving them until they’re worth using."
-              baseDelay={0.6}
-            />
+            Most of what I learn comes from building — whether it’s a full-stack application, an automation system, an AI-powered tool, or an experiment that started as a simple idea. I care less about having projects on a résumé and more about making things that actually work, understanding what breaks, and improving them until they’re worth using.
           </p>
         </div>
 

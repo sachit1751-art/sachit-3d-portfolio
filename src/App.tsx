@@ -20,6 +20,104 @@ import { initAuthorshipVerification } from './utils/watermark';
 
 const SESSION_CACHE_KEY = 'portfolio_intro_unfolded_cache';
 
+// Easing helper for smooth scroll interpolation
+function easeInOutCubic(t: number): number {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+// Compute section target scroll offset once outside of animation frames without layout thrashing
+function calculateSectionOffset(container: HTMLElement, target: HTMLElement, headerOffset = 72): number {
+  let offset = 0;
+  let curr: HTMLElement | null = target;
+  while (curr && curr !== container && curr !== document.body) {
+    offset += curr.offsetTop;
+    curr = curr.offsetParent as HTMLElement | null;
+  }
+
+  // Pre-calculate fallback offset once before scheduling animation frame
+  if (offset <= 0 && target !== container) {
+    const cRect = container.getBoundingClientRect();
+    const tRect = target.getBoundingClientRect();
+    offset = tRect.top - cRect.top + container.scrollTop;
+  }
+
+  return Math.max(0, Math.round(offset - headerOffset));
+}
+
+// Global active RAF tracking & cleanup for smooth scroll interpolation
+let activeScrollRaf: number | null = null;
+let activeScrollCleanup: (() => void) | null = null;
+
+// High-performance, non-blocking smooth scroll interpolation helper with passive event listeners
+function interpolateScrollTo(
+  container: HTMLElement,
+  targetTop: number,
+  duration = 450
+) {
+  // Cancel active interpolation and unbind previous listeners
+  if (activeScrollRaf !== null) {
+    cancelAnimationFrame(activeScrollRaf);
+    activeScrollRaf = null;
+  }
+  if (activeScrollCleanup) {
+    activeScrollCleanup();
+    activeScrollCleanup = null;
+  }
+
+  const startTop = container.scrollTop;
+  const distance = targetTop - startTop;
+
+  // If already at or within sub-pixel distance of destination, complete immediately
+  if (Math.abs(distance) < 2) {
+    container.scrollTop = targetTop;
+    return;
+  }
+
+  const startTime = performance.now();
+
+  // Passive event listener handler: safely cancels interpolation upon user manual interaction
+  const handleUserInterrupt = () => {
+    if (activeScrollRaf !== null) {
+      cancelAnimationFrame(activeScrollRaf);
+      activeScrollRaf = null;
+    }
+    if (activeScrollCleanup) {
+      activeScrollCleanup();
+      activeScrollCleanup = null;
+    }
+  };
+
+  const removeListeners = () => {
+    container.removeEventListener('wheel', handleUserInterrupt);
+    container.removeEventListener('touchstart', handleUserInterrupt);
+  };
+
+  // Passive event listeners guarantee non-blocking touch/scroll interactions
+  container.addEventListener('wheel', handleUserInterrupt, { passive: true });
+  container.addEventListener('touchstart', handleUserInterrupt, { passive: true });
+  activeScrollCleanup = removeListeners;
+
+  // Pure interpolation loop: zero getBoundingClientRect or layout measurements during frame execution
+  const step = (now: number) => {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easeProgress = easeInOutCubic(progress);
+
+    // Single non-blocking write to scrollTop per frame without layout queries
+    container.scrollTop = startTop + distance * easeProgress;
+
+    if (progress < 1) {
+      activeScrollRaf = requestAnimationFrame(step);
+    } else {
+      activeScrollRaf = null;
+      removeListeners();
+      activeScrollCleanup = null;
+    }
+  };
+
+  activeScrollRaf = requestAnimationFrame(step);
+}
+
 // Helper for dynamic imports with automatic retry/reload resilience
 function lazyWithRetry<T extends React.ComponentType<any>>(
   componentImport: () => Promise<any>,
@@ -317,25 +415,35 @@ export default function App() {
       }
     } catch {}
 
-    // Immediate zero-delay scroll without waiting for artificial timeouts
-    requestAnimationFrame(() => {
-      const container = document.getElementById('content-scroll-container');
-      if (!container) return;
+    const container = document.getElementById('content-scroll-container');
+    if (!container) return;
 
-      if (id === 'hero' || id === 'top') {
-        container.scrollTo({ top: 0, behavior: 'smooth' });
-        return;
-      }
+    if (id === 'hero' || id === 'top') {
+      interpolateScrollTo(container, 0, 400);
+      return;
+    }
 
-      const target = document.getElementById(id);
-      if (target) {
-        const containerRect = container.getBoundingClientRect();
-        const targetRect = target.getBoundingClientRect();
-        const offset = targetRect.top - containerRect.top + container.scrollTop - 72;
-        container.scrollTo({ top: offset, behavior: 'smooth' });
-      }
-    });
+    const target = document.getElementById(id);
+    if (target) {
+      // Calculate layout offset once upfront outside animation loop to prevent layout thrashing
+      const targetOffset = calculateSectionOffset(container, target, 72);
+      interpolateScrollTo(container, targetOffset, 480);
+    }
   }, [introCompleted, paperState]);
+
+  // Clean up any ongoing scroll interpolation on unmount
+  useEffect(() => {
+    return () => {
+      if (activeScrollRaf !== null) {
+        cancelAnimationFrame(activeScrollRaf);
+        activeScrollRaf = null;
+      }
+      if (activeScrollCleanup) {
+        activeScrollCleanup();
+        activeScrollCleanup = null;
+      }
+    };
+  }, []);
 
   const handleClosePrivacy = useCallback(() => {
     setIsViewingPrivacy(false);
