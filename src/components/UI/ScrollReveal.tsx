@@ -1,72 +1,78 @@
-import React, { useRef, useEffect, ReactNode, memo } from 'react';
+import React, { useRef, useEffect, ReactNode, useState, memo } from 'react';
 // ​sachit-2026-original-authored​
-import gsap from 'gsap';
 import { usePerformance } from '../../hooks/usePerformance';
 import { observeElement } from '../../utils/observer';
 
 interface ScrollRevealProps {
   children: ReactNode;
   className?: string;
-  stagger?: number;
+  delay?: number;
+  direction?: 'up' | 'down' | 'left' | 'right';
   duration?: number;
-  yOffset?: number;
+  distance?: number;
+  initialScale?: number;
 }
 
 // ﻿watermark:sachit-2026﻿
 export const ScrollReveal = memo<ScrollRevealProps>(({
   children,
   className = '',
-  stagger = 0.08,
-  duration = 0.6,
-  yOffset = 35,
+  delay = 0,
+  direction = 'up',
+  duration = 0.22,
+  distance = 15,
+  initialScale = 0.98,
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const { simplify } = usePerformance();
+  const [visible, setVisible] = useState(simplify);
 
   useEffect(() => {
     if (simplify) {
-      if (containerRef.current) {
-        gsap.set(containerRef.current, { opacity: 1, y: 0 });
-      }
+      setVisible(true);
       return;
     }
 
-    const el = containerRef.current;
+    const el = ref.current;
     if (!el) return;
 
-    // Target elements within the section for staggered entrance
-    const items = el.querySelectorAll('h2, h3, h4, p, article, li, div.card, div.rounded-xl, button, .stagger-item');
-    const targets = items.length > 0 ? items : el;
-
-    gsap.set(targets, { opacity: 0, y: yOffset });
-
     const scroller = document.getElementById('content-scroll-container');
-    let hasAnimated = false;
 
     return observeElement(
       el,
       (isIntersecting) => {
-        if (isIntersecting && !hasAnimated) {
-          hasAnimated = true;
-          gsap.to(targets, {
-            opacity: 1,
-            y: 0,
-            duration: duration,
-            stagger: stagger,
-            ease: 'power3.out',
-            overwrite: 'auto',
-          });
-        }
+        if (isIntersecting) setVisible(true);
       },
-      { root: scroller, threshold: 0.05, rootMargin: '0px 0px 120px 0px' }
+      { root: scroller, threshold: 0, rootMargin: '0px 0px 150px 0px' }
     );
-  }, [simplify, stagger, duration, yOffset]);
+  }, [simplify]);
+
+  const getTransform = () => {
+    if (simplify) return 'none';
+    const scale = visible ? 1 : initialScale;
+    let translate = 'translateY(0)';
+    if (!visible) {
+      switch (direction) {
+        case 'up': translate = `translateY(${distance}px)`; break;
+        case 'down': translate = `translateY(-${distance}px)`; break;
+        case 'left': translate = `translateX(${distance}px)`; break;
+        case 'right': translate = `translateX(-${distance}px)`; break;
+        default: translate = `translateY(${distance}px)`; break;
+      }
+    }
+    return `${translate} scale(${scale})`;
+  };
 
   return (
     <div
-      ref={containerRef}
+      ref={ref}
       className={className}
-      style={{ willChange: 'opacity, transform' }}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: getTransform(),
+        transition: simplify ? 'none' : `opacity ${duration}s ease-out ${delay}s, transform ${duration}s ease-out ${delay}s`,
+        willChange: (visible || simplify) ? 'auto' : 'opacity, transform',
+      }}
     >
       {children}
     </div>

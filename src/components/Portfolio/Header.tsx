@@ -62,24 +62,35 @@ export const Header = memo<HeaderProps>(({
   const isScrollingRef = useRef(false);
   const lastActiveSectionRef = useRef('hero');
 
-  // Memoized section boundary & visibility calculation function using rootMargin baseline
+  // Memoized section boundary & visibility calculation function for rapid scroll events
   const calculateActiveSection = useCallback((container: HTMLElement) => {
     if (container.scrollTop < 80) {
       return 'hero';
     }
     const containerRect = container.getBoundingClientRect();
-    const viewTop = containerRect.top + 70; // Header baseline
+    let activeId = 'hero';
+    let maxVisibleArea = -1;
+    const viewTop = containerRect.top + 70; // Offset below header
+    const viewBottom = containerRect.bottom;
 
     for (const sectionId of ALL_SECTIONS) {
       const el = document.getElementById(sectionId);
       if (el) {
         const rect = el.getBoundingClientRect();
-        if (rect.top <= viewTop + 150 && rect.bottom >= viewTop) {
-          return sectionId;
+        const visibleTop = Math.max(rect.top, viewTop);
+        const visibleBottom = Math.min(rect.bottom, viewBottom);
+        const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+        const totalHeight = rect.height || 1;
+        const ratio = visibleHeight / totalHeight;
+
+        // Prioritize sections well in view or passing the top threshold with tolerance
+        if (visibleHeight > 0 && (ratio > maxVisibleArea || (rect.top <= viewTop + 120 && rect.bottom > viewTop + 50))) {
+          maxVisibleArea = ratio;
+          activeId = sectionId;
         }
       }
     }
-    return 'hero';
+    return activeId;
   }, []);
 
   // Swipe-to-dismiss gesture on touch-enabled mobile devices for navigation drawer
@@ -103,8 +114,8 @@ export const Header = memo<HeaderProps>(({
     if (!secId || secId === 'hero') return '';
     if (secId === 'about' || secId === 'philosophy') return 'about';
     if (secId === 'projects') return 'projects';
-    if (secId === 'skills' || secId === 'currently-building' || secId === 'github' || secId === 'experience' || secId === 'education' || secId === 'strengths') return 'skills';
-    if (secId === 'building-in-public' || secId === 'chat-about-me') return 'building-in-public';
+    if (secId === 'skills' || secId === 'currently-building' || secId === 'github' || secId === 'experience' || secId === 'strengths') return 'skills';
+    if (secId === 'education' || secId === 'building-in-public' || secId === 'chat-about-me') return 'building-in-public';
     if (secId === 'contact') return 'contact';
     return '';
   };
@@ -178,8 +189,8 @@ export const Header = memo<HeaderProps>(({
 
     const observerOptions: IntersectionObserverInit = {
       root: container,
-      rootMargin: '-70px 0px -20% 0px',
-      threshold: [0, 0.25, 0.5, 0.75, 1],
+      rootMargin: '-70px 0px -40% 0px',
+      threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0],
     };
 
     const updateHashAndSection = (sectionId: string) => {
@@ -214,17 +225,13 @@ export const Header = memo<HeaderProps>(({
 
       if (isScrollingRef.current) return;
 
-      if (container.scrollTop < 80) {
-        updateHashAndSection('hero');
-        return;
-      }
-
       if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
         if (visibleSections.size > 0) {
           let maxRatio = -1;
           let bestSection = 'hero';
 
+          // Check sections in DOM order to prefer earlier sections if tied
           for (const sectionId of ALL_SECTIONS) {
             const ratio = visibleSections.get(sectionId) || 0;
             if (ratio > maxRatio && ratio > 0.05) {

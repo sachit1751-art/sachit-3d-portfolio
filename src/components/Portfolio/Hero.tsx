@@ -5,7 +5,6 @@ import { ArrowDownRight, Mail, FileText } from 'lucide-react';
 import { WordReveal } from '../UI/TextReveal';
 import { DepthFlipText } from '../UI/DepthFlipText';
 import { QuoteRoll } from '../UI/QuoteRoll';
-import { TypewriterEffect } from '../UI/TypewriterEffect';
 import { GitHubIcon } from '../UI/Icons';
 import { DEV_QUOTES } from '../../data/quotes';
 import { WATERMARKED_NAME } from '../../utils/watermark';
@@ -108,7 +107,7 @@ export const Hero = memo<HeroProps>(({
         </div>
         <div className="mb-4">
           <p className="gsap-hero-subtitle font-handwriting text-lg sm:text-xl mb-2" style={{ color: 'var(--c-subtle)' }}>
-            <TypewriterEffect text="Independent Full-Stack Developer" typingSpeed={55} delay={0.15} />
+            Independent Developer
           </p>
         </div>
         <h1 className="gsap-hero-title text-[clamp(2.2rem,1.25rem+4.5vw,5.25rem)] leading-[1.18] font-handwriting font-bold tracking-tight my-2 overflow-visible" style={{ color: 'var(--c-heading)', paddingRight: '0.1em' }}>
