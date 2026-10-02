@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 const OPTIMIZATIONS = [
   { label: 'Images', value: 'WebP / AVIF format' },
   { label: 'Animations', value: 'GPU-friendly transforms' },
-  { label: 'Fonts', value: 'Preloaded with font-display: swap' },
+  { label: 'Fonts', value: 'Preloaded with font-display: block (no FOUT)' },
   { label: 'Components', value: 'Lazy loaded where useful' },
   { label: 'Assets', value: 'Compressed for production' },
   { label: 'Code', value: 'Tree-shaking via Vite' },

@@ -108,7 +108,7 @@ const FILE_TREE: FileNode[] = [
   },
   { name: 'App.tsx', type: 'file', description: 'Root component — manages paperState, theme, showContent. Conditional render for Structure Room.' },
   { name: 'types.ts', type: 'file', description: 'TypeScript interfaces — PaperState, PaperTheme, Project, SkillCategory.' },
-  { name: 'index.css', type: 'file', description: 'Theme system (4 themes with CSS variables), animations, utility classes, scrollbar styling, MOOD game CSS, newsprint layout system.' },
+  { name: 'index.css', type: 'file', description: 'Unified Kraft theme system (CSS variables), animations, utility classes, scrollbar styling, MOOD game CSS, newsprint layout system.' },
 ];
 
 const FileNodeComponent: React.FC<{ node: FileNode; depth?: number }> = ({ node, depth = 0 }) => {

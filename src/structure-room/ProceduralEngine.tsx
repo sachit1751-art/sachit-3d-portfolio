@@ -55,10 +55,7 @@ const PAPER_TEXTURE = [
 ];
 
 const THEME_COLORS = [
-  { theme: 'Cotton', base: '#fbf9f4', fibers: 'Brown', grid: 'None' },
-  { theme: 'Kraft', base: '#d6bfa2', fibers: 'Dark brown', grid: 'None' },
-  { theme: 'Blueprint', base: '#1a334d', fibers: 'White', grid: 'Blue grid lines' },
-  { theme: 'Slate', base: '#232428', fibers: 'White', grid: 'None' },
+  { theme: 'Kraft Paper', base: '#d6bfa2', fibers: 'Organic dark brown & warm highlights', grid: 'None' },
 ];
 
 const VERTEX_STATS = [
