@@ -4,6 +4,7 @@ import { Feather, User } from 'lucide-react';
 import gsap from 'gsap';
 import { LocalMascot } from '../UI/LocalMascot';
 import { WordReveal } from '../UI/TextReveal';
+import { TypewriterEffect } from '../UI/TypewriterEffect';
 import { ScrollReveal } from '../UI/ScrollReveal';
 import { WATERMARKED_NAME } from '../../utils/watermark';
 
@@ -117,21 +118,24 @@ export const About = memo(() => {
 
         <div className="lg:col-span-5 space-y-4 text-base sm:text-lg leading-relaxed font-handwriting" style={{ color: 'var(--c-body)' }}>
           <p>
-            <WordReveal
+            <TypewriterEffect
               text={`I’m ${WATERMARKED_NAME} — a student and developer who enjoys building things from the ground up.`}
-              baseDelay={0.2}
+              delay={0.1}
+              typingSpeed={35}
             />
           </p>
           <p>
-            <WordReveal
+            <TypewriterEffect
               text="I work across web development, AI, automation, and open-source software, mostly learning through projects I build myself. I like taking an idea, figuring out how it could work, learning whatever I need along the way, and turning it into something real."
-              baseDelay={0.4}
+              delay={0.6}
+              typingSpeed={25}
             />
           </p>
           <p>
-            <WordReveal
+            <TypewriterEffect
               text="Most of what I learn comes from building — whether it’s a full-stack application, an automation system, an AI-powered tool, or an experiment that started as a simple idea. I care less about having projects on a résumé and more about making things that actually work, understanding what breaks, and improving them until they’re worth using."
-              baseDelay={0.6}
+              delay={1.2}
+              typingSpeed={20}
             />
           </p>
         </div>

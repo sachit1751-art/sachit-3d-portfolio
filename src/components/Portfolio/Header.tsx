@@ -60,6 +60,27 @@ export const Header = memo<HeaderProps>(({
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isScrollingRef = useRef(false);
+  const lastActiveSectionRef = useRef('hero');
+
+  // Memoized section boundary & visibility calculation function using rootMargin baseline
+  const calculateActiveSection = useCallback((container: HTMLElement) => {
+    if (container.scrollTop < 80) {
+      return 'hero';
+    }
+    const containerRect = container.getBoundingClientRect();
+    const viewTop = containerRect.top + 70; // Header baseline
+
+    for (const sectionId of ALL_SECTIONS) {
+      const el = document.getElementById(sectionId);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= viewTop + 150 && rect.bottom >= viewTop) {
+          return sectionId;
+        }
+      }
+    }
+    return 'hero';
+  }, []);
 
   // Swipe-to-dismiss gesture on touch-enabled mobile devices for navigation drawer
   const {
@@ -78,7 +99,17 @@ export const Header = memo<HeaderProps>(({
   const navContainerRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
-  const currentActive = isViewingResume ? 'resume' : activeSection;
+  const getNavParentId = (secId: string): string => {
+    if (!secId || secId === 'hero') return '';
+    if (secId === 'about' || secId === 'philosophy') return 'about';
+    if (secId === 'projects') return 'projects';
+    if (secId === 'skills' || secId === 'currently-building' || secId === 'github' || secId === 'experience' || secId === 'education' || secId === 'strengths') return 'skills';
+    if (secId === 'building-in-public' || secId === 'chat-about-me') return 'building-in-public';
+    if (secId === 'contact') return 'contact';
+    return '';
+  };
+
+  const currentActive = isViewingResume ? 'resume' : getNavParentId(activeSection);
 
   // ── Measure active indicator position ────────────────────────────────
   useEffect(() => {
@@ -102,8 +133,11 @@ export const Header = memo<HeaderProps>(({
       return;
     }
 
-    // Set active immediately so the underline moves on click
-    setActiveSection(id);
+    // Set active immediately so the underline moves on click if changed
+    if (lastActiveSectionRef.current !== id) {
+      lastActiveSectionRef.current = id;
+      setActiveSection(id);
+    }
 
     // Update URL hash smoothly for standard SPA routing
     try {
@@ -144,12 +178,15 @@ export const Header = memo<HeaderProps>(({
 
     const observerOptions: IntersectionObserverInit = {
       root: container,
-      rootMargin: '-70px 0px -40% 0px',
-      threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0],
+      rootMargin: '-70px 0px -20% 0px',
+      threshold: [0, 0.25, 0.5, 0.75, 1],
     };
 
     const updateHashAndSection = (sectionId: string) => {
-      setActiveSection(sectionId);
+      if (lastActiveSectionRef.current !== sectionId) {
+        lastActiveSectionRef.current = sectionId;
+        setActiveSection(sectionId);
+      }
       if (!isScrollingRef.current && !isViewingResume) {
         const targetHash = sectionId === 'hero' ? '' : `#${sectionId}`;
         const currentHash = window.location.hash;
@@ -177,13 +214,17 @@ export const Header = memo<HeaderProps>(({
 
       if (isScrollingRef.current) return;
 
+      if (container.scrollTop < 80) {
+        updateHashAndSection('hero');
+        return;
+      }
+
       if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
         if (visibleSections.size > 0) {
           let maxRatio = -1;
           let bestSection = 'hero';
 
-          // Check sections in DOM order to prefer earlier sections if tied
           for (const sectionId of ALL_SECTIONS) {
             const ratio = visibleSections.get(sectionId) || 0;
             if (ratio > maxRatio && ratio > 0.05) {
@@ -204,29 +245,25 @@ export const Header = memo<HeaderProps>(({
       if (el) observer.observe(el);
     });
 
-    // Handle background blur on scroll > 20px and throttled precise active section tracking
+    let isTicking = false;
+
+    // Handle background blur on scroll > 20px and RAF-throttled viewport visibility tracking
     const handleScroll = () => {
       const isScrolled = container.scrollTop > 20;
       setScrolled(prev => prev !== isScrolled ? isScrolled : prev);
 
       if (isScrollingRef.current) return;
+      if (isTicking) return;
 
+      isTicking = true;
       if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
-        const scrollPos = container.scrollTop;
-        let currentActive = 'hero';
-
-        for (const sectionId of ALL_SECTIONS) {
-          const el = document.getElementById(sectionId);
-          if (el) {
-            const top = el.offsetTop - container.offsetTop;
-            if (scrollPos >= top - 180) {
-              currentActive = sectionId;
-            }
-          }
+        const activeId = calculateActiveSection(container);
+        if (lastActiveSectionRef.current !== activeId) {
+          lastActiveSectionRef.current = activeId;
+          setActiveSection(activeId);
         }
-
-        setActiveSection(prev => prev !== currentActive ? currentActive : prev);
+        isTicking = false;
       });
     };
 
@@ -238,7 +275,7 @@ export const Header = memo<HeaderProps>(({
       observer.disconnect();
       container.removeEventListener('scroll', handleScroll);
     };
-  }, [isViewingResume]);
+  }, [isViewingResume, calculateActiveSection]);
 
   // ── Initial hash navigation & hashchange listener ────────────────────────
   useEffect(() => {
