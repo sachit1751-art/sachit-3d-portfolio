@@ -11,8 +11,12 @@ export default defineConfig(() => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src'),
+        '@components': path.resolve(__dirname, 'src/components'),
+        '@ui': path.resolve(__dirname, 'src/components/UI'),
+        '@hooks': path.resolve(__dirname, 'src/hooks'),
+        '@utils': path.resolve(__dirname, 'src/utils'),
+        '@types': path.resolve(__dirname, 'src/types'),
       },
-      dedupe: ['react', 'react-dom'],
     },
     server: {
       host: true,
