@@ -455,7 +455,6 @@ h2.sm\:text-5xl,
 
   /* Ink on paper — text blends with paper texture (light themes only) */
   #physical-paper-sheet {
-    mix-blend-mode: multiply;
     transform: translateZ(0);
     will-change: transform;
   }
@@ -736,57 +735,6 @@ h2.sm\:text-5xl,
 .hero-card-number {
   transition: all 0.3s ease-out;
   opacity: 0.6;
-}
-
-/* ========================================================
-   PROJECT CARD INTERACTION ARCHITECTURE
-   - Desktop: Smooth hover-based lift effect
-   - Touch Devices: First-class 'Tap-to-Reveal' interaction
-   ======================================================== */
-.gsap-project-card {
-  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
-              box-shadow 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
-              border-color 0.22s ease,
-              background-color 0.22s ease;
-  will-change: transform, box-shadow;
-}
-
-/* 1. Desktop Hover Lift: Active only when hover is supported to prevent sticky hover on touch */
-@media (hover: hover) and (pointer: fine) {
-  .gsap-project-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--c-border-hover) !important;
-    box-shadow: 0 14px 30px -6px rgba(36, 31, 26, 0.09), 0 4px 10px -2px rgba(36, 31, 26, 0.05);
-  }
-}
-
-/* 2. Touch Devices: Tap-to-Reveal State */
-@media (hover: none), (pointer: coarse) {
-  .gsap-project-card {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: pan-y;
-  }
-
-  /* Tactile press response during finger contact */
-  .gsap-project-card:active:not(:has(a:active, button:active)) {
-    transform: scale(0.99);
-  }
-
-  /* Revealed state when tapped on touch devices: produces physical lift and elevation */
-  .gsap-project-card[data-touch-revealed="true"] {
-    transform: translateY(-4px);
-    border-color: var(--c-border-focus) !important;
-    box-shadow: 0 12px 28px -4px rgba(36, 31, 26, 0.12), 0 4px 12px -2px rgba(36, 31, 26, 0.06);
-  }
-}
-
-/* 3D Paper Scene Canvas: Normal clean paper rendering */
-div#paper-3d-scene > canvas {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-  outline: none;
-  filter: none;
 }
 
 /* Slippy Jellyfish button animation (from Uiverse.io) */
