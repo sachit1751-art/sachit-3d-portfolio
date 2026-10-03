@@ -117,16 +117,20 @@ export function initAuthorshipVerification(): void {
       value: () => {
         const audit = detectDesignCloning();
         console.log(
-          '%c[ORIGINAL AUTHORSHIP VERIFIED]',
-          'color: #10b981; font-weight: bold; font-size: 14px;'
+          '%c╔════════════════════════════════════════════════════════════════╗\n' +
+          '%c║             🔒 CRYPTOGRAPHIC PROVENANCE CERTIFICATE            ║\n' +
+          '%c╚════════════════════════════════════════════════════════════════╝',
+          'color: #10b981; font-weight: bold; font-family: monospace;',
+          'color: #10b981; font-weight: bold; font-family: monospace; background: #064e3b; padding: 2px 4px;',
+          'color: #10b981; font-weight: bold; font-family: monospace;'
         );
-        console.log('Author: Sachit');
-        console.log('Contact: sachit1771@gmail.com / sachit1751@gmail.com');
-        console.log('Copyright: © 2026 Sachit. All Rights Reserved.');
-        console.log('Provenance Payload:', SECRET_PAYLOAD_PRIMARY);
-        console.log('CSS Watermark Status:', audit.cssWatermarkPresent ? 'ACTIVE & VALID' : 'ALTERED');
-        console.log('Pseudo-DOM Markers:', audit.pseudoMarkersValid ? 'INTACT' : 'TAMPERED');
-        console.log('Status: Authenticated Original Source Code');
+        console.log('%c Author: %cSachit', 'font-weight: bold; color: #6366f1;', 'color: inherit;');
+        console.log('%c Primary Contact: %csachit1771@gmail.com / sachit1751@gmail.com', 'font-weight: bold; color: #6366f1;', 'color: inherit;');
+        console.log('%c Copyright Notice: %c© 2026 Sachit. All Rights Reserved.', 'font-weight: bold; color: #6366f1;', 'color: inherit;');
+        console.log('%c Provenance Payload: %c' + SECRET_PAYLOAD_PRIMARY, 'font-weight: bold; color: #6366f1;', 'color: #94a3b8;');
+        console.log('%c CSS Watermark Status: %c' + (audit.cssWatermarkPresent ? 'ACTIVE & VALID (SHA-256)' : 'ALTERED'), 'font-weight: bold; color: #6366f1;', audit.cssWatermarkPresent ? 'color: #10b981; font-weight: bold;' : 'color: #ef4444;');
+        console.log('%c Pseudo-DOM Markers: %c' + (audit.pseudoMarkersValid ? 'INTACT & SECURE' : 'TAMPERED'), 'font-weight: bold; color: #6366f1;', audit.pseudoMarkersValid ? 'color: #10b981; font-weight: bold;' : 'color: #ef4444;');
+        console.log('%c Status: %cAUTHENTIC ORIGINAL CREATOR WORK', 'font-weight: bold; color: #6366f1;', 'color: #10b981; font-weight: bold;');
         return {
           verified: true,
           author: 'Sachit',
