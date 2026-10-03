@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, memo } from 'react';
 // ​provenance:sachit-2026-original​
 import { PaperTheme } from '../../types';
-import { ArrowUpRight, Sparkles, Compass, Search, FolderClosed, Menu, X, Minimize2 } from 'lucide-react';
+import { ArrowUpRight, Sparkles, Compass, Search, FolderClosed, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
 import { useIntersectionHighlighting } from '../../hooks/useIntersectionHighlighting';
@@ -10,7 +10,7 @@ import { WATERMARKED_NAME } from '../../utils/watermark';
 interface HeaderProps {
   theme: PaperTheme;
   setTheme: (theme: PaperTheme, event?: React.MouseEvent | MouseEvent) => void;
-  onRecrumple: () => void;
+  onRecrumple?: () => void;
   onViewResume?: () => void;
   isViewingResume?: boolean;
   onNavigateSection?: (id: string) => void;
@@ -260,26 +260,8 @@ export const Header = memo<HeaderProps>(({
             })}
           </nav>
 
-          {/* Right Area: Fold button & Mobile Menu Toggle */}
-          <div className="flex flex-1 items-center justify-end gap-2.5">
-            {/* Desktop & Mobile Fold Page Button (folds paper back into crumpled 3D ball) */}
-            <button
-              type="button"
-              onClick={onRecrumple}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-mono text-[10.5px] font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95 border group select-none shadow-xs"
-              style={{
-                backgroundColor: 'var(--c-input-bg)',
-                borderColor: 'var(--c-border)',
-                color: 'var(--c-heading)',
-              }}
-              title="Fold paper sheet back into 3D crumpled ball"
-              aria-label="Fold paper back into crumpled ball"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--c-dot)]" />
-              <Minimize2 className="w-3.5 h-3.5 opacity-70 group-hover:opacity-100 transition-transform group-hover:scale-110" />
-              <span>Fold</span>
-            </button>
-
+          {/* Right Area: Mobile Menu Toggle */}
+          <div className="flex flex-1 items-center justify-end">
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(prev => !prev)}
@@ -342,28 +324,6 @@ export const Header = memo<HeaderProps>(({
                   </button>
                 );
               })}
-
-              {/* Mobile Fold Button in Drawer */}
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onRecrumple();
-                }}
-                className="w-full flex items-center justify-between px-4 py-3 min-h-[48px] rounded-xl transition-all text-left cursor-pointer active:scale-[0.99] touch-manipulation mt-2"
-                style={{
-                  backgroundColor: 'var(--c-input-bg)',
-                  border: '1px solid var(--c-border)',
-                }}
-              >
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2 h-2 rounded-full bg-[var(--c-dot)]" />
-                  <span className="text-base font-handwriting font-bold" style={{ color: 'var(--c-heading)' }}>
-                    Fold Page to Ball
-                  </span>
-                </div>
-                <Minimize2 className="w-4 h-4 opacity-70" />
-              </button>
             </div>
 
             {/* Mobile Touch Swipe-Up-To-Dismiss Handle */}

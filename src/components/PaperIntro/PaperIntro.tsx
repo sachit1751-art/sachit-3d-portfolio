@@ -218,12 +218,15 @@ export const PaperIntro = memo<PaperIntroProps>(({
   return (
     <div 
       data-theme={theme} 
-      className="relative w-full h-screen overflow-hidden bg-[var(--c-bg)] transition-colors duration-500"
+      className="relative w-full h-screen overflow-hidden transition-colors duration-500"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
-      style={{ touchAction: paperState === 'crumpled' ? 'none' : 'auto' }}
+      style={{ 
+        backgroundColor: paperState === 'crumpled' ? '#ffffff' : 'var(--c-bg)',
+        touchAction: paperState === 'crumpled' ? 'none' : 'auto' 
+      }}
     >
-      {/* Background layer: Paper texture background + radial vignette + video */}
+      {/* Background layer: Radial vignette + video backdrop (matches deployed white aesthetic) */}
       <div className="absolute inset-0 z-0 overflow-hidden paper-grain pointer-events-none">
         <div 
           className="absolute inset-0 opacity-40 mix-blend-multiply"

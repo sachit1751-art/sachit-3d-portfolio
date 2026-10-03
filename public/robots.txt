@@ -11,6 +11,7 @@ Allow: /
 Allow: /resume
 Allow: /privacy
 Allow: /terms
+Allow: /og-image.jpg
 Allow: /og-image.png
 Allow: /og-image.svg
 Allow: /mascots/

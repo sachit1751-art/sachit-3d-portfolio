@@ -705,7 +705,10 @@ export default function App() {
       )}
 
       {/* 3D Paper Scene */}
-      <div className="fixed inset-0 z-10">
+      <div 
+        className={`fixed inset-0 z-10 ${showContent && introCompleted ? 'parchment-scene-layer is-background' : ''}`}
+        data-parchment-bg={showContent && introCompleted ? 'true' : undefined}
+      >
         <Suspense fallback={null}>
           <LazyPaperIntro
             paperState={paperState}

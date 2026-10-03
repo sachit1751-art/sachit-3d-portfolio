@@ -80,20 +80,6 @@ export const PaperCrumpleOverlay = memo(() => {
           backgroundSize: '100% 900px, 100% 1200px, 100% 100%',
         }}
       />
-
-      {/* Layer 3: Organic Edge Drop Shadows simulating undulating torn paper borders */}
-      <div 
-        className="absolute inset-y-0 left-0 w-8 opacity-40 pointer-events-none"
-        style={{
-          background: 'linear-gradient(to right, rgba(0,0,0,0.09) 0%, rgba(0,0,0,0.03) 60%, transparent 100%)',
-        }}
-      />
-      <div 
-        className="absolute inset-y-0 right-0 w-8 opacity-40 pointer-events-none"
-        style={{
-          background: 'linear-gradient(to left, rgba(0,0,0,0.09) 0%, rgba(0,0,0,0.03) 60%, transparent 100%)',
-        }}
-      />
     </div>
   );
 });
