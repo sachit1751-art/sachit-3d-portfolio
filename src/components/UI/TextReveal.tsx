@@ -1,9 +1,8 @@
 import React, { useRef, useState, useEffect, memo, useMemo } from 'react';
-// ​provenance:sachit-2026-original​
 import { usePerformance } from '../../hooks/usePerformance';
 import { observeElement } from '../../utils/observer';
 
-function useScrollReveal() {
+function useScrollTrigger(threshold = 0.05, rootMargin = '150px 0px 150px 0px') {
   const ref = useRef<HTMLSpanElement>(null);
   const [visible, setVisible] = useState(false);
   const { simplify } = usePerformance();
@@ -17,42 +16,62 @@ function useScrollReveal() {
     const el = ref.current;
     if (!el) return;
 
+    // Immediate viewport check
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight + 100 && rect.bottom > -100) {
+      setVisible(true);
+      return;
+    }
+
     const scroller = document.getElementById('content-scroll-container');
     
     const unobserve = observeElement(
       el, 
       (isIntersecting) => {
-        if (isIntersecting) setVisible(true);
+        if (isIntersecting) {
+          setVisible(true);
+        }
       },
-      { root: scroller, threshold: 0.01, rootMargin: '100px 0px 100px 0px' }
+      { root: scroller, threshold, rootMargin },
+      true
     );
 
-    // Safety fallback: ensure text is always visible within 200ms
-    const timer = setTimeout(() => {
+    // Fallback safety timeout so text is never permanently stuck
+    const safetyTimer = setTimeout(() => {
       setVisible(true);
-    }, 200);
+    }, 450);
 
     return () => {
       if (unobserve) unobserve();
-      clearTimeout(timer);
+      clearTimeout(safetyTimer);
     };
-  }, [simplify]);
+  }, [simplify, threshold, rootMargin]);
 
   return { ref, visible, simplify };
 }
 
-// ﻿author:sachit-2026-original﻿
-export const CharReveal = memo(({ text, baseDelay = 0, className = '' }: { text: string; baseDelay?: number; className?: string }) => {
-  const { ref, visible, simplify } = useScrollReveal();
-  
+/**
+ * CharReveal - Smooth, progressive letter-by-letter typing reveal with ZERO layout shift.
+ * All characters maintain their natural layout position.
+ */
+export const CharReveal = memo(({ 
+  text, 
+  baseDelay = 0, 
+  className = '' 
+}: { 
+  text: string; 
+  baseDelay?: number; 
+  className?: string; 
+}) => {
+  const { ref, visible, simplify } = useScrollTrigger();
   const words = useMemo(() => text.split(' '), [text]);
 
   if (simplify) {
     return <span className={className}>{text}</span>;
   }
 
-  let charCount = 0;
-  
+  let charIndex = 0;
+
   return (
     <span ref={ref} className={`inline ${className}`} aria-label={text}>
       {words.map((word, wordIdx) => {
@@ -61,21 +80,30 @@ export const CharReveal = memo(({ text, baseDelay = 0, className = '' }: { text:
           <React.Fragment key={wordIdx}>
             <span className="inline-block whitespace-nowrap">
               {chars.map((char, charInWordIdx) => {
-                const delay = baseDelay + charCount++ * 0.03;
+                const delay = baseDelay + charIndex++ * 0.022;
                 return (
                   <span
                     key={charInWordIdx}
-                    className={visible ? 'char-reveal' : ''}
-                    style={visible ? { animationDelay: `${delay}s` } : { opacity: 0 }}
+                    className="inline-block transition-all duration-200 ease-out"
+                    style={
+                      visible
+                        ? {
+                            opacity: 1,
+                            transform: 'translateY(0)',
+                            transitionDelay: `${delay}s`,
+                          }
+                        : {
+                            opacity: 0,
+                            transform: 'translateY(4px)',
+                          }
+                    }
                   >
                     {char}
                   </span>
                 );
               })}
             </span>
-            {wordIdx < words.length - 1 && (
-              <span key={`space-${wordIdx}`}>&nbsp;</span>
-            )}
+            {wordIdx < words.length - 1 && <span>&nbsp;</span>}
           </React.Fragment>
         );
       })}
@@ -84,9 +112,19 @@ export const CharReveal = memo(({ text, baseDelay = 0, className = '' }: { text:
 });
 CharReveal.displayName = 'CharReveal';
 
-export const WordReveal = memo(({ text, baseDelay = 0, className = '' }: { text: string; baseDelay?: number; className?: string }) => {
-  const { ref, visible, simplify } = useScrollReveal();
-  
+/**
+ * WordReveal - Smooth typing/word reveal that starts cleanly on scroll with zero text shift.
+ */
+export const WordReveal = memo(({ 
+  text, 
+  baseDelay = 0, 
+  className = '' 
+}: { 
+  text: string; 
+  baseDelay?: number; 
+  className?: string; 
+}) => {
+  const { ref, visible, simplify } = useScrollTrigger();
   const words = useMemo(() => text.split(' '), [text]);
 
   if (simplify) {
@@ -94,19 +132,30 @@ export const WordReveal = memo(({ text, baseDelay = 0, className = '' }: { text:
   }
 
   return (
-    <span ref={ref} className={className}>
+    <span ref={ref} className={`inline ${className}`} aria-label={text}>
       {words.map((word, i) => {
-        const delay = baseDelay + i * 0.035;
+        const delay = baseDelay + i * 0.032;
         return (
-          <span key={i} className="inline-block">
+          <React.Fragment key={i}>
             <span
-              className={visible ? 'word-reveal' : ''}
-              style={visible ? { animationDelay: `${delay}s` } : { opacity: 0 }}
+              className="inline-block transition-all duration-250 ease-out"
+              style={
+                visible
+                  ? {
+                      opacity: 1,
+                      transform: 'translateY(0)',
+                      transitionDelay: `${delay}s`,
+                    }
+                  : {
+                      opacity: 0,
+                      transform: 'translateY(5px)',
+                    }
+              }
             >
               {word}
             </span>
-            {i < words.length - 1 && '\u00A0'}
-          </span>
+            {i < words.length - 1 && <span>&nbsp;</span>}
+          </React.Fragment>
         );
       })}
     </span>
@@ -114,7 +163,17 @@ export const WordReveal = memo(({ text, baseDelay = 0, className = '' }: { text:
 });
 WordReveal.displayName = 'WordReveal';
 
-export const LineReveal = memo(({ children, delay = 0, className = '', style }: { children: React.ReactNode; delay?: number; className?: string; style?: React.CSSProperties }) => {
+export const LineReveal = memo(({ 
+  children, 
+  delay = 0, 
+  className = '', 
+  style 
+}: { 
+  children: React.ReactNode; 
+  delay?: number; 
+  className?: string; 
+  style?: React.CSSProperties; 
+}) => {
   return (
     <div
       className={`animate-line-reveal ${className}`}
