@@ -67,6 +67,11 @@ const layer: React.CSSProperties = {
   inset: 0,
   backgroundSize: '300% 300%',
   backgroundRepeat: 'no-repeat',
+  imageRendering: '-webkit-optimize-contrast',
+  transform: 'translateZ(0)',
+  WebkitBackfaceVisibility: 'hidden',
+  backfaceVisibility: 'hidden',
+  willChange: 'background-position',
 };
 
 interface LocalMascotProps {

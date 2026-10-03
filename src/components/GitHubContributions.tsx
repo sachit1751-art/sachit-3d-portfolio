@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback, memo } from 'react';
 import { PaperTheme } from '../types';
 import { usePerformance } from '../hooks/usePerformance';
 import { HoneycombLoader } from './UI/HoneycombLoader';
@@ -99,7 +99,7 @@ const INTENSITY_TIERS = [
   { level: 4, range: '10+ commits', label: 'Peak Sprint', desc: 'Deep-flow releases & intense sprints', icon: '🔥' },
 ];
 
-export const GitHubContributions: React.FC<GitHubContributionsProps> = ({ 
+export const GitHubContributions: React.FC<GitHubContributionsProps> = memo(({ 
   username = 'sachit1751-art',
   theme = 'kraft'
 }) => {
@@ -558,4 +558,6 @@ export const GitHubContributions: React.FC<GitHubContributionsProps> = ({
       </div>
     </div>
   );
-};
+});
+
+GitHubContributions.displayName = 'GitHubContributions';

@@ -1,31 +1,24 @@
 import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
-// ​‌‍sachit-portfolio-2026-original-author‍‌​
+// sachit-portfolio-2026-original-author
 import { PaperState, PaperTheme } from './types';
 import { Header } from './components/Portfolio/Header';
 import { PortfolioContainer } from './components/Portfolio/PortfolioContainer';
 import { NotFound } from './components/Portfolio/NotFound';
 import { HoneycombLoader } from './components/UI/HoneycombLoader';
-import { SEOHead } from './components/SEO/SEOHead';
 import { SEOMetadata } from './components/SEO/SEOMetadata';
 import { ShortcutHUD } from './components/UI/ShortcutHUD';
 import { ToastNotification } from './components/UI/Toast';
 import { useDoomSequence } from './hooks/useDoomSequence';
 import { usePerformance } from './hooks/usePerformance';
-import { useGlobalShortcuts } from './hooks/useGlobalShortcuts';
-import { useScrollContainerArrowNav } from './hooks/useScrollContainerArrowNav';
 import { initSecurity } from './utils/security';
 import { initFontLoader } from './utils/fontLoader';
-import { resetSharedObservers } from './utils/observer';
 import { initAuthorshipVerification } from './utils/watermark';
-
-const SESSION_CACHE_KEY = 'portfolio_intro_unfolded_cache';
 
 // Easing helper for smooth scroll interpolation
 function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
-// Compute section target scroll offset once outside of animation frames without layout thrashing
 function calculateSectionOffset(container: HTMLElement, target: HTMLElement, headerOffset = 72): number {
   let offset = 0;
   let curr: HTMLElement | null = target;
@@ -33,28 +26,22 @@ function calculateSectionOffset(container: HTMLElement, target: HTMLElement, hea
     offset += curr.offsetTop;
     curr = curr.offsetParent as HTMLElement | null;
   }
-
-  // Pre-calculate fallback offset once before scheduling animation frame
   if (offset <= 0 && target !== container) {
     const cRect = container.getBoundingClientRect();
     const tRect = target.getBoundingClientRect();
     offset = tRect.top - cRect.top + container.scrollTop;
   }
-
   return Math.max(0, Math.round(offset - headerOffset));
 }
 
-// Global active RAF tracking & cleanup for smooth scroll interpolation
 let activeScrollRaf: number | null = null;
 let activeScrollCleanup: (() => void) | null = null;
 
-// High-performance, non-blocking smooth scroll interpolation helper with passive event listeners
 function interpolateScrollTo(
   container: HTMLElement,
   targetTop: number,
   duration = 450
 ) {
-  // Cancel active interpolation and unbind previous listeners
   if (activeScrollRaf !== null) {
     cancelAnimationFrame(activeScrollRaf);
     activeScrollRaf = null;
@@ -63,19 +50,15 @@ function interpolateScrollTo(
     activeScrollCleanup();
     activeScrollCleanup = null;
   }
-
   const startTop = container.scrollTop;
   const distance = targetTop - startTop;
 
-  // If already at or within sub-pixel distance of destination, complete immediately
   if (Math.abs(distance) < 2) {
     container.scrollTop = targetTop;
     return;
   }
 
   const startTime = performance.now();
-
-  // Passive event listener handler: safely cancels interpolation upon user manual interaction
   const handleUserInterrupt = () => {
     if (activeScrollRaf !== null) {
       cancelAnimationFrame(activeScrollRaf);
@@ -92,18 +75,15 @@ function interpolateScrollTo(
     container.removeEventListener('touchstart', handleUserInterrupt);
   };
 
-  // Passive event listeners guarantee non-blocking touch/scroll interactions
   container.addEventListener('wheel', handleUserInterrupt, { passive: true });
   container.addEventListener('touchstart', handleUserInterrupt, { passive: true });
   activeScrollCleanup = removeListeners;
 
-  // Pure interpolation loop: zero getBoundingClientRect or layout measurements during frame execution
   const step = (now: number) => {
     const elapsed = now - startTime;
     const progress = Math.min(elapsed / duration, 1);
     const easeProgress = easeInOutCubic(progress);
 
-    // Single non-blocking write to scrollTop per frame without layout queries
     container.scrollTop = startTop + distance * easeProgress;
 
     if (progress < 1) {
@@ -118,7 +98,6 @@ function interpolateScrollTo(
   activeScrollRaf = requestAnimationFrame(step);
 }
 
-// Helper for dynamic imports with automatic retry/reload resilience
 function lazyWithRetry<T extends React.ComponentType<any>>(
   componentImport: () => Promise<any>,
   exportName?: string
@@ -142,8 +121,6 @@ function lazyWithRetry<T extends React.ComponentType<any>>(
   }) as React.LazyExoticComponent<T>;
 }
 
-// Lazy-load heavy components with retry resiliency
-const LazyPaperIntro = lazyWithRetry<typeof import('./components/PaperIntro/PaperIntro').PaperIntro>(() => import('./components/PaperIntro/PaperIntro'), 'PaperIntro');
 const LazyStructureRoom = lazyWithRetry<typeof import('./structure-room/StructureRoom').StructureRoom>(() => import('./structure-room/StructureRoom'), 'StructureRoom');
 const LazyDoomTransition = lazyWithRetry<typeof import('./structure-room/DoomTransition').DoomTransition>(() => import('./structure-room/DoomTransition'), 'DoomTransition');
 const LazyMoodTransition = lazyWithRetry<typeof import('./components/MoodGame/MoodTransition').MoodTransition>(() => import('./components/MoodGame/MoodTransition'), 'MoodTransition');
@@ -160,7 +137,6 @@ function HeavyFallback() {
   );
 }
 
-// ﻿provenance:sachit-2026-original﻿
 export default function App() {
   const [is404, setIs404] = useState(false);
   const [isViewingResume, setIsViewingResume] = useState(false);
@@ -169,107 +145,53 @@ export default function App() {
 
   useEffect(() => {
     initFontLoader();
-    // Route handling for SPA
     const checkRoute = () => {
       const path = window.location.pathname;
       const hash = window.location.hash;
-      console.log('[App checkRoute] Path:', path, 'Hash:', hash);
       if (hash.startsWith('#structure') || hash.startsWith('#/structure') || path.startsWith('/structure')) {
         setShowStructureRoom(true);
-        setIsViewingResume(false);
-        setIsViewingPrivacy(false);
-        setIsViewingTerms(false);
-        setShowContent(true);
-        setIntroCompleted(true);
-        setPaperState('opened');
         setIs404(false);
       } else if (path === '/resume' || path === '/resume/' || path === '/resume.html') {
         setIsViewingResume(true);
-        setIsViewingPrivacy(false);
-        setIsViewingTerms(false);
-        setShowContent(true);
-        setIntroCompleted(true);
-        setPaperState('opened');
         setIs404(false);
       } else if (path === '/privacy' || path === '/privacy/') {
         setIsViewingPrivacy(true);
-        setIsViewingResume(false);
-        setIsViewingTerms(false);
-        setShowContent(true);
-        setIntroCompleted(true);
-        setPaperState('opened');
         setIs404(false);
       } else if (path === '/terms' || path === '/terms/') {
         setIsViewingTerms(true);
-        setIsViewingResume(false);
-        setIsViewingPrivacy(false);
-        setShowContent(true);
-        setIntroCompleted(true);
-        setPaperState('opened');
         setIs404(false);
       } else if (path !== '/' && path !== '/index.html' && !path.startsWith('/api/')) {
         setIs404(true);
       } else {
-        setIsViewingResume(false);
-        setIsViewingPrivacy(false);
-        setIsViewingTerms(false);
         setIs404(false);
-        // Root path always presents the intro animation on fresh load/reload
       }
     };
-
     checkRoute();
-
-    const handlePopState = () => {
-      checkRoute();
-    };
+    const handlePopState = () => checkRoute();
 
     const handleOpenPrivacy = () => {
       setIsViewingPrivacy(true);
       setIsViewingResume(false);
       setIsViewingTerms(false);
-      setShowContent(true);
-      setIntroCompleted(true);
-      setPaperState('opened');
-      try {
-        if (window.location.pathname !== '/privacy') {
-          window.history.pushState({}, '', '/privacy');
-        }
-      } catch {}
+      setIs404(false);
+      try { if (window.location.pathname !== '/privacy') window.history.pushState({}, '', '/privacy'); } catch {}
     };
 
     const handleOpenTerms = () => {
       setIsViewingTerms(true);
       setIsViewingResume(false);
       setIsViewingPrivacy(false);
-      setShowContent(true);
-      setIntroCompleted(true);
-      setPaperState('opened');
-      try {
-        if (window.location.pathname !== '/terms') {
-          window.history.pushState({}, '', '/terms');
-        }
-      } catch {}
+      setIs404(false);
+      try { if (window.location.pathname !== '/terms') window.history.pushState({}, '', '/terms'); } catch {}
     };
 
-    const handleOpen404 = () => {
-      setIs404(true);
-      setIsViewingResume(false);
-      setIsViewingPrivacy(false);
-      setIsViewingTerms(false);
-      try {
-        if (window.location.pathname !== '/404') {
-          window.history.pushState({}, '', '/404');
-        }
-      } catch {}
-    };
+    const handleOpen404 = () => setIs404(true);
 
     window.addEventListener('popstate', handlePopState);
     window.addEventListener('hashchange', handlePopState);
     window.addEventListener('open-privacy', handleOpenPrivacy);
     window.addEventListener('open-terms', handleOpenTerms);
     window.addEventListener('open-404', handleOpen404);
-
     return () => {
       window.removeEventListener('popstate', handlePopState);
       window.removeEventListener('hashchange', handlePopState);
@@ -285,127 +207,50 @@ export default function App() {
       initSecurity();
     }
   }, []);
-  const [paperState, setPaperState] = useState<PaperState>(() => {
-    if (typeof window !== 'undefined') {
-      const path = window.location.pathname;
-      if (path === '/resume' || path === '/resume/' || path === '/resume.html' || path === '/privacy' || path === '/privacy/' || path === '/terms' || path === '/terms/') {
-        return 'opened';
-      }
-    }
-    return 'crumpled';
-  });
 
+  const [paperState] = useState<PaperState>('opened');
   const [theme, setTheme] = useState<PaperTheme>('kraft');
   const [isSiteMapOpen, setIsSiteMapOpen] = useState(false);
   const [siteMapInitialTab, setSiteMapInitialTab] = useState<'all' | 'sections' | 'projects' | 'actions' | 'shortcuts'>('all');
-
-  const [introCompleted, setIntroCompleted] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const path = window.location.pathname;
-      if (path === '/resume' || path === '/resume/' || path === '/resume.html' || path === '/privacy' || path === '/privacy/' || path === '/terms' || path === '/terms/') {
-        return true;
-      }
-    }
-    return false;
-  });
-
-  const [showContent, setShowContent] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const path = window.location.pathname;
-      if (path === '/resume' || path === '/resume/' || path === '/resume.html' || path === '/privacy' || path === '/privacy/' || path === '/terms' || path === '/terms/') {
-        return true;
-      }
-    }
-    return false;
-  });
-
-  const [headerReady, setHeaderReady] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const path = window.location.pathname;
-      if (path === '/resume' || path === '/resume/' || path === '/resume.html' || path === '/privacy' || path === '/privacy/' || path === '/terms' || path === '/terms/') {
-        return true;
-      }
-    }
-    return false;
-  });
-
   const [showTransition, setShowTransition] = useState(false);
   const [showStructureRoom, setShowStructureRoom] = useState(false);
   const [showMoodTransition, setShowMoodTransition] = useState(false);
   const [showMoodGame, setShowMoodGame] = useState(false);
 
-  // Monitoring state transitions
-  useEffect(() => {
-    console.log('[App State Monitor Effect]', { 
-      paperState, 
-      introCompleted, 
-      showContent,
-      headerReady,
-      timestamp: new Date().toISOString()
-    });
-  }, [paperState, introCompleted, showContent, headerReady]);
-
   const { isUnlocked: doomUnlocked, exitStructureRoom } = useDoomSequence(paperState);
   const { simplify } = usePerformance();
-  const moodTransitionFiredRef = useRef(false);
 
   const handleOpenResume = useCallback(() => {
-    console.log('[App] handleOpenResume: Setting flags to skip intro');
     setIsViewingResume(true);
-    setShowContent(true);
-    setIntroCompleted(true);
-    setPaperState('opened');
-    try {
-      if (window.location.pathname !== '/resume') {
-        window.history.pushState({}, '', '/resume');
-      }
-    } catch {}
+    try { if (window.location.pathname !== '/resume') window.history.pushState({}, '', '/resume'); } catch {}
   }, []);
 
   const handleCloseResume = useCallback(() => {
     setIsViewingResume(false);
-    try {
-      if (window.location.pathname === '/resume') {
-        window.history.pushState({}, '', '/');
-      }
-    } catch {}
+    try { if (window.location.pathname === '/resume') window.history.pushState({}, '', '/'); } catch {}
   }, []);
 
   const handleOpenPrivacy = useCallback(() => {
     setIsViewingPrivacy(true);
     setIsViewingResume(false);
     setIsViewingTerms(false);
-    setShowContent(true);
-    setIntroCompleted(true);
-    setPaperState('opened');
-    try {
-      if (window.location.pathname !== '/privacy') {
-        window.history.pushState({}, '', '/privacy');
-      }
-    } catch {}
+    setIs404(false);
+    try { if (window.location.pathname !== '/privacy') window.history.pushState({}, '', '/privacy'); } catch {}
   }, []);
 
   const handleOpenTerms = useCallback(() => {
     setIsViewingTerms(true);
     setIsViewingResume(false);
     setIsViewingPrivacy(false);
-    setShowContent(true);
-    setIntroCompleted(true);
-    setPaperState('opened');
-    try {
-      if (window.location.pathname !== '/terms') {
-        window.history.pushState({}, '', '/terms');
-      }
-    } catch {}
+    setIs404(false);
+    try { if (window.location.pathname !== '/terms') window.history.pushState({}, '', '/terms'); } catch {}
+  }, []);
+
+  const handleRecrumple = useCallback(() => {
+    // No-op
   }, []);
 
   const handleNavigateSection = useCallback((id: string) => {
-    // Prevent navigation if intro isn't finished and we're not explicitly bypassing it
-    if (!introCompleted && paperState !== 'opened') {
-      console.warn('[App] handleNavigateSection: Navigation suppressed (intro active)');
-      return;
-    }
-
     setIsViewingResume(false);
     setIsViewingPrivacy(false);
     setIsViewingTerms(false);
@@ -414,24 +259,19 @@ export default function App() {
         window.history.pushState({}, '', '/');
       }
     } catch {}
-
     const container = document.getElementById('content-scroll-container');
     if (!container) return;
-
     if (id === 'hero' || id === 'top') {
       interpolateScrollTo(container, 0, 400);
       return;
     }
-
     const target = document.getElementById(id);
     if (target) {
-      // Calculate layout offset once upfront outside animation loop to prevent layout thrashing
       const targetOffset = calculateSectionOffset(container, target, 72);
       interpolateScrollTo(container, targetOffset, 480);
     }
-  }, [introCompleted, paperState]);
+  }, []);
 
-  // Clean up any ongoing scroll interpolation on unmount
   useEffect(() => {
     return () => {
       if (activeScrollRaf !== null) {
@@ -476,42 +316,9 @@ export default function App() {
 
   const handleMoodTransitionComplete = useCallback(() => {
     setShowMoodTransition(false);
-    moodTransitionFiredRef.current = false;
     setShowMoodGame(true);
   }, []);
 
-  const handlePaperOpenComplete = useCallback(() => {
-    try {
-      sessionStorage.setItem(SESSION_CACHE_KEY, 'true');
-    } catch {}
-    setIntroCompleted(true);
-    setShowContent(true);
-    setHeaderReady(true);
-
-    // Explicitly blur any active element to prevent mobile keyboards from opening after the intro animation ends
-    try {
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
-    } catch {}
-
-    requestAnimationFrame(() => {
-      const container = document.getElementById('content-scroll-container');
-      if (container) container.scrollTop = 0;
-    });
-  }, []);
-
-  // Preload ResumeViewer module once portfolio is revealed to ensure instantaneous transitions
-  useEffect(() => {
-    if (showContent && introCompleted) {
-      const timer = window.setTimeout(() => {
-        import('./components/Portfolio/ResumeViewer');
-      }, 1200);
-      return () => window.clearTimeout(timer);
-    }
-  }, [showContent, introCompleted]);
-
-  // Apply performance class to body for CSS optimizations
   useEffect(() => {
     if (simplify) {
       document.body.classList.add('perf-simplify');
@@ -520,125 +327,8 @@ export default function App() {
     }
   }, [simplify]);
 
-  // Clear stale MOOD session on fresh load so game doesn't auto-start
-  useEffect(() => {
-    try {
-      sessionStorage.removeItem('mood_unlocked');
-    } catch {}
-  }, []);
-
-  // Sync content visibility with intro state
-  useEffect(() => {
-    if (paperState === 'opened' && introCompleted) {
-      setShowContent(true);
-    } else if (paperState === 'crumpled' && !showMoodGame) {
-      setShowContent(false);
-    }
-  }, [paperState, showMoodGame, introCompleted]);
-
-  // Header synchronization - ready when intro confirms opened
-  useEffect(() => {
-    if (paperState === 'opened' && introCompleted) {
-      setHeaderReady(true);
-    } else {
-      setHeaderReady(false);
-    }
-  }, [paperState, introCompleted]);
-
-  const handleRecrumple = useCallback(() => {
-    console.log('[App] handleRecrumple: Resetting session and states');
-    try {
-      sessionStorage.removeItem(SESSION_CACHE_KEY);
-    } catch {}
-    resetSharedObservers();
-    if (window.location.hash) {
-      window.history.replaceState(null, '', window.location.pathname + window.location.search);
-    }
-    setShowContent(false);
-    setIntroCompleted(false);
-    setHeaderReady(false);
-    setPaperState('crumpled');
-    setShowStructureRoom(false);
-    setShowTransition(false);
-    setShowMoodTransition(false);
-    setShowMoodGame(false);
-    moodTransitionFiredRef.current = false;
-  }, []);
-
-  const handleThemeChange = useCallback(() => {
-    // No-op: Kraft Paper is the only theme available
-  }, []);
-
-  // Global keyboard shortcuts manager
-  useGlobalShortcuts({
-    isSiteMapOpen,
-    onOpenSiteMap: (tab) => {
-      if (tab) setSiteMapInitialTab(tab);
-      setIsSiteMapOpen(true);
-    },
-    onCloseSiteMap: () => setIsSiteMapOpen(false),
-    onToggleSiteMap: () => setIsSiteMapOpen((prev) => !prev),
-    isViewingResume,
-    onOpenResume: handleOpenResume,
-    onCloseResume: handleCloseResume,
-    isViewingPrivacy,
-    onClosePrivacy: () => {
-      setIsViewingPrivacy(false);
-      try { if (window.location.pathname !== '/') window.history.pushState({}, '', '/'); } catch {}
-    },
-    isViewingTerms,
-    onCloseTerms: () => {
-      setIsViewingTerms(false);
-      try { if (window.location.pathname !== '/') window.history.pushState({}, '', '/'); } catch {}
-    },
-    is404,
-    onClose404: () => {
-      setIs404(false);
-      try { if (window.location.pathname !== '/') window.history.pushState({}, '', '/'); } catch {}
-      setShowContent(true);
-      setIntroCompleted(true);
-      setPaperState('opened');
-    },
-    showStructureRoom,
-    onExitStructureRoom: () => {
-      exitStructureRoom();
-      setShowStructureRoom(false);
-    },
-    theme,
-    setTheme: handleThemeChange,
-    onNavigateSection: handleNavigateSection,
-    introCompleted,
-  });
-
-  // Arrow key navigation between sections and project cards
-  useScrollContainerArrowNav({
-    enabled: showContent && introCompleted && !isViewingResume && !isViewingPrivacy && !isViewingTerms && !is404 && !isSiteMapOpen,
-    onNavigateSection: handleNavigateSection,
-  });
-
-  useEffect(() => {
-    if (doomUnlocked && paperState === 'crumpled') {
-      setShowTransition(true);
-    }
-  }, [doomUnlocked, paperState]);
-
-  const handleMoodUnlocked = useCallback(() => {
-    if (moodTransitionFiredRef.current) return;
-    moodTransitionFiredRef.current = true;
-    setShowMoodTransition(true);
-  }, []);
-
-  const handleSetPaperState = useCallback((state: PaperState) => {
-    setPaperState(state);
-  }, []);
-
-  const handleSetShowMoodGame = useCallback((v: boolean) => {
-    setShowMoodGame(v);
-  }, []);
-
   return (
     <div data-theme={theme} className="relative min-h-screen bg-[var(--c-bg)] font-sans antialiased overflow-x-hidden transition-colors duration-500">
-      {/* Route-Aware & Crawler-Optimized SEO Metadata */}
       <SEOMetadata
         pageType={
           is404
@@ -663,81 +353,34 @@ export default function App() {
             : '/'
         }
       />
+
       {is404 && (
         <NotFound
           theme={theme}
-          setTheme={handleThemeChange}
+          setTheme={setTheme}
           onNavigateHome={() => {
             setIs404(false);
-            try {
-              if (window.location.pathname !== '/') {
-                window.history.pushState({}, '', '/');
-              }
-            } catch {}
-            setShowContent(true);
-            setIntroCompleted(true);
-            setPaperState('opened');
+            try { if (window.location.pathname !== '/') window.history.pushState({}, '', '/'); } catch {}
           }}
           onNavigateSection={(sectionId) => {
             setIs404(false);
-            try {
-              if (window.location.pathname !== '/') {
-                window.history.pushState({}, '', '/');
-              }
-            } catch {}
-            setShowContent(true);
-            setIntroCompleted(true);
-            setPaperState('opened');
+            try { if (window.location.pathname !== '/') window.history.pushState({}, '', '/'); } catch {}
             handleNavigateSection(sectionId);
           }}
-          onRecrumple={handleRecrumple}
           onViewResume={handleOpenResume}
         />
       )}
-      {showContent && (
-        <a
-          href="#content-scroll-container"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:rounded focus:text-sm focus:font-body focus:shadow-lg"
-          style={{ backgroundColor: 'var(--c-btn-bg)', color: 'var(--c-btn-text)' }}
-        >
-          Skip to content
-        </a>
-      )}
 
-      {/* 3D Paper Scene */}
-      <div className="fixed inset-0 z-10">
-        <Suspense fallback={null}>
-          <LazyPaperIntro
-            paperState={paperState}
-            setPaperState={handleSetPaperState}
+      {!is404 && !showStructureRoom && !showMoodGame && (
+        <div className="relative min-h-screen flex flex-col" data-theme={theme}>
+          <Header
             theme={theme}
-            setTheme={handleThemeChange}
-            onOpenComplete={handlePaperOpenComplete}
-            showMoodGame={showMoodGame}
-            setShowMoodGame={handleSetShowMoodGame}
-            onMoodUnlocked={handleMoodUnlocked}
+            setTheme={setTheme}
+            onViewResume={handleOpenResume}
+            isViewingResume={isViewingResume}
+            onNavigateSection={handleNavigateSection}
+            onOpenSiteMap={handleOpenSiteMap}
           />
-        </Suspense>
-      </div>
-
-      {/* Portfolio Content */}
-      {showContent && introCompleted && !showStructureRoom && !showMoodGame && (
-        <div
-          className="fixed inset-0 z-20 animate-portfolio-enter flex flex-col"
-          data-theme={theme}
-        >
-          {headerReady && (
-            <Header
-              theme={theme}
-              setTheme={handleThemeChange}
-              onRecrumple={handleRecrumple}
-              onViewResume={handleOpenResume}
-              isViewingResume={isViewingResume}
-              onNavigateSection={handleNavigateSection}
-              onOpenSiteMap={handleOpenSiteMap}
-            />
-          )}
-          {/* Main Portfolio Scroll Container - kept mounted to preserve scroll position and eliminate remount lag */}
           <div
             id="content-scroll-container"
             className={`flex-1 min-h-0 w-full overflow-y-auto overflow-x-hidden ${
@@ -749,8 +392,6 @@ export default function App() {
               WebkitOverflowScrolling: 'touch',
               overscrollBehaviorY: 'contain',
             }}
-            aria-hidden={isViewingResume || isViewingPrivacy || isViewingTerms}
-            tabIndex={isViewingResume || isViewingPrivacy || isViewingTerms ? -1 : undefined}
           >
             <PortfolioContainer
               theme={theme}
@@ -759,98 +400,55 @@ export default function App() {
             />
           </div>
 
-          {/* Dedicated Resume Overlay Container */}
           {isViewingResume && (
-            <div
-              id="resume-scroll-container"
-              className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden bg-transparent"
-            >
+            <div id="resume-scroll-container" className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden bg-[var(--c-bg)]">
               <Suspense fallback={<div className="flex items-center justify-center py-24"><HoneycombLoader size="md" label="PREPARING CV CANVAS..." color="var(--c-heading)" /></div>}>
-                <LazyResumeViewer
-                  theme={theme}
-                  onBack={handleCloseResume}
-                />
+                <LazyResumeViewer theme={theme} onBack={handleCloseResume} />
               </Suspense>
             </div>
           )}
 
-          {/* Dedicated Privacy Policy Overlay */}
           {isViewingPrivacy && (
-            <div
-              id="privacy-scroll-container"
-              data-theme={theme}
-              className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden bg-transparent"
-            >
+            <div id="privacy-scroll-container" data-theme={theme} className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden bg-[var(--c-bg)]">
               <Suspense fallback={<div className="flex items-center justify-center py-24"><HoneycombLoader size="md" label="LOADING PRIVACY POLICY..." color="var(--c-heading)" /></div>}>
-                <LazyPrivacyPolicy
-                  theme={theme}
-                  onBack={handleClosePrivacy}
-                />
+                <LazyPrivacyPolicy theme={theme} onBack={handleClosePrivacy} />
               </Suspense>
             </div>
           )}
 
-          {/* Dedicated Terms of Service Overlay */}
           {isViewingTerms && (
-            <div
-              id="terms-scroll-container"
-              data-theme={theme}
-              className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden bg-transparent"
-            >
+            <div id="terms-scroll-container" data-theme={theme} className="fixed inset-0 top-0 pt-20 sm:pt-24 z-20 w-full h-full overflow-y-auto overflow-x-hidden bg-[var(--c-bg)]">
               <Suspense fallback={<div className="flex items-center justify-center py-24"><HoneycombLoader size="md" label="LOADING TERMS..." color="var(--c-heading)" /></div>}>
-                <LazyTermsOfService
-                  theme={theme}
-                  onBack={handleCloseTerms}
-                />
+                <LazyTermsOfService theme={theme} onBack={handleCloseTerms} />
               </Suspense>
             </div>
           )}
-
-
         </div>
       )}
 
-      {/* Doom Transition */}
       {showTransition && (
         <Suspense fallback={<HeavyFallback />}>
-          <LazyDoomTransition
-            onComplete={handleDoomTransitionComplete}
-          />
+          <LazyDoomTransition onComplete={handleDoomTransitionComplete} />
         </Suspense>
       )}
 
-      {/* Structure Room */}
       {showStructureRoom && (
-        <div
-          className="fixed inset-0 z-20"
-          data-theme={theme}
-        >
+        <div className="fixed inset-0 z-20" data-theme={theme}>
           <Suspense fallback={<HeavyFallback />}>
-            <LazyStructureRoom
-              theme={theme}
-              setTheme={handleThemeChange}
-              onExit={handleExitStructureRoom}
-            />
+            <LazyStructureRoom theme={theme} setTheme={setTheme} onExit={handleExitStructureRoom} />
           </Suspense>
         </div>
       )}
 
-      {/* Mood Transition — Mission Briefing Terminal */}
       {showMoodTransition && (
         <Suspense fallback={<HeavyFallback />}>
-          <LazyMoodTransition
-            onComplete={handleMoodTransitionComplete}
-          />
+          <LazyMoodTransition onComplete={handleMoodTransitionComplete} />
         </Suspense>
       )}
 
-      {/* Global Shortcut HUD Toast Feedback */}
       <ShortcutHUD />
-
-      {/* Global Success & Status Toast Notifications */}
       <ToastNotification />
 
-      {/* Global Site Map & Command Palette Modal (Cmd+K) */}
       {isSiteMapOpen && (
         <Suspense fallback={null}>
           <LazySiteMapModal
@@ -862,7 +460,7 @@ export default function App() {
             onOpenTerms={handleOpenTerms}
             onRecrumple={handleRecrumple}
             theme={theme}
-            setTheme={handleThemeChange}
+            setTheme={setTheme}
             initialCategory={siteMapInitialTab}
           />
         </Suspense>

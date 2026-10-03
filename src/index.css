@@ -455,7 +455,6 @@ h2.sm\:text-5xl,
 
   /* Ink on paper — text blends with paper texture (light themes only) */
   #physical-paper-sheet {
-    mix-blend-mode: multiply;
     transform: translateZ(0);
     will-change: transform;
   }

@@ -8,6 +8,7 @@ import { GitHubIcon } from '../UI/Icons';
 import { AnimatedMenuIcon } from '../UI/AnimatedMenuIcon';
 import { WordReveal } from '../UI/TextReveal';
 import { usePerformance } from '../../hooks/usePerformance';
+import { useTouchDevice } from '../../hooks/useTouchDevice';
 import { ScrollReveal } from '../UI/ScrollReveal';
 import { observeElement } from '../../utils/observer';
 import { getTechStackSVG } from '../UI/TechIcons';
@@ -99,6 +100,7 @@ interface ProjectCardProps {
   isExpanded: boolean;
   onToggleExpand: (id: string, e?: React.MouseEvent | React.KeyboardEvent) => void;
   onCardNavigate: (currentIndex: number, e: React.KeyboardEvent<HTMLElement>) => void;
+  isTouchDevice?: boolean;
 }
 
 const ProjectCard = memo<ProjectCardProps>(({ 
@@ -107,10 +109,12 @@ const ProjectCard = memo<ProjectCardProps>(({
   totalProjects,
   isExpanded, 
   onToggleExpand,
-  onCardNavigate
+  onCardNavigate,
+  isTouchDevice,
 }) => {
   const expandedContainerRef = useRef<HTMLDivElement>(null);
   const lastActiveElementRef = useRef<HTMLElement | null>(null);
+  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
 
   // Focus trap and auto-focus when modal expands
   useEffect(() => {
@@ -129,6 +133,37 @@ const ProjectCard = memo<ProjectCardProps>(({
       lastActiveElementRef.current.focus();
     }
   }, [isExpanded]);
+
+  const handleCardTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length === 1) {
+      touchStartRef.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+        time: Date.now(),
+      };
+    }
+  };
+
+  const handleCardTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!touchStartRef.current) return;
+    const touchEnd = e.changedTouches[0];
+    const dx = Math.abs(touchEnd.clientX - touchStartRef.current.x);
+    const dy = Math.abs(touchEnd.clientY - touchStartRef.current.y);
+    const duration = Date.now() - touchStartRef.current.time;
+    touchStartRef.current = null;
+
+    // Distinguish intentional tap (< 12px drag movement, < 500ms duration) from a scroll/swipe gesture
+    if (dx < 12 && dy < 12 && duration < 500) {
+      const target = e.target as HTMLElement | null;
+      // If user tapped directly on interactive external links or action buttons, let their handler proceed
+      if (target?.closest('a, button, [data-action="github"], [data-action="live-demo"], [data-action="quick-details"]')) {
+        return;
+      }
+      e.preventDefault();
+      triggerHaptic(HAPTIC_PATTERNS.click);
+      onToggleExpand(project.id);
+    }
+  };
 
   const handleModalKeyDown = (e: React.KeyboardEvent) => {
     if (!isExpanded || !expandedContainerRef.current) return;
@@ -169,11 +204,14 @@ const ProjectCard = memo<ProjectCardProps>(({
         id={`project-card-${project.id}`}
         data-project-card="true"
         data-project-index={idx}
+        data-touch-revealed={isExpanded ? 'true' : 'false'}
         tabIndex={0}
         role="article"
         aria-setsize={totalProjects}
         aria-posinset={idx + 1}
         aria-label={`${project.title} (${project.category}, ${project.year}). Press Enter or Space to toggle details. Use arrow keys to navigate projects.`}
+        onTouchStart={handleCardTouchStart}
+        onTouchEnd={handleCardTouchEnd}
         onKeyDown={(e) => {
           if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
             e.preventDefault();
@@ -191,7 +229,7 @@ const ProjectCard = memo<ProjectCardProps>(({
         }}
       >
         <div>
-          {/* Header Meta: Category + Index */}
+          {/* Header Meta: Category + Index + Touch-to-Reveal Affordance */}
           <div className="flex items-center justify-between text-xs font-handwriting mb-3" style={{ color: 'var(--c-subtle)' }}>
             <div className="flex items-center gap-1.5 flex-wrap">
               <span
@@ -200,6 +238,30 @@ const ProjectCard = memo<ProjectCardProps>(({
               >
                 {project.category}
               </span>
+
+              {/* Touch Device Tap-to-Reveal Indicator Badge */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  triggerHaptic(HAPTIC_PATTERNS.click);
+                  onToggleExpand(project.id, e);
+                }}
+                className={`inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full transition-all select-none cursor-pointer ${
+                  isTouchDevice ? 'inline-flex' : 'inline-flex sm:hidden'
+                }`}
+                style={{
+                  backgroundColor: isExpanded ? 'var(--c-btn-bg)' : 'transparent',
+                  color: isExpanded ? 'var(--c-btn-text)' : 'var(--c-subtle)',
+                  border: isExpanded ? '1px solid var(--c-btn-bg)' : '1px dashed var(--c-border)',
+                }}
+                aria-expanded={isExpanded}
+                aria-label={isExpanded ? `Collapse ${project.title} details` : `Tap to reveal ${project.title} specifications`}
+                title={isExpanded ? 'Tap to close specifications' : 'Tap to reveal specifications'}
+              >
+                <span className={`w-1.5 h-1.5 rounded-full ${isExpanded ? 'bg-emerald-400' : 'bg-[var(--c-dot)] animate-pulse'}`} />
+                <span>{isExpanded ? 'Tap to close' : 'Tap to reveal'}</span>
+              </button>
             </div>
             <span className="text-[10px] uppercase tracking-widest font-mono font-bold" style={{ color: 'var(--c-faint)' }}>
               {String(idx + 1).padStart(2, '0')}
@@ -278,6 +340,29 @@ const ProjectCard = memo<ProjectCardProps>(({
                   {project.longDescription || project.description}
                 </p>
               </div>
+
+              {/* Project Impact Metrics */}
+              {project.stats && (
+                <div 
+                  className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2 pb-1 font-mono text-[10px] uppercase tracking-wider" 
+                  style={{ borderTop: '1px dashed var(--c-border)', color: 'var(--c-subtle)' }}
+                >
+                  <span className="inline-flex items-center gap-1">
+                    <span className="opacity-60">Stars:</span>
+                    <strong style={{ color: 'var(--c-heading)' }}>{project.stats.stars}</strong>
+                  </span>
+                  <span>•</span>
+                  <span className="inline-flex items-center gap-1">
+                    <span className="opacity-60">Forks:</span>
+                    <strong style={{ color: 'var(--c-heading)' }}>{project.stats.forks}</strong>
+                  </span>
+                  <span>•</span>
+                  <span className="inline-flex items-center gap-1">
+                    <span className="opacity-60">Score:</span>
+                    <strong style={{ color: 'var(--c-heading)' }}>{project.stats.score}/100</strong>
+                  </span>
+                </div>
+              )}
 
               <div className="flex flex-wrap items-center justify-between gap-2 pt-2.5" style={{ borderTop: '1px solid var(--c-border)' }}>
                 <span className="font-mono text-[10px] uppercase tracking-wider opacity-70" style={{ color: 'var(--c-muted)' }}>
@@ -448,6 +533,7 @@ export const Projects = memo(() => {
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
   const cardsGridRef = useRef<HTMLDivElement>(null);
   const { simplify } = usePerformance();
+  const isTouchDevice = useTouchDevice();
 
   const toggleExpandCard = useCallback((id: string, e?: React.MouseEvent | React.KeyboardEvent) => {
     if (e) {
@@ -586,6 +672,10 @@ export const Projects = memo(() => {
         <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
           <WordReveal text="Featured Projects" baseDelay={0.1} />
         </h2>
+        <p className="text-xs sm:text-sm font-handwriting text-center mt-2 select-none" style={{ color: 'var(--c-subtle)' }}>
+          <span className="inline-block sm:hidden">( tap any card to reveal details )</span>
+          <span className="hidden sm:inline">( click or tap quick details to explore specifications )</span>
+        </p>
       </div>
 
       {/* Screen reader keyboard instructions */}
@@ -609,6 +699,7 @@ export const Projects = memo(() => {
             isExpanded={expandedCardId === project.id}
             onToggleExpand={toggleExpandCard}
             onCardNavigate={handleCardNavigate}
+            isTouchDevice={isTouchDevice}
           />
         ))}
       </div>

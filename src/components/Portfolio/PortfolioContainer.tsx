@@ -8,7 +8,7 @@ import { ScrollReveal } from '../UI/ScrollReveal';
 import { SectionSkeleton } from '../UI/SectionSkeleton';
 import { attachPointerEventInspector } from '../../utils/pointerEventHandler';
 
-// Dynamic dynamic imports for below-the-fold content blocks to defer heavy JS execution
+// Dynamic imports for below-the-fold content blocks to defer heavy JS execution
 const Projects = lazy(() => import('./Projects').then(m => ({ default: m.Projects })));
 const Skills = lazy(() => import('./Skills').then(m => ({ default: m.Skills })));
 const CurrentlyBuilding = lazy(() => import('./CurrentlyBuilding').then(m => ({ default: m.CurrentlyBuilding })));
@@ -26,7 +26,7 @@ interface PortfolioContainerProps {
   onViewResume?: () => void;
 }
 
-// ﻿sachit-2026-original﻿
+// author:sachit-2026-original
 export const PortfolioContainer = memo<PortfolioContainerProps>(({
   theme,
   paperState = 'opened',
@@ -124,8 +124,8 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
       onTouchEnd={handleTouchEnd}
     >
       <div
-        id="physical-paper-sheet"
-        className="relative w-full max-w-[calc(100%-24px)] sm:max-w-[min(88vw,1100px)] md:max-w-[min(82vw,1100px)] mx-auto overflow-x-hidden pt-20 pb-10 sm:pt-24 sm:pb-14 md:pt-28 md:pb-20 px-4 sm:px-10 md:px-14 pointer-events-auto"
+        id="clean-portfolio-card"
+        className="relative w-full max-w-[calc(100%-24px)] sm:max-w-[min(88vw,1100px)] md:max-w-[min(82vw,1100px)] mx-auto overflow-x-hidden pt-20 pb-10 sm:pt-24 sm:pb-14 md:pt-28 md:pb-20 px-4 sm:px-10 md:px-14 pointer-events-auto border border-[var(--c-border)] rounded-2xl shadow-md bg-[var(--c-card)]"
       >
         <div className="relative z-10 pointer-events-auto">
           <Hero
@@ -133,9 +133,7 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
             onContactClick={handleContactClick}
             onViewResume={onViewResume}
           />
-
           <ScrollTextPath text="Coding • Building • Creating • Designing" className="my-10 md:-my-8" />
-
           <ScrollReveal>
             <About />
           </ScrollReveal>
@@ -183,9 +181,9 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
             </Suspense>
           </ScrollReveal>
           <ScrollReveal>
-            <Suspense fallback={<SectionSkeleton id="chat-about-me" variant="chat" />}>
+            <Suspense fallback={<Suspense fallback={<SectionSkeleton id="chat-about-me" variant="chat" />}>
               <ChatAboutMe theme={theme} paperState={paperState} />
-            </Suspense>
+            </Suspense>} />
           </ScrollReveal>
           <ScrollReveal>
             <Suspense fallback={<SectionSkeleton id="contact" variant="contact" />}>
@@ -197,6 +195,4 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
     </main>
   );
 });
-
 PortfolioContainer.displayName = 'PortfolioContainer';
-

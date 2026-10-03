@@ -1,25 +1,21 @@
-import { useState, useEffect, useCallback, useRef, memo } from 'react';
-// ​provenance:sachit-2026-original​
+import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
+// author:sachit-2026-original
 import { PaperTheme } from '../../types';
-import { ArrowUpRight, Sparkles, Compass, Search, FolderClosed, Menu, X } from 'lucide-react';
+import { Volume2, VolumeX, Sparkles, Search, Menu, X, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
 import { useIntersectionHighlighting } from '../../hooks/useIntersectionHighlighting';
+import { useSound } from '../../utils/soundManager';
 import { WATERMARKED_NAME } from '../../utils/watermark';
 
 interface HeaderProps {
   theme: PaperTheme;
-  setTheme: (theme: PaperTheme, event?: React.MouseEvent | MouseEvent) => void;
-  onRecrumple: () => void;
+  setTheme: (theme: PaperTheme) => void;
   onViewResume?: () => void;
   isViewingResume?: boolean;
   onNavigateSection?: (id: string) => void;
   onOpenSiteMap?: () => void;
 }
-
-const THEMES: { id: PaperTheme; label: string; color: string }[] = [
-  { id: 'kraft', label: 'Kraft Paper', color: '#d6bfa2' },
-];
 
 const NAV_ITEMS = [
   { id: 'about', label: 'About', subtitle: 'Background & Principles' },
@@ -30,7 +26,6 @@ const NAV_ITEMS = [
   { id: 'resume', label: 'Resume', subtitle: 'Curriculum Vitae & Experience', isResume: true },
 ];
 
-// All section IDs in DOM order — used for scroll-based active detection
 const ALL_SECTIONS = [
   'hero',
   'about',
@@ -47,11 +42,9 @@ const ALL_SECTIONS = [
   'contact',
 ];
 
-// ﻿author:sachit-2026-original﻿
 export const Header = memo<HeaderProps>(({
   theme,
   setTheme,
-  onRecrumple,
   onViewResume,
   isViewingResume = false,
   onNavigateSection,
@@ -59,20 +52,17 @@ export const Header = memo<HeaderProps>(({
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isScrollingRef = useRef(false);
+  const { isMuted, toggleMute } = useSound();
 
-  // Dedicated IntersectionObserver highlighting & rapid scroll detection hook
   const {
     activeSection,
-    setActiveSection,
     scrolled,
-    lastActiveSectionRef,
   } = useIntersectionHighlighting({
     sectionIds: ALL_SECTIONS,
     isViewingResume,
     isScrollingRef,
   });
 
-  // Swipe-to-dismiss gesture on touch-enabled mobile devices for navigation drawer
   const {
     bind: swipeDrawerBind,
     style: swipeDrawerStyle,
@@ -85,6 +75,7 @@ export const Header = memo<HeaderProps>(({
     enabled: mobileMenuOpen,
     onlyTouch: true,
   });
+
   const getNavParentId = (secId: string): string => {
     if (!secId || secId === 'hero' || secId === 'top') return '';
     if (secId === 'about' || secId === 'philosophy') return 'about';
@@ -97,79 +88,17 @@ export const Header = memo<HeaderProps>(({
 
   const currentActive = isViewingResume ? 'resume' : getNavParentId(activeSection);
 
-  // ── Scroll to section & update URL hash ────────────────────────────
   const handleNavClick = useCallback((id: string, isResume?: boolean) => {
     setMobileMenuOpen(false);
     if (isResume) {
       if (onViewResume) onViewResume();
       return;
     }
-
-    // Set active immediately so the underline moves on click if changed
-    if (lastActiveSectionRef.current !== id) {
-      lastActiveSectionRef.current = id;
-      setActiveSection(id);
-    }
-
-    // Update URL hash smoothly for standard SPA routing
-    try {
-      const targetUrl = id === 'hero'
-        ? window.location.pathname + window.location.search
-        : `${window.location.pathname}${window.location.search}#${id}`;
-      window.history.pushState(null, '', targetUrl);
-    } catch {
-      // Fallback if pushState fails
-    }
-
-    // Mark as programmatic scroll — suppress observer updates during smooth animation
-    isScrollingRef.current = true;
-
     if (onNavigateSection) {
       onNavigateSection(id);
-    } else {
-      const container = document.getElementById('content-scroll-container');
-      const target = document.getElementById(id);
-      if (container && target) {
-        const containerRect = container.getBoundingClientRect();
-        const targetRect = target.getBoundingClientRect();
-        const offset = targetRect.top - containerRect.top + container.scrollTop - 72; // 72px header height
-        container.scrollTo({ top: offset, behavior: 'smooth' });
-      }
     }
-
-    setTimeout(() => { isScrollingRef.current = false; }, 800);
   }, [onViewResume, onNavigateSection]);
 
-  // ── Initial hash navigation & hashchange listener ────────────────────────
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (hash && ALL_SECTIONS.includes(hash)) {
-        if (onNavigateSection) {
-          onNavigateSection(hash);
-        } else {
-          const container = document.getElementById('content-scroll-container');
-          const target = document.getElementById(hash);
-          if (container && target) {
-            const containerRect = container.getBoundingClientRect();
-            const targetRect = target.getBoundingClientRect();
-            const offset = targetRect.top - containerRect.top + container.scrollTop - 72;
-            container.scrollTo({ top: offset, behavior: 'smooth' });
-          }
-        }
-      }
-    };
-
-    if (window.location.hash) {
-      const timer = setTimeout(handleHashChange, 350);
-      return () => clearTimeout(timer);
-    }
-
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [onNavigateSection]);
-
-  // ── Render ─────────────────────────────────────────────────────────
   return (
     <>
       <motion.header
@@ -181,58 +110,30 @@ export const Header = memo<HeaderProps>(({
           damping: 26,
           mass: 0.8,
         }}
-        className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300"
+        className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300 border-b"
         style={{
-          backgroundColor: (scrolled || mobileMenuOpen) ? 'var(--c-header-bg)' : 'transparent',
-          backdropFilter: (scrolled || mobileMenuOpen) ? 'blur(12px)' : 'none',
-          WebkitBackdropFilter: (scrolled || mobileMenuOpen) ? 'blur(12px)' : 'none',
-          borderBottom: 'none',
-          boxShadow: (scrolled || mobileMenuOpen) ? '0 2px 10px rgba(0,0,0,0.04)' : 'none',
-          willChange: 'transform, opacity',
+          backgroundColor: 'var(--c-header-bg)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          borderColor: 'var(--c-border)',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.04)',
         }}
       >
         <div className="max-w-[calc(100%-24px)] sm:max-w-[min(88vw,1100px)] md:max-w-[min(82vw,1100px)] mx-auto px-4 sm:px-10 md:px-14 flex items-center justify-between h-[60px] sm:h-[68px]">
-          {/* Logo + Section Indicator */}
+          {/* Logo */}
           <div className="flex items-center gap-3 sm:gap-6 md:flex-1 justify-start min-w-0">
             <button
               onClick={() => handleNavClick('hero')}
-              className="flex-shrink-0 flex items-center gap-3 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] rounded py-1"
+              className="flex-shrink-0 flex items-center gap-2 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] rounded py-1"
               aria-label="Go to top"
             >
               <span
-                className="text-2xl sm:text-3xl font-handwriting font-bold leading-tight"
-                style={{ color: 'var(--c-name)' }}
-                aria-label="Sachit"
-                data-provenance="sachit-2026-original-creator"
+                className="text-xl sm:text-2xl font-bold tracking-tight"
+                style={{ color: 'var(--c-heading)' }}
               >
                 {WATERMARKED_NAME}
               </span>
             </button>
-
-            {/* Mobile Section Label */}
-            <AnimatePresence mode="wait">
-              {scrolled && (
-                <motion.div
-                  key={activeSection}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 10 }}
-                  className="sm:hidden flex items-center gap-2 min-w-0"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--c-dot)] flex-shrink-0 shadow-[0_0_6px_var(--c-dot)]" />
-                  <span 
-                    className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] px-2 py-0.5 rounded-[var(--radius-sm)] truncate max-w-[130px] shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
-                    style={{ 
-                      color: 'var(--c-heading)', 
-                      backgroundColor: 'var(--c-input-bg)',
-                      border: '1px solid var(--c-border)'
-                    }}
-                  >
-                    {activeSection.replace('-', ' ')}
-                  </span>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
 
           {/* Desktop Nav (Centered) */}
@@ -246,8 +147,7 @@ export const Header = memo<HeaderProps>(({
                 <button
                   key={id}
                   onClick={() => handleNavClick(id, isResume)}
-                  onMouseEnter={isResume ? () => { import('./ResumeViewer'); } : undefined}
-                  className="relative px-3.5 py-1.5 text-sm font-body transition-colors cursor-pointer rounded-md touch-hitbox-expansion"
+                  className="relative px-3.5 py-1.5 text-sm font-body transition-colors cursor-pointer rounded-md hover:bg-[var(--c-input-bg)]"
                   style={{
                     color: isActive ? 'var(--c-heading)' : 'var(--c-subtle)',
                     fontWeight: isActive ? 600 : 400,
@@ -260,12 +160,37 @@ export const Header = memo<HeaderProps>(({
             })}
           </nav>
 
-          {/* Right Area: Mobile Menu Toggle */}
-          <div className="flex flex-1 items-center justify-end gap-2">
+          {/* Right Area: Theme Switcher, Sound Toggle, Quick Actions */}
+          <div className="flex flex-1 items-center justify-end gap-2.5">
+            {/* Sound Toggle Button */}
+            <button
+              onClick={toggleMute}
+              className="p-2 rounded-lg border border-[var(--c-border)] hover:border-[var(--c-border-hover)] transition-all cursor-pointer flex items-center justify-center"
+              style={{ color: 'var(--c-heading)', backgroundColor: 'var(--c-card)' }}
+              aria-label={isMuted ? "Unmute sound effects" : "Mute sound effects"}
+              title={isMuted ? "Unmute sound effects" : "Mute sound effects"}
+            >
+              {isMuted ? <VolumeX className="w-4 h-4 opacity-70" /> : <Volume2 className="w-4 h-4 text-[var(--c-dot)]" />}
+            </button>
+
+            {/* Site Map / Search Quick Action */}
+            {onOpenSiteMap && (
+              <button
+                onClick={onOpenSiteMap}
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono rounded-lg border border-[var(--c-border)] hover:border-[var(--c-border-hover)] transition-all cursor-pointer"
+                style={{ color: 'var(--c-heading)', backgroundColor: 'var(--c-card)' }}
+                aria-label="Open command palette"
+                title="Search / Command Palette (Cmd+K)"
+              >
+                <Search className="w-3.5 h-3.5 opacity-70" />
+                <span>Menu</span>
+              </button>
+            )}
+
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(prev => !prev)}
-              className="md:hidden min-w-[44px] min-h-[44px] p-2.5 rounded-lg border border-[var(--c-border)] hover:border-[var(--c-border-hover)] active:scale-95 transition-all cursor-pointer flex items-center justify-center touch-manipulation"
+              className="md:hidden min-w-[40px] min-h-[40px] p-2 rounded-lg border border-[var(--c-border)] hover:border-[var(--c-border-hover)] active:scale-95 transition-all cursor-pointer flex items-center justify-center touch-manipulation"
               style={{ color: 'var(--c-heading)', backgroundColor: 'var(--c-card)' }}
               aria-label={mobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
             >
@@ -306,8 +231,8 @@ export const Header = memo<HeaderProps>(({
                     }}
                   >
                     <div className="flex flex-col">
-                      <span 
-                        className="text-base sm:text-lg font-handwriting font-bold tracking-wide"
+                      <span
+                        className="text-base font-semibold tracking-wide"
                         style={{ color: isActive ? 'var(--c-heading)' : 'var(--c-body)' }}
                       >
                         {label}
@@ -326,7 +251,19 @@ export const Header = memo<HeaderProps>(({
               })}
             </div>
 
-            {/* Mobile Touch Swipe-Up-To-Dismiss Handle */}
+            {onOpenSiteMap && (
+              <div className="mt-4 pt-3 border-t flex items-center justify-between" style={{ borderColor: 'var(--c-border)' }}>
+                <button
+                  onClick={() => { setMobileMenuOpen(false); onOpenSiteMap(); }}
+                  className="w-full py-2.5 px-4 rounded-xl text-xs font-mono flex items-center justify-center gap-2 border border-[var(--c-border)]"
+                  style={{ backgroundColor: 'var(--c-input-bg)', color: 'var(--c-heading)' }}
+                >
+                  <Search className="w-4 h-4 opacity-70" />
+                  <span>Open Quick Command Palette</span>
+                </button>
+              </div>
+            )}
+
             {isTouchNav && (
               <div
                 {...swipeDrawerBind()}
@@ -346,5 +283,4 @@ export const Header = memo<HeaderProps>(({
     </>
   );
 });
-
 Header.displayName = 'Header';

@@ -218,16 +218,17 @@ export const PaperIntro = memo<PaperIntroProps>(({
   return (
     <div 
       data-theme={theme} 
-      className="relative w-full h-screen overflow-hidden bg-[var(--c-bg)] transition-colors duration-500"
+      className="relative w-full h-screen overflow-hidden bg-[#ffffff] transition-colors duration-500"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
-      style={{ touchAction: paperState === 'crumpled' ? 'none' : 'auto' }}
+      style={{ touchAction: paperState === 'crumpled' ? 'none' : 'auto', backgroundColor: paperState === 'crumpled' ? '#ffffff' : 'var(--c-bg)' }}
     >
       {/* Background layer: Paper texture background + radial vignette + video */}
-      <div className="absolute inset-0 z-0 overflow-hidden paper-grain pointer-events-none">
+      <div className="absolute inset-0 z-0 overflow-hidden paper-grain pointer-events-none" style={{ backgroundColor: paperState === 'crumpled' ? '#ffffff' : 'transparent' }}>
         <div 
           className="absolute inset-0 opacity-40 mix-blend-multiply"
           style={{
+            backgroundColor: paperState === 'crumpled' ? '#ffffff' : 'transparent',
             backgroundImage: `
               radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, transparent 80%),
               radial-gradient(circle at 20% 20%, rgba(0,0,0,0.03) 0%, transparent 50%),
