@@ -171,7 +171,7 @@ export const Hero = memo<HeroProps>(({
             <GitHubIcon className="w-4 h-4" />
           </a>
           <a
-            href="https://www.linkedin.com/in/sachit"
+            href="https://www.linkedin.com/in/sachit-undefined-975503440"
             target="_blank"
             rel="noreferrer"
             aria-label="LinkedIn"

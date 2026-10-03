@@ -85,10 +85,6 @@ export const Header = memo<HeaderProps>(({
     enabled: mobileMenuOpen,
     onlyTouch: true,
   });
-  const navBtns = useRef<Record<string, HTMLButtonElement | null>>({});
-  const navContainerRef = useRef<HTMLDivElement>(null);
-  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
-
   const getNavParentId = (secId: string): string => {
     if (!secId || secId === 'hero' || secId === 'top') return '';
     if (secId === 'about' || secId === 'philosophy') return 'about';
@@ -100,28 +96,6 @@ export const Header = memo<HeaderProps>(({
   };
 
   const currentActive = isViewingResume ? 'resume' : getNavParentId(activeSection);
-
-  // ── Measure active indicator position ────────────────────────────────
-  useEffect(() => {
-    if (!currentActive) {
-      setIndicatorStyle({ left: 0, width: 0 });
-      return;
-    }
-
-    const btn = navBtns.current[currentActive];
-    const nav = navContainerRef.current;
-    if (!btn || !nav) {
-      setIndicatorStyle({ left: 0, width: 0 });
-      return;
-    }
-
-    const navRect = nav.getBoundingClientRect();
-    const btnRect = btn.getBoundingClientRect();
-    setIndicatorStyle({
-      left: btnRect.left - navRect.left,
-      width: btnRect.width,
-    });
-  }, [currentActive]);
 
   // ── Scroll to section & update URL hash ────────────────────────────
   const handleNavClick = useCallback((id: string, isResume?: boolean) => {
@@ -212,8 +186,8 @@ export const Header = memo<HeaderProps>(({
           backgroundColor: (scrolled || mobileMenuOpen) ? 'var(--c-header-bg)' : 'transparent',
           backdropFilter: (scrolled || mobileMenuOpen) ? 'blur(12px)' : 'none',
           WebkitBackdropFilter: (scrolled || mobileMenuOpen) ? 'blur(12px)' : 'none',
-          borderBottom: (scrolled || mobileMenuOpen) ? '1px solid var(--c-header-border)' : '1px solid transparent',
-          boxShadow: (scrolled || mobileMenuOpen) ? '0 2px 10px rgba(0,0,0,0.05)' : 'none',
+          borderBottom: 'none',
+          boxShadow: (scrolled || mobileMenuOpen) ? '0 2px 10px rgba(0,0,0,0.04)' : 'none',
           willChange: 'transform, opacity',
         }}
       >
@@ -263,7 +237,6 @@ export const Header = memo<HeaderProps>(({
 
           {/* Desktop Nav (Centered) */}
           <nav
-            ref={navContainerRef}
             className="hidden md:flex items-center gap-1 relative justify-center"
             aria-label="Main navigation"
           >
@@ -272,7 +245,6 @@ export const Header = memo<HeaderProps>(({
               return (
                 <button
                   key={id}
-                  ref={(el) => { navBtns.current[id] = el; }}
                   onClick={() => handleNavClick(id, isResume)}
                   onMouseEnter={isResume ? () => { import('./ResumeViewer'); } : undefined}
                   className="relative px-3.5 py-1.5 text-sm font-body transition-colors cursor-pointer rounded-md touch-hitbox-expansion"
@@ -286,16 +258,6 @@ export const Header = memo<HeaderProps>(({
                 </button>
               );
             })}
-            {/* Sliding underline indicator */}
-            <span
-              className="absolute bottom-0 h-[2px] rounded-full transition-all duration-300 ease-in-out"
-              style={{
-                backgroundColor: 'var(--c-dot)',
-                left: indicatorStyle.left,
-                width: indicatorStyle.width,
-                opacity: (indicatorStyle.width > 0 && currentActive) ? 1 : 0,
-              }}
-            />
           </nav>
 
           {/* Right Area: Mobile Menu Toggle */}

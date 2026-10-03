@@ -168,8 +168,8 @@ Sachit practices focused time management:
   "how can i contact sachit?": `### Contact Channels
 - **Email:** [sachit1771@gmail.com](mailto:sachit1771@gmail.com)
 - **GitHub:** [github.com/Sachit-1771](https://github.com/Sachit-1771)
-- **LinkedIn:** [linkedin.com/in/sachit-1771](https://linkedin.com/in/sachit-1771)
-- **Instagram:** [@sachit_1771](https://instagram.com/sachit_1771)
+- **LinkedIn:** [linkedin.com/in/sachit-undefined-975503440](https://www.linkedin.com/in/sachit-undefined-975503440)
+- **Instagram:** [@sachit2097](https://www.instagram.com/sachit2097)
 
 He typically responds to emails and messages within 24 hours.`,
 

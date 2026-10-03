@@ -195,7 +195,8 @@ export const SEOMetadata = ({
         url: 'https://sachin-portfoli.vercel.app/',
         sameAs: [
           'https://github.com/sachit1751-art',
-          'https://linkedin.com/in/sachit',
+          'https://www.linkedin.com/in/sachit-undefined-975503440',
+          'https://www.instagram.com/sachit2097',
         ],
         knowsAbout: [
           'AI Automation',

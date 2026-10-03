@@ -12,8 +12,8 @@ import { triggerHaptic, HAPTIC_PATTERNS } from '../../utils/haptics';
 
 const EMAIL = 'sachit1751@gmail.com';
 const GITHUB = 'https://github.com/sachit1751-art';
-const LINKEDIN = 'https://www.linkedin.com/in/sachit';
-const INSTAGRAM = 'https://www.instagram.com/sachit';
+const LINKEDIN = 'https://www.linkedin.com/in/sachit-undefined-975503440';
+const INSTAGRAM = 'https://www.instagram.com/sachit2097';
 
 const AUTO_MESSAGES = [
   {

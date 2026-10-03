@@ -537,13 +537,26 @@ export const SiteMapModal: React.FC<SiteMapModalProps> = ({
       {
         id: 'action-linkedin-external',
         title: 'Open LinkedIn Profile',
-        subtitle: 'Visit linkedin.com/in/sachit1771 in a new tab',
+        subtitle: 'Visit linkedin.com/in/sachit-undefined-975503440 in a new tab',
         category: 'action',
         categoryLabel: 'External Link',
         icon: ExternalLink,
         keywords: ['linkedin', 'network', 'profile', 'connect', 'career'],
         action: () => {
-          window.open('https://linkedin.com/in/sachit1771', '_blank', 'noopener,noreferrer');
+          window.open('https://www.linkedin.com/in/sachit-undefined-975503440', '_blank', 'noopener,noreferrer');
+          onClose();
+        },
+      },
+      {
+        id: 'action-instagram-external',
+        title: 'Open Instagram Profile',
+        subtitle: 'Visit instagram.com/sachit2097 in a new tab',
+        category: 'action',
+        categoryLabel: 'External Link',
+        icon: ExternalLink,
+        keywords: ['instagram', 'social', 'profile', 'photos', 'feed'],
+        action: () => {
+          window.open('https://www.instagram.com/sachit2097', '_blank', 'noopener,noreferrer');
           onClose();
         },
       },

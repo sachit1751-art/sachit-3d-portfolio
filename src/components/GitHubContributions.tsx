@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback, memo } from 'react';
 import { PaperTheme } from '../types';
 import { usePerformance } from '../hooks/usePerformance';
 import { HoneycombLoader } from './UI/HoneycombLoader';
@@ -23,10 +23,6 @@ export interface GitHubContributionsProps {
 }
 
 type TimeframeOption = '3M' | '6M' | '9M' | '12M';
-
-const THEME_PALETTE_NAMES: Record<PaperTheme, { label: string; accent: string }> = {
-  kraft: { label: 'Roasted Amber & Sepia Leather', accent: '#c89962' },
-};
 
 // Deterministic mock generation when GitHub API proxy is offline/rate-limited
 function generateFallbackContributions(username: string): ContributionData {
@@ -93,37 +89,122 @@ function generateFallbackContributions(username: string): ContributionData {
   };
 }
 
+const INTENSITY_TIERS = [
+  { level: 0, range: '0 commits', label: 'Rest & Design', icon: '☕' },
+  { level: 1, range: '1–2 commits', label: 'Light Updates', icon: '🌱' },
+  { level: 2, range: '3–5 commits', label: 'Active Builds', icon: '🔨' },
+  { level: 3, range: '6–9 commits', label: 'Heavy Shipping', icon: '⚡' },
+  { level: 4, range: '10+ commits', label: 'Peak Sprint', icon: '🔥' },
+];
+
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+function getActivityBadge(level: number, count: number) {
+  if (count === 0) return { label: 'Rest & Architecture', icon: '☕' };
+  if (level === 1) return { label: 'Light Push', icon: '🌱' };
+  if (level === 2) return { label: 'Active Feature Build', icon: '🔨' };
+  if (level === 3) return { label: 'Heavy Shipping', icon: '⚡' };
+  return { label: 'Peak Sprint', icon: '🔥' };
+}
+
+// Ultra-fast memoized Matrix component to completely isolate 371 cells from parent re-renders
+interface MatrixProps {
+  weeks: ContributionDay[][];
+  monthLabels: { text: string; colIndex: number }[];
+  highlightLevel: number | null;
+  onHoverCell: (day: ContributionDay | null) => void;
+}
+
+const MatrixGrid = memo(({ weeks, monthLabels, highlightLevel, onHoverCell }: MatrixProps) => {
+  return (
+    <div 
+      className="flex flex-col min-w-max pb-2 relative git-matrix-container"
+      data-highlight={highlightLevel !== null ? highlightLevel : undefined}
+      onMouseLeave={() => onHoverCell(null)}
+    >
+      {/* Month Labels */}
+      <div className="flex h-5 relative select-none" style={{ paddingLeft: 'var(--offset-left)' }}>
+        {monthLabels.map((lbl, idx) => (
+          <span
+            key={idx}
+            className="absolute text-[9px] sm:text-[10px] font-mono pointer-events-none"
+            style={{
+              left: `calc(${lbl.colIndex} * var(--col-width) + var(--offset-left))`,
+              color: 'var(--c-muted)',
+            }}
+          >
+            {lbl.text}
+          </span>
+        ))}
+      </div>
+
+      {/* Calendar Grid Section */}
+      <div className="flex">
+        {/* Day of Week Labels */}
+        <div 
+          className="grid grid-rows-7 gap-[3px] sm:gap-[4px] text-[9px] sm:text-[10px] font-mono select-none pr-2 text-right pointer-events-none" 
+          style={{ color: 'var(--c-muted)', width: 'var(--offset-left)' }}
+        >
+          {['Sun', '', 'Tue', '', 'Thu', '', 'Sat'].map((d, rowIdx) => (
+            <div 
+              key={rowIdx} 
+              className="h-[11px] sm:h-[13px] flex items-center justify-end"
+            >
+              {d}
+            </div>
+          ))}
+        </div>
+
+        {/* Grid of Weeks (GPU Accelerated) */}
+        <div className="flex gap-[3px] sm:gap-[4px]">
+          {weeks.map((week, weekIdx) => (
+            <div key={weekIdx} className="grid grid-rows-7 gap-[3px] sm:gap-[4px]">
+              {week.map((day, dayIdx) => (
+                <button
+                  key={dayIdx}
+                  type="button"
+                  data-level={day.level}
+                  className="git-cell w-[11px] h-[11px] sm:w-[13px] sm:h-[13px] rounded-[4px] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--c-border-focus)] relative"
+                  style={{
+                    backgroundColor: `var(--c-git-${day.level})`,
+                    border: day.level === 0 ? '1px solid var(--c-border)' : '1px solid var(--c-git-border, transparent)',
+                  }}
+                  aria-label={`${day.count} contributions on ${formatDate(day.date)}`}
+                  onMouseEnter={() => onHoverCell(day)}
+                  onTouchStart={() => onHoverCell(day)}
+                  onClick={() => onHoverCell(day)}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+});
+
 export const GitHubContributions: React.FC<GitHubContributionsProps> = ({ 
   username = 'sachit1751-art',
   theme = 'kraft'
 }) => {
   const [data, setData] = useState<ContributionData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
-  const [hoveredCell, setHoveredCell] = useState<ContributionDay | null>(null);
   const [hasIntersected, setHasIntersected] = useState<boolean>(true);
   const [timeframe, setTimeframe] = useState<TimeframeOption>('12M');
-  const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [highlightLevel, setHighlightLevel] = useState<number | null>(null);
+  const [hoveredDay, setHoveredDay] = useState<ContributionDay | null>(null);
   const { simplify } = usePerformance();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const settingsRef = useRef<HTMLDivElement>(null);
-
-  // Close settings popup when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (settingsRef.current && !settingsRef.current.contains(e.target as Node)) {
-        setShowSettings(false);
-      }
-    };
-    if (showSettings) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showSettings]);
 
   // Load data progressively using IntersectionObserver
   useEffect(() => {
@@ -186,67 +267,96 @@ export const GitHubContributions: React.FC<GitHubContributionsProps> = ({
         if (scrollRef.current) {
           scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
         }
-      }, 100);
+      }, 50);
     }
   }, [loading, data, timeframe]);
 
-  // Format date helper (e.g. "August 25, 2026")
-  const formatDate = (dateStr: string) => {
-    const d = new Date(dateStr);
-    return d.toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
-
   // Group contributions into 7-day columns (weeks)
-  let weeks: ContributionDay[][] = [];
-  let visibleContributionsCount = 0;
+  const { weeks, visibleContributionsCount } = useMemo(() => {
+    if (!data?.contributions) {
+      return { weeks: [], visibleContributionsCount: 0 };
+    }
 
-  if (data?.contributions) {
     const rawWeeks: ContributionDay[][] = [];
     for (let i = 0; i < data.contributions.length; i += 7) {
       rawWeeks.push(data.contributions.slice(i, i + 7));
     }
 
-    // Filter by timeframe
     let weekCount = rawWeeks.length;
     if (timeframe === '3M') weekCount = 13;
     else if (timeframe === '6M') weekCount = 26;
     else if (timeframe === '9M') weekCount = 39;
     else if (simplify) weekCount = 26;
 
-    weeks = rawWeeks.slice(-weekCount);
-    visibleContributionsCount = weeks.flat().reduce((acc, curr) => acc + curr.count, 0);
-  }
+    const filteredWeeks = rawWeeks.slice(-weekCount);
+    const flatDays = filteredWeeks.flat();
+    const count = flatDays.reduce((acc, curr) => acc + curr.count, 0);
+
+    return {
+      weeks: filteredWeeks,
+      visibleContributionsCount: count,
+    };
+  }, [data, timeframe, simplify]);
 
   // Derive month labels and column placements
-  const monthLabels: { text: string; colIndex: number }[] = [];
-  let lastLabelIndex = -10;
+  const monthLabels = useMemo(() => {
+    const labels: { text: string; colIndex: number }[] = [];
+    let lastLabelIndex = -10;
 
-  if (weeks.length > 0) {
-    weeks.forEach((week, index) => {
-      if (week.length > 0) {
-        const monthNum = new Date(week[0].date).getMonth();
-        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const currentMonthName = monthNames[monthNum];
+    if (weeks.length > 0) {
+      weeks.forEach((week, index) => {
+        if (week.length > 0) {
+          const monthNum = new Date(week[0].date).getMonth();
+          const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          const currentMonthName = monthNames[monthNum];
 
-        if (index === 0 || (monthNum !== new Date(weeks[index - 1][0].date).getMonth() && index - lastLabelIndex >= 4)) {
-          monthLabels.push({ text: currentMonthName, colIndex: index });
-          lastLabelIndex = index;
+          if (index === 0 || (monthNum !== new Date(weeks[index - 1][0].date).getMonth() && index - lastLabelIndex >= 4)) {
+            labels.push({ text: currentMonthName, colIndex: index });
+            lastLabelIndex = index;
+          }
         }
-      }
-    });
-  }
+      });
+    }
+    return labels;
+  }, [weeks]);
 
-  const currentTheme = theme || 'kraft';
-  const themeMeta = THEME_PALETTE_NAMES[currentTheme] || THEME_PALETTE_NAMES.kraft;
+  const handleHoverCell = useCallback((day: ContributionDay | null) => {
+    setHoveredDay(day);
+  }, []);
 
   return (
     <div ref={containerRef} className="w-full mt-10">
+      {/* Scoped High-Performance CSS for 120 FPS GPU rendering */}
+      <style>{`
+        .git-cell {
+          transform: translateZ(0);
+          transition: transform 0.12s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.12s ease-out, opacity 0.15s ease-out;
+        }
+        .git-cell:hover {
+          transform: scale(1.16) translateY(-1px) translateZ(0) !important;
+          z-index: 30 !important;
+          box-shadow: 0 3px 8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.08) !important;
+        }
+        [data-highlight="0"] .git-cell:not([data-level="0"]),
+        [data-highlight="1"] .git-cell:not([data-level="1"]),
+        [data-highlight="2"] .git-cell:not([data-level="2"]),
+        [data-highlight="3"] .git-cell:not([data-level="3"]),
+        [data-highlight="4"] .git-cell:not([data-level="4"]) {
+          opacity: 0.22;
+        }
+        [data-highlight="0"] .git-cell[data-level="0"],
+        [data-highlight="1"] .git-cell[data-level="1"],
+        [data-highlight="2"] .git-cell[data-level="2"],
+        [data-highlight="3"] .git-cell[data-level="3"],
+        [data-highlight="4"] .git-cell[data-level="4"] {
+          transform: scale(1.12) translateY(-0.5px) translateZ(0);
+          z-index: 20;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+        }
+      `}</style>
+
       <div
-        className="p-5 sm:p-6 relative overflow-visible rounded-[var(--radius-lg)] transition-colors duration-500"
+        className="p-5 sm:p-6 relative overflow-visible rounded-[var(--radius-lg)] transition-colors duration-300 shadow-sm"
         style={{
           border: '1px solid var(--c-border)',
           background: 'var(--c-card-gradient-from)',
@@ -258,46 +368,44 @@ export const GitHubContributions: React.FC<GitHubContributionsProps> = ({
           </div>
         ) : (
           <div className="w-full">
-            {/* Inner Header Row */}
+            {/* Header Row */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-[var(--c-border)] select-none relative">
-              <div>
-                <div className="font-mono text-xs" style={{ color: 'var(--c-body)' }}>
-                  <strong className="text-sm font-sans tracking-tight" style={{ color: 'var(--c-heading)', fontWeight: 600 }}>
-                    {visibleContributionsCount || data?.totalContributions || 0} contributions
-                  </strong>{' '}
+              <div className="font-mono text-xs" style={{ color: 'var(--c-body)' }}>
+                <strong className="text-sm font-sans tracking-tight" style={{ color: 'var(--c-heading)', fontWeight: 600 }}>
+                  {visibleContributionsCount || data?.totalContributions || 0} contributions
+                </strong>{' '}
+                <span className="opacity-70">
                   {timeframe === '3M' && 'in the last 3 months'}
                   {timeframe === '6M' && 'in the last 6 months'}
                   {timeframe === '9M' && 'in the last 9 months'}
                   {timeframe === '12M' && 'in the last year'}
-                </div>
+                </span>
               </div>
 
-              {/* Right action controls */}
-              <div className="flex items-center gap-2 relative" ref={settingsRef}>
-                {/* Timeframe Quick Pills */}
-                <div className="hidden md:flex items-center p-0.5 rounded-[var(--radius-sm)]" style={{ border: '1px solid var(--c-border)' }}>
-                  {(['3M', '6M', '9M', '12M'] as TimeframeOption[]).map((tf) => (
-                    <button
-                      key={tf}
-                      type="button"
-                      onClick={() => setTimeframe(tf)}
-                      className="px-2 py-0.5 font-mono text-[9px] font-bold tracking-wider uppercase transition-all rounded-[var(--radius-xs)] cursor-pointer"
-                      style={{
-                        backgroundColor: timeframe === tf ? 'var(--c-heading)' : 'transparent',
-                        color: timeframe === tf ? 'var(--c-btn-text)' : 'var(--c-muted)',
-                      }}
-                    >
-                      {tf}
-                    </button>
-                  ))}
-                </div>
+              {/* Timeframe Quick Pills */}
+              <div className="flex items-center gap-1 p-1 rounded-[7px]" style={{ border: '1px solid var(--c-border)', backgroundColor: 'var(--c-input-bg)' }}>
+                {(['3M', '6M', '9M', '12M'] as TimeframeOption[]).map((tf) => (
+                  <button
+                    key={tf}
+                    type="button"
+                    onClick={() => setTimeframe(tf)}
+                    className="px-2.5 py-1 min-w-[32px] text-center font-mono text-[9.5px] font-bold tracking-wider uppercase transition-all rounded-[5px] cursor-pointer relative shadow-none active:scale-95"
+                    style={{
+                      backgroundColor: timeframe === tf ? 'var(--c-heading)' : 'transparent',
+                      color: timeframe === tf ? 'var(--c-btn-text)' : 'var(--c-muted)',
+                      boxShadow: timeframe === tf ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                    }}
+                  >
+                    {tf}
+                  </button>
+                ))}
               </div>
             </div>
 
             {/* Scroll wrapper */}
             <div
               ref={scrollRef}
-              className="w-full overflow-x-auto scrollbar-none select-none github-contributions-wrapper"
+              className="w-full overflow-x-auto scrollbar-none select-none github-contributions-wrapper relative"
               style={{
                 WebkitOverflowScrolling: 'touch',
               }}
@@ -307,114 +415,73 @@ export const GitHubContributions: React.FC<GitHubContributionsProps> = ({
                   Loading contribution matrix...
                 </div>
               ) : (
-                <div className="flex flex-col min-w-max pb-2">
-                  {/* Months Row */}
-                  <div className="flex h-5 relative select-none" style={{ paddingLeft: 'var(--offset-left)' }}>
-                    {monthLabels.map((lbl, idx) => {
-                      return (
-                        <span
-                          key={idx}
-                          className="absolute text-[9px] sm:text-[10px] font-mono"
-                          style={{
-                            left: `calc(${lbl.colIndex} * var(--col-width) + var(--offset-left))`,
-                            transform: 'translateX(0)',
-                            color: 'var(--c-muted)',
-                          }}
-                        >
-                          {lbl.text}
-                        </span>
-                      );
-                    })}
-                  </div>
-
-                  {/* Calendar Grid Section */}
-                  <div className="flex">
-                    {/* Day of Week Labels */}
-                    <div className="grid grid-rows-7 gap-[3px] sm:gap-[4px] text-[9px] sm:text-[10px] font-mono select-none pr-2 text-right" style={{ color: 'var(--c-muted)', width: 'var(--offset-left)' }}>
-                      <div className="h-[11px] sm:h-[13px] flex items-center justify-end">Sun</div>
-                      <div className="h-[11px] sm:h-[13px] flex items-center justify-end"></div>
-                      <div className="h-[11px] sm:h-[13px] flex items-center justify-end">Tue</div>
-                      <div className="h-[11px] sm:h-[13px] flex items-center justify-end"></div>
-                      <div className="h-[11px] sm:h-[13px] flex items-center justify-end">Thu</div>
-                      <div className="h-[11px] sm:h-[13px] flex items-center justify-end"></div>
-                      <div className="h-[11px] sm:h-[13px] flex items-center justify-end">Sat</div>
-                    </div>
-
-                    {/* Grid of Weeks */}
-                    <div className="flex gap-[3px] sm:gap-[4px]">
-                      {weeks.map((week, weekIdx) => (
-                        <div key={weekIdx} className="grid grid-rows-7 gap-[3px] sm:gap-[4px]">
-                          {week.map((day, dayIdx) => {
-                            const cellStyle: React.CSSProperties = {
-                              backgroundColor: `var(--c-git-${day.level})`,
-                              border: day.level === 0 ? '1px solid var(--c-border)' : '1px solid var(--c-git-border, transparent)',
-                              transition: 'background-color 0.4s ease, border-color 0.4s ease, transform 0.15s ease',
-                              willChange: 'transform',
-                              transform: 'translateZ(0)',
-                            };
-
-                            return (
-                              <button
-                                key={dayIdx}
-                                className="w-[11px] h-[11px] sm:w-[13px] sm:h-[13px] rounded-[3px] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--c-border-focus)] hover:scale-110 hover:z-10 relative transform-gpu"
-                                style={cellStyle}
-                                aria-label={`${day.count} contributions on ${formatDate(day.date)}`}
-                                onMouseEnter={() => !simplify && setHoveredCell(day)}
-                                onMouseLeave={() => !simplify && setHoveredCell(null)}
-                                onTouchStart={() => !simplify && setHoveredCell(day)}
-                                onClick={() => setHoveredCell(day)}
-                              />
-                            );
-                          })}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <MatrixGrid
+                  weeks={weeks}
+                  monthLabels={monthLabels}
+                  highlightLevel={highlightLevel}
+                  onHoverCell={handleHoverCell}
+                />
               )}
             </div>
 
-            {/* Bottom info row */}
+            {/* Bottom info row with activity status and color scale */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 pt-4 gap-3 sm:gap-0 border-t border-dashed border-[var(--c-border)]">
               <div className="font-mono text-[10px] sm:text-xs min-h-[16px] sm:min-h-[20px]" style={{ color: 'var(--c-body)' }}>
-                {hoveredCell ? (
-                  <span>
-                    <strong style={{ color: 'var(--c-heading)' }}>{hoveredCell.count}</strong> {hoveredCell.count === 1 ? 'contribution' : 'contributions'} on{' '}
-                    <span className="font-sans italic">{formatDate(hoveredCell.date)}</span>
+                {hoveredDay ? (
+                  <div className="flex items-center gap-2 flex-wrap transition-opacity duration-150">
+                    <span>
+                      <strong style={{ color: 'var(--c-heading)' }}>{hoveredDay.count}</strong> {hoveredDay.count === 1 ? 'contribution' : 'contributions'} on{' '}
+                      <span className="font-sans italic">{formatDate(hoveredDay.date)}</span>
+                    </span>
+                    <span 
+                      className="px-2 py-0.5 rounded text-[9px] font-bold tracking-wide uppercase"
+                      style={{ 
+                        backgroundColor: 'var(--c-input-bg)', 
+                        border: '1px solid var(--c-border)',
+                        color: 'var(--c-heading)'
+                      }}
+                    >
+                      {getActivityBadge(hoveredDay.level, hoveredDay.count).label}
+                    </span>
+                  </div>
+                ) : highlightLevel !== null ? (
+                  <span className="font-mono text-[11px] flex items-center gap-2" style={{ color: 'var(--c-heading)' }}>
+                    <span>
+                      Highlighting <strong>Level {highlightLevel}</strong> ({INTENSITY_TIERS[highlightLevel].range} — {INTENSITY_TIERS[highlightLevel].label})
+                    </span>
                   </span>
                 ) : (
-                  <span className="opacity-60 italic font-sans">{simplify ? 'Tap a block to view details' : 'Hover or tap a block to view details'}</span>
+                  <span className="opacity-60 italic font-sans">
+                    {simplify ? 'Tap a square to inspect activity' : 'Hover over squares to inspect activity or hover over swatches to highlight matching days'}
+                  </span>
                 )}
               </div>
 
-              {/* Dynamic Theme Color Scale Legend */}
-              <div className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider" style={{ color: 'var(--c-muted)' }}>
+              {/* Dynamic Theme Color Scale Legend with Hover Highlight */}
+              <div 
+                className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider" 
+                style={{ color: 'var(--c-muted)' }}
+                onMouseLeave={() => setHighlightLevel(null)}
+              >
                 <span>Less</span>
-                <div 
-                  className="w-[10px] h-[10px] sm:w-[11px] sm:h-[11px] rounded-[3px] transition-colors duration-400" 
-                  style={{ backgroundColor: 'var(--c-git-0)', border: '1px solid var(--c-border)' }} 
-                  title="Level 0"
-                />
-                <div 
-                  className="w-[10px] h-[10px] sm:w-[11px] sm:h-[11px] rounded-[3px] transition-colors duration-400" 
-                  style={{ backgroundColor: 'var(--c-git-1)', border: '1px solid var(--c-git-border, transparent)' }} 
-                  title="Level 1"
-                />
-                <div 
-                  className="w-[10px] h-[10px] sm:w-[11px] sm:h-[11px] rounded-[3px] transition-colors duration-400" 
-                  style={{ backgroundColor: 'var(--c-git-2)', border: '1px solid var(--c-git-border, transparent)' }} 
-                  title="Level 2"
-                />
-                <div 
-                  className="w-[10px] h-[10px] sm:w-[11px] sm:h-[11px] rounded-[3px] transition-colors duration-400" 
-                  style={{ backgroundColor: 'var(--c-git-3)', border: '1px solid var(--c-git-border, transparent)' }} 
-                  title="Level 3"
-                />
-                <div 
-                  className="w-[10px] h-[10px] sm:w-[11px] sm:h-[11px] rounded-[3px] transition-colors duration-400" 
-                  style={{ backgroundColor: 'var(--c-git-4)', border: '1px solid var(--c-git-border, transparent)' }} 
-                  title="Level 4"
-                />
+                {INTENSITY_TIERS.map((tier) => (
+                  <button
+                    key={tier.level}
+                    type="button"
+                    onMouseEnter={() => setHighlightLevel(tier.level)}
+                    onMouseLeave={() => setHighlightLevel(null)}
+                    onTouchStart={() => setHighlightLevel(tier.level)}
+                    onClick={() => setHighlightLevel(prev => prev === tier.level ? null : tier.level)}
+                    className="w-[10px] h-[10px] sm:w-[11px] sm:h-[11px] rounded-[4px] transition-all duration-200 cursor-pointer hover:scale-135 focus:outline-none" 
+                    style={{ 
+                      backgroundColor: `var(--c-git-${tier.level})`, 
+                      border: tier.level === 0 ? '1px solid var(--c-border)' : '1px solid var(--c-git-border, transparent)',
+                      transform: highlightLevel === tier.level ? 'scale(1.35)' : undefined,
+                      boxShadow: highlightLevel === tier.level ? '0 0 6px rgba(0,0,0,0.3)' : undefined,
+                    }} 
+                    title={`Level ${tier.level}: ${tier.range} (${tier.label})`}
+                  />
+                ))}
                 <span>More</span>
               </div>
             </div>
