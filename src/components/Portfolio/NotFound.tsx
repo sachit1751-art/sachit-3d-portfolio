@@ -67,11 +67,8 @@ export const NotFound: React.FC<NotFoundProps> = ({
         color: 'var(--c-heading, #241f1a)',
       }}
     >
-      {/* Hand-Drawn Kraft Paper 404 Illustration Background with Subtle Gaussian Blur */}
-      <div 
-        className="absolute inset-0 pointer-events-none overflow-hidden z-0 parchment-bg-elements parchment-bg-blur"
-        data-parchment-bg="true"
-      >
+      {/* Hand-Drawn Kraft Paper 404 Illustration Background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         <img
           src="/src/assets/images/kraft_paper_404_illustration_1790872312462.jpg"
           alt="Hand-drawn kraft paper 404 illustration"

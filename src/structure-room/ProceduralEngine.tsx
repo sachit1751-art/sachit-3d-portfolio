@@ -39,18 +39,18 @@ const DEFORMATION_LAYERS = [
 const PAPER_TEXTURE = [
   {
     name: 'Diffuse Map',
-    size: '1024×1024 (High-Res Retina)',
-    description: 'Base color with per-pixel high-frequency micro-grain, 60 organic radial fiber spots, and 550 curved fibers with variable thickness. Anisotropic filtered for razor-sharp glancing angles.',
+    size: '512×512',
+    description: 'Base color with per-pixel grain noise, 30 random radial gradient spots (fiber/highlight), and 250 random curved fiber strokes. Blueprint theme adds white grid lines.',
   },
   {
     name: 'Bump Map',
-    size: '1024×1024 (High-Res Retina)',
-    description: 'Gray base with per-pixel noise + 18 sharp embossed crease pairs with gradient fold ridges for tactile paper depth on high-DPI screens.',
+    size: '512×512',
+    description: 'Gray base with noise + 12 random fold lines. Each fold line is a white/black pair for emboss effect — creates the illusion of paper creases.',
   },
   {
     name: 'Roughness Map',
-    size: '512×512 (High-Res)',
-    description: 'Gray base with per-pixel noise. Controls subtle surface micro-sheen under directional and ambient lighting.',
+    size: '256×256',
+    description: 'Gray base with per-pixel noise. Controls how rough/smooth the paper surface appears under lighting.',
   },
 ];
 

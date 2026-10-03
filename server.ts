@@ -448,28 +448,6 @@ async function startServer() {
   app.get("/sitemap.xml", serveSitemap);
   app.get("/sitemap.xml.js", serveSitemap);
 
-  app.get("/og-image.jpg", (req, res) => {
-    const ogJpgPath = path.join(process.cwd(), "public", "og-image.jpg");
-    if (fs.existsSync(ogJpgPath)) {
-      res.setHeader("Content-Type", "image/jpeg");
-      res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=604800");
-      res.sendFile(ogJpgPath);
-    } else {
-      res.status(404).send("Not found");
-    }
-  });
-
-  app.get("/og-image.jpeg", (req, res) => {
-    const ogJpgPath = path.join(process.cwd(), "public", "og-image.jpg");
-    if (fs.existsSync(ogJpgPath)) {
-      res.setHeader("Content-Type", "image/jpeg");
-      res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=604800");
-      res.sendFile(ogJpgPath);
-    } else {
-      res.status(404).send("Not found");
-    }
-  });
-
   app.get("/og-image.png", (req, res) => {
     const ogPngPath = path.join(process.cwd(), "public", "og-image.png");
     if (fs.existsSync(ogPngPath)) {
@@ -510,7 +488,6 @@ Allow: /
 Allow: /resume
 Allow: /privacy
 Allow: /terms
-Allow: /og-image.jpg
 Allow: /og-image.png
 Allow: /og-image.svg
 Allow: /mascots/
@@ -561,10 +538,6 @@ Sitemap: ${baseUrl}/sitemap.xml`;
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
-    app.use((req, res, next) => {
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      next();
-    });
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",

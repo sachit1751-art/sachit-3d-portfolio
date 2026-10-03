@@ -496,6 +496,19 @@ export const SiteMapModal: React.FC<SiteMapModalProps> = ({
         },
       },
       {
+        id: 'action-recrumple',
+        title: 'Fold Paper (Re-crumple Intro)',
+        subtitle: 'Fold the site back into a 3D procedural crumpled paper mesh',
+        category: 'action',
+        categoryLabel: 'Scene Action',
+        icon: RotateCcw,
+        keywords: ['fold', 'crumple', 'restart', 'intro', '3d', 'reset', 'paper'],
+        action: () => {
+          onRecrumple();
+          onClose();
+        },
+      },
+      {
         id: 'action-copy-email',
         title: 'Copy Email Address',
         subtitle: 'Copy sachit1771@gmail.com directly to your clipboard',

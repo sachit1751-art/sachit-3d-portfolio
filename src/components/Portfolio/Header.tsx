@@ -10,7 +10,7 @@ import { WATERMARKED_NAME } from '../../utils/watermark';
 interface HeaderProps {
   theme: PaperTheme;
   setTheme: (theme: PaperTheme, event?: React.MouseEvent | MouseEvent) => void;
-  onRecrumple?: () => void;
+  onRecrumple: () => void;
   onViewResume?: () => void;
   isViewingResume?: boolean;
   onNavigateSection?: (id: string) => void;
@@ -261,11 +261,11 @@ export const Header = memo<HeaderProps>(({
           </nav>
 
           {/* Right Area: Mobile Menu Toggle */}
-          <div className="flex flex-1 items-center justify-end">
+          <div className="flex flex-1 items-center justify-end gap-2">
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(prev => !prev)}
-              className="md:hidden min-w-[40px] min-h-[40px] p-2 rounded-lg border border-[var(--c-border)] hover:border-[var(--c-border-hover)] active:scale-95 transition-all cursor-pointer flex items-center justify-center touch-manipulation"
+              className="md:hidden min-w-[44px] min-h-[44px] p-2.5 rounded-lg border border-[var(--c-border)] hover:border-[var(--c-border-hover)] active:scale-95 transition-all cursor-pointer flex items-center justify-center touch-manipulation"
               style={{ color: 'var(--c-heading)', backgroundColor: 'var(--c-card)' }}
               aria-label={mobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
             >

@@ -134,14 +134,13 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
       preserveDrawingBuffer: true,
     });
     renderer.setSize(widthPx, heightPx);
-    // High-Resolution screen optimization: full 2.0 DPR on desktop Retina displays for razor-sharp paper detail,
-    // 1.75 on mobile, with simplify mode staying at 1.0 for low-power performance
-    const maxPixelRatio = simplify ? 1.0 : (isMobile ? Math.min(window.devicePixelRatio, 1.75) : Math.min(window.devicePixelRatio, 2.0));
+    // Cap pixel ratio to 1.25 for mobile, 1.5 for desktop to avoid high-DPI fragment shader fill-rate lag
+    const maxPixelRatio = simplify ? 1.0 : (isMobile ? 1.25 : 1.5);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxPixelRatio));
     
     if (!simplify) {
-      renderer.toneMapping = THREE.NoToneMapping;
-      renderer.toneMappingExposure = 1.0;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.05;
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     }
@@ -149,45 +148,38 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
     container.replaceChildren(renderer.domElement);
     rendererRef.current = renderer;
 
-    const ambientLight = new THREE.AmbientLight(0xfffdf6, simplify ? 1.0 : 0.9);
+    const ambientLight = new THREE.AmbientLight(0xfff8ee, simplify ? 1.0 : 0.8);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1.4);
+    const mainLight = new THREE.DirectionalLight(0xfffdf7, 1.8);
     mainLight.position.set(4, 6, 5);
     if (!simplify) {
       mainLight.castShadow = true;
-      mainLight.shadow.mapSize.width = isMobile ? 512 : 1024;
-      mainLight.shadow.mapSize.height = isMobile ? 512 : 1024;
+      mainLight.shadow.mapSize.width = isMobile ? 256 : 512;
+      mainLight.shadow.mapSize.height = isMobile ? 256 : 512;
       mainLight.shadow.camera.near = 0.5;
       mainLight.shadow.camera.far = 20;
-      mainLight.shadow.bias = -0.0006;
+      mainLight.shadow.bias = -0.0008;
     }
     scene.add(mainLight);
     mainLightRef.current = mainLight;
 
     if (!simplify) {
-      const fillLight = new THREE.DirectionalLight(0xf5efe6, 0.5);
+      const fillLight = new THREE.DirectionalLight(0xebe2d8, 0.6);
       fillLight.position.set(-4.0, -2.0, 4.0);
       scene.add(fillLight);
 
-      const softTopLight = new THREE.PointLight(0xffffff, 0.6, 12);
+      const softTopLight = new THREE.PointLight(0xffffff, 0.8, 12);
       softTopLight.position.set(0, 3.0, 4.0);
       scene.add(softTopLight);
     }
 
     const { map, roughnessMap, bumpMap } = getProceduralPaperTextures(theme);
-
-    // Apply hardware anisotropic filtering for crisp texture rendering at glancing angles
-    const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
-    if (map) map.anisotropy = Math.min(maxAnisotropy, 8);
-    if (bumpMap) bumpMap.anisotropy = Math.min(maxAnisotropy, 8);
-    if (roughnessMap) roughnessMap.anisotropy = Math.min(maxAnisotropy, 8);
-
     const material = new THREE.MeshStandardMaterial({
       map,
       roughnessMap: simplify ? null : roughnessMap,
       bumpMap: simplify ? null : bumpMap,
-      bumpScale: 0.14,
+      bumpScale: 0.12,
       roughness: 0.75,
       metalness: 0.0,
       side: THREE.DoubleSide,
@@ -253,20 +245,19 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
     // Shadow
     const shadowGeo = new THREE.PlaneGeometry(3.0, 3.0, simplify ? 4 : 16, simplify ? 4 : 16);
     const shadowCanvas = document.createElement('canvas');
-    const sSize = simplify ? 64 : 256;
-    shadowCanvas.width = sSize;
-    shadowCanvas.height = sSize;
+    shadowCanvas.width = simplify ? 32 : 128;
+    shadowCanvas.height = simplify ? 32 : 128;
     const sCtx = shadowCanvas.getContext('2d')!;
+    const sSize = simplify ? 32 : 128;
     const sMid = sSize / 2;
     const sGrad = sCtx.createRadialGradient(sMid, sMid, 1, sMid, sMid, sMid);
-    sGrad.addColorStop(0, 'rgba(30, 22, 14, 0.58)');
-    sGrad.addColorStop(0.35, 'rgba(40, 32, 24, 0.28)');
+    sGrad.addColorStop(0, 'rgba(30, 22, 14, 0.55)');
+    sGrad.addColorStop(0.4, 'rgba(40, 32, 24, 0.25)');
     sGrad.addColorStop(0.7, 'rgba(50, 42, 35, 0.08)');
     sGrad.addColorStop(1, 'transparent');
     sCtx.fillStyle = sGrad;
     sCtx.fillRect(0, 0, sSize, sSize);
     const shadowTexture = new THREE.CanvasTexture(shadowCanvas);
-    shadowTexture.generateMipmaps = true;
 
     const shadowMat = new THREE.MeshBasicMaterial({
       map: shadowTexture,

@@ -7,7 +7,6 @@ import { Philosophy } from './Philosophy';
 import { ScrollReveal } from '../UI/ScrollReveal';
 import { SectionSkeleton } from '../UI/SectionSkeleton';
 import { attachPointerEventInspector } from '../../utils/pointerEventHandler';
-import { PaperCrumpleOverlay } from '../UI/PaperCrumpleOverlay';
 
 // Dynamic dynamic imports for below-the-fold content blocks to defer heavy JS execution
 const Projects = lazy(() => import('./Projects').then(m => ({ default: m.Projects })));
@@ -126,14 +125,8 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
     >
       <div
         id="physical-paper-sheet"
-        className="relative w-full max-w-[calc(100%-24px)] sm:max-w-[min(88vw,1100px)] md:max-w-[min(82vw,1100px)] mx-auto overflow-x-hidden pt-20 pb-10 sm:pt-24 sm:pb-14 md:pt-28 md:pb-20 px-4 sm:px-10 md:px-14 pointer-events-auto shadow-2xl rounded-sm"
-        style={{
-          boxShadow: '0 12px 36px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08), inset 0 0 100px rgba(0,0,0,0.02)',
-        }}
+        className="relative w-full max-w-[calc(100%-24px)] sm:max-w-[min(88vw,1100px)] md:max-w-[min(82vw,1100px)] mx-auto overflow-x-hidden pt-20 pb-10 sm:pt-24 sm:pb-14 md:pt-28 md:pb-20 px-4 sm:px-10 md:px-14 pointer-events-auto"
       >
-        {/* Realistic tactile crumple shading and crease ridges */}
-        <PaperCrumpleOverlay />
-
         <div className="relative z-10 pointer-events-auto">
           <Hero
             onExploreProjects={handleExploreProjects}
