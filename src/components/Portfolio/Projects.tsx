@@ -8,6 +8,7 @@ import { GitHubIcon } from '../UI/Icons';
 import { AnimatedMenuIcon } from '../UI/AnimatedMenuIcon';
 import { WordReveal } from '../UI/TextReveal';
 import { usePerformance } from '../../hooks/usePerformance';
+import { useTouchDevice } from '../../hooks/useTouchDevice';
 import { ScrollReveal } from '../UI/ScrollReveal';
 import { observeElement } from '../../utils/observer';
 import { getTechStackSVG } from '../UI/TechIcons';
@@ -111,6 +112,33 @@ const ProjectCard = memo<ProjectCardProps>(({
 }) => {
   const expandedContainerRef = useRef<HTMLDivElement>(null);
   const lastActiveElementRef = useRef<HTMLElement | null>(null);
+  const isTouchDevice = useTouchDevice();
+  const touchStartPos = useRef<{ x: number; y: number } | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      touchStartPos.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStartPos.current) return;
+    const touch = e.changedTouches[0];
+    if (touch) {
+      const deltaX = Math.abs(touch.clientX - touchStartPos.current.x);
+      const deltaY = Math.abs(touch.clientY - touchStartPos.current.y);
+      // Guard against scrolling or swiping (only trigger if touch movement < 10px)
+      if (deltaX < 10 && deltaY < 10) {
+        const target = e.target as HTMLElement;
+        // Don't override direct clicks on buttons or anchor tags
+        if (!target.closest('a') && !target.closest('button')) {
+          triggerHaptic(HAPTIC_PATTERNS.click);
+          onToggleExpand(project.id);
+        }
+      }
+    }
+    touchStartPos.current = null;
+  };
 
   // Focus trap and auto-focus when modal expands
   useEffect(() => {
@@ -169,11 +197,14 @@ const ProjectCard = memo<ProjectCardProps>(({
         id={`project-card-${project.id}`}
         data-project-card="true"
         data-project-index={idx}
+        data-touch-revealed={isTouchDevice && isExpanded ? 'true' : 'false'}
         tabIndex={0}
         role="article"
         aria-setsize={totalProjects}
         aria-posinset={idx + 1}
         aria-label={`${project.title} (${project.category}, ${project.year}). Press Enter or Space to toggle details. Use arrow keys to navigate projects.`}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         onKeyDown={(e) => {
           if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
             e.preventDefault();
@@ -182,17 +213,19 @@ const ProjectCard = memo<ProjectCardProps>(({
             onCardNavigate(idx, e);
           }
         }}
-        className="gsap-project-card group relative flex flex-col justify-between w-full h-full rounded-[var(--radius-lg)] focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] outline-none transition-colors duration-200"
+        className="gsap-project-card group relative flex flex-col justify-between w-full h-full rounded-[var(--radius-lg)] focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] outline-none transition-all duration-300"
         style={{
           backgroundColor: 'var(--c-card)',
-          border: '1px solid var(--c-border)',
+          border: isExpanded ? '1px solid var(--c-border-focus, var(--c-heading))' : '1px solid var(--c-border)',
           padding: 'clamp(1rem, 2vw + 0.5rem, 1.5rem)',
           zIndex: isExpanded ? 10 : 1,
+          transform: isTouchDevice && isExpanded ? 'translateY(-4px)' : undefined,
+          boxShadow: isTouchDevice && isExpanded ? '0 12px 28px rgba(0,0,0,0.12)' : undefined,
         }}
       >
         <div>
-          {/* Header Meta: Category + Index */}
-          <div className="flex items-center justify-between text-xs font-handwriting mb-3" style={{ color: 'var(--c-subtle)' }}>
+          {/* Header Meta: Category + Index + Touch Affordance Pill */}
+          <div className="flex items-center justify-between text-xs font-handwriting mb-3 gap-2" style={{ color: 'var(--c-subtle)' }}>
             <div className="flex items-center gap-1.5 flex-wrap">
               <span
                 className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-[var(--radius-sm)]"
@@ -200,6 +233,18 @@ const ProjectCard = memo<ProjectCardProps>(({
               >
                 {project.category}
               </span>
+              {isTouchDevice && (
+                <span
+                  className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold px-2 py-0.5 rounded-full transition-all duration-200 animate-pulse"
+                  style={{
+                    backgroundColor: isExpanded ? 'var(--c-heading)' : 'var(--c-input-bg)',
+                    color: isExpanded ? 'var(--c-btn-text)' : 'var(--c-muted)',
+                    border: '1px solid var(--c-border)',
+                  }}
+                >
+                  {isExpanded ? 'Tap to close' : 'Tap to reveal'}
+                </span>
+              )}
             </div>
             <span className="text-[10px] uppercase tracking-widest font-mono font-bold" style={{ color: 'var(--c-faint)' }}>
               {String(idx + 1).padStart(2, '0')}

@@ -127,7 +127,9 @@ export const SEOMetadata = ({
     };
 
     const hostOrigin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://sachin-portfoli.vercel.app';
-    const ogImageUrl = `${hostOrigin}/og-image.png`;
+    const ogImageUrl = `${hostOrigin}/og-image.jpg`;
+
+    const imageAltText = 'Sachit — Software Developer & Prompt Engineer Portfolio preview card featuring full-stack web applications, AI tools, and custom platforms';
 
     setOgTag('og:title', fullTitle);
     setOgTag('og:description', description);
@@ -136,10 +138,10 @@ export const SEOMetadata = ({
     setOgTag('og:site_name', 'Sachit');
     setOgTag('og:image', ogImageUrl);
     setOgTag('og:image:secure_url', ogImageUrl);
-    setOgTag('og:image:type', 'image/png');
+    setOgTag('og:image:type', 'image/jpeg');
     setOgTag('og:image:width', '1200');
     setOgTag('og:image:height', '630');
-    setOgTag('og:image:alt', 'Sachit — Software Developer & Prompt Engineer Portfolio');
+    setOgTag('og:image:alt', imageAltText);
 
     // 5. Twitter Card Meta Tags
     const setTwitterTag = (name: string, content: string) => {
@@ -156,7 +158,7 @@ export const SEOMetadata = ({
     setTwitterTag('twitter:title', fullTitle);
     setTwitterTag('twitter:description', description);
     setTwitterTag('twitter:image', ogImageUrl);
-    setTwitterTag('twitter:image:alt', 'Sachit — Software Developer & Prompt Engineer Portfolio');
+    setTwitterTag('twitter:image:alt', imageAltText);
 
     // WhatsApp / Legacy image_src fallback
     let imgSource = document.querySelector('link[rel="image_src"]');
