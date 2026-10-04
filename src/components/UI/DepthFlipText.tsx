@@ -32,20 +32,14 @@ const DEFAULT_PHRASES = [
 export const DepthFlipText = memo<DepthFlipTextProps>(({
   phrases = DEFAULT_PHRASES,
   singleText,
-  interval = 3600,
+  interval = 3000,
   className = '',
   style,
 }) => {
   const [index, setIndex] = useState(0);
-  const { simplify } = usePerformance();
 
   const activePhrases = singleText ? [singleText] : phrases;
   const currentPhrase = activePhrases[index % activePhrases.length];
-
-  // Pre-calculate phrase text widths using Pretext for smooth bounding stability
-  const phraseWidth = useMemo(() => {
-    return measureTextWidth(currentPhrase, '800 64px sans-serif');
-  }, [currentPhrase]);
 
   // Next phrase trigger
   const triggerNext = useCallback(() => {
@@ -53,18 +47,14 @@ export const DepthFlipText = memo<DepthFlipTextProps>(({
   }, [activePhrases.length]);
 
   useEffect(() => {
-    if (simplify || activePhrases.length <= 1) return;
+    if (activePhrases.length <= 1) return;
 
     const timer = setInterval(() => {
-      triggerNext();
+      setIndex((prev) => (prev + 1) % activePhrases.length);
     }, interval);
 
     return () => clearInterval(timer);
-  }, [activePhrases.length, interval, simplify, triggerNext]);
-
-  if (simplify) {
-    return <span className={className} style={style}>{currentPhrase}</span>;
-  }
+  }, [activePhrases.length, interval]);
 
   // Split phrase into words to preserve word boundary wrapping
   const words = currentPhrase.split(' ');

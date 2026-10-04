@@ -118,7 +118,7 @@ export const Hero = memo<HeroProps>(({
                 "UI & Motion Engineer",
                 "Best Vibecoder"
               ]}
-              interval={3800}
+              interval={3200}
             />
           </span>
         </h1>

@@ -8,6 +8,10 @@ import {defineConfig} from 'vite';
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss()],
+    esbuild: {
+      drop: ['console', 'debugger'],
+      legalComments: 'none',
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src'),

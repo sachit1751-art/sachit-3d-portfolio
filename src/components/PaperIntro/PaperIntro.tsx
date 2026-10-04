@@ -47,7 +47,14 @@ export const PaperIntro = memo<PaperIntroProps>(({
   const { isMuted, toggleMute } = useSound();
   const { simplify } = usePerformance();
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const touchStartDistRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsDesktop(window.innerWidth >= 768);
+    }
+  }, []);
 
   useEffect(() => {
     const checkTouch = () => {
@@ -236,7 +243,7 @@ export const PaperIntro = memo<PaperIntroProps>(({
           }}
         />
 
-        {paperState === 'crumpled' && !simplify && (
+        {paperState === 'crumpled' && !simplify && isDesktop && (
           <video
             ref={videoRef}
             autoPlay

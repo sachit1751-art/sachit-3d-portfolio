@@ -130,15 +130,15 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
       antialias: !simplify && !isMobile,
-      powerPreference: 'high-performance',
-      preserveDrawingBuffer: true,
+      powerPreference: isMobile ? 'low-power' : 'high-performance',
+      preserveDrawingBuffer: false,
     });
     renderer.setSize(widthPx, heightPx);
-    // Cap pixel ratio to 1.25 for mobile, 1.5 for desktop to avoid high-DPI fragment shader fill-rate lag
-    const maxPixelRatio = simplify ? 1.0 : (isMobile ? 1.25 : 1.5);
+    // Cap pixel ratio to 1.0 for mobile, 1.5 for desktop to avoid high-DPI fragment shader fill-rate lag
+    const maxPixelRatio = simplify ? 1.0 : (isMobile ? 1.0 : 1.5);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxPixelRatio));
     
-    if (!simplify) {
+    if (!simplify && !isMobile) {
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.05;
       renderer.shadowMap.enabled = true;
@@ -153,10 +153,10 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
 
     const mainLight = new THREE.DirectionalLight(0xfffdf7, 1.8);
     mainLight.position.set(4, 6, 5);
-    if (!simplify) {
+    if (!simplify && !isMobile) {
       mainLight.castShadow = true;
-      mainLight.shadow.mapSize.width = isMobile ? 256 : 512;
-      mainLight.shadow.mapSize.height = isMobile ? 256 : 512;
+      mainLight.shadow.mapSize.width = 512;
+      mainLight.shadow.mapSize.height = 512;
       mainLight.shadow.camera.near = 0.5;
       mainLight.shadow.camera.far = 20;
       mainLight.shadow.bias = -0.0008;
