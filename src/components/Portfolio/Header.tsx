@@ -4,7 +4,7 @@ import { PaperTheme } from '../../types';
 import { ArrowUpRight, Sparkles, Compass, Search, FolderClosed, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
-import { useIntersectionHighlighting } from '../../hooks/useIntersectionHighlighting';
+import { useScrollSpy } from '../../hooks/useScrollSpy';
 import { WATERMARKED_NAME } from '../../utils/watermark';
 
 interface HeaderProps {
@@ -60,17 +60,50 @@ export const Header = memo<HeaderProps>(({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isScrollingRef = useRef(false);
 
-  // Dedicated IntersectionObserver highlighting & rapid scroll detection hook
+  // Unified scroll-spy hook calculating section positions and active header tab
   const {
     activeSection,
     setActiveSection,
+    activeTab: currentActive,
     scrolled,
     lastActiveSectionRef,
-  } = useIntersectionHighlighting({
+  } = useScrollSpy({
     sectionIds: ALL_SECTIONS,
     isViewingResume,
     isScrollingRef,
   });
+
+  const navRef = useRef<HTMLElement>(null);
+  const [indicatorStyle, setIndicatorStyle] = useState<{ left: number; width: number; opacity: number }>({
+    left: 0,
+    width: 0,
+    opacity: 0,
+  });
+
+  const updateIndicator = useCallback(() => {
+    if (!navRef.current || !currentActive) {
+      setIndicatorStyle(prev => (prev.opacity === 0 ? prev : { ...prev, opacity: 0 }));
+      return;
+    }
+    const activeButton = navRef.current.querySelector<HTMLElement>(`[data-nav-id="${currentActive}"]`);
+    if (activeButton) {
+      const navRect = navRef.current.getBoundingClientRect();
+      const buttonRect = activeButton.getBoundingClientRect();
+      setIndicatorStyle({
+        left: buttonRect.left - navRect.left + 8,
+        width: Math.max(0, buttonRect.width - 16),
+        opacity: 1,
+      });
+    } else {
+      setIndicatorStyle(prev => (prev.opacity === 0 ? prev : { ...prev, opacity: 0 }));
+    }
+  }, [currentActive]);
+
+  useEffect(() => {
+    updateIndicator();
+    window.addEventListener('resize', updateIndicator);
+    return () => window.removeEventListener('resize', updateIndicator);
+  }, [updateIndicator]);
 
   // Swipe-to-dismiss gesture on touch-enabled mobile devices for navigation drawer
   const {
@@ -85,17 +118,6 @@ export const Header = memo<HeaderProps>(({
     enabled: mobileMenuOpen,
     onlyTouch: true,
   });
-  const getNavParentId = (secId: string): string => {
-    if (!secId || secId === 'hero' || secId === 'top') return '';
-    if (secId === 'about' || secId === 'philosophy') return 'about';
-    if (secId === 'projects') return 'projects';
-    if (secId === 'skills' || secId === 'currently-building' || secId === 'github' || secId === 'experience' || secId === 'education' || secId === 'strengths') return 'skills';
-    if (secId === 'building-in-public' || secId === 'chat-about-me') return 'building-in-public';
-    if (secId === 'contact') return 'contact';
-    return '';
-  };
-
-  const currentActive = isViewingResume ? 'resume' : getNavParentId(activeSection);
 
   // ── Scroll to section & update URL hash ────────────────────────────
   const handleNavClick = useCallback((id: string, isResume?: boolean) => {
@@ -237,6 +259,7 @@ export const Header = memo<HeaderProps>(({
 
           {/* Desktop Nav (Centered) */}
           <nav
+            ref={navRef}
             className="hidden md:flex items-center gap-1 relative justify-center"
             aria-label="Main navigation"
           >
@@ -245,6 +268,7 @@ export const Header = memo<HeaderProps>(({
               return (
                 <button
                   key={id}
+                  data-nav-id={id}
                   onClick={() => handleNavClick(id, isResume)}
                   onMouseEnter={isResume ? () => { import('./ResumeViewer'); } : undefined}
                   className="relative px-3.5 py-1.5 text-sm font-body transition-colors cursor-pointer rounded-md touch-hitbox-expansion"
@@ -254,10 +278,21 @@ export const Header = memo<HeaderProps>(({
                   }}
                   aria-current={isActive ? 'location' : undefined}
                 >
-                  {label}
+                  <span className="relative z-10">{label}</span>
                 </button>
               );
             })}
+
+            {/* Sliding Underline Indicator */}
+            <div
+              className="absolute bottom-0 h-[2px] bg-current transition-all duration-300 ease-out pointer-events-none rounded-full"
+              style={{
+                left: `${indicatorStyle.left}px`,
+                width: `${indicatorStyle.width}px`,
+                opacity: indicatorStyle.opacity,
+                color: 'var(--c-dot)',
+              }}
+            />
           </nav>
 
           {/* Right Area: Mobile Menu Toggle */}
