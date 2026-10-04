@@ -66,10 +66,28 @@ export function useActiveSection() {
       }
     };
 
+    const containerHeight = container.clientHeight || window.innerHeight;
+    let totalHeight = 0;
+    let count = 0;
+
+    ALL_SECTIONS.forEach((id) => {
+      if (id === 'hero') return;
+      const el = document.getElementById(id);
+      if (el) {
+        totalHeight += el.offsetHeight;
+        count++;
+      }
+    });
+
+    const avgSectionHeight = count > 0 ? totalHeight / count : containerHeight * 0.5;
+    const heightRatio = avgSectionHeight / containerHeight;
+    const bottomMarginPct = Math.min(40, Math.max(15, Math.round(heightRatio * 25)));
+    const dynamicRootMargin = `-10% 0px -${bottomMarginPct}% 0px`;
+
     const observer = new IntersectionObserver(observerCallback, {
       root: container,
       threshold: [0, 0.1, 0.25, 0.4, 0.5, 0.75, 1.0],
-      rootMargin: '-10% 0px -35% 0px',
+      rootMargin: dynamicRootMargin,
     });
 
     ALL_SECTIONS.forEach((id) => {

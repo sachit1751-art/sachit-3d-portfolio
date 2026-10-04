@@ -107,9 +107,27 @@ export function useIntersectionHighlighting({
     // Track visibility ratio of each section
     const visibleSections = new Map<string, number>();
 
+    const containerHeight = container.clientHeight || window.innerHeight;
+    let totalHeight = 0;
+    let count = 0;
+
+    sectionIdsRef.current.forEach((id) => {
+      if (id === 'hero') return;
+      const el = document.getElementById(id);
+      if (el) {
+        totalHeight += el.offsetHeight;
+        count++;
+      }
+    });
+
+    const avgSectionHeight = count > 0 ? totalHeight / count : containerHeight * 0.5;
+    const heightRatio = avgSectionHeight / containerHeight;
+    const bottomMarginPct = Math.min(40, Math.max(15, Math.round(heightRatio * 25)));
+    const dynamicRootMargin = `-${headerHeight}px 0px -${bottomMarginPct}% 0px`;
+
     const observerOptions: IntersectionObserverInit = {
       root: container,
-      rootMargin: `-${headerHeight}px 0px -25% 0px`,
+      rootMargin: dynamicRootMargin,
       threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
     };
 

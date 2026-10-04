@@ -911,6 +911,7 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
       ref={containerRef}
       id="paper-3d-scene"
       className="paper-ball-container w-full h-full cursor-pointer select-none"
+      role="img"
       aria-label="3D Crumpled Paper Canvas"
       onClick={handleContainerClick}
     />

@@ -68,31 +68,27 @@ const NavTabButton = memo<{
       aria-current={isActive ? 'location' : undefined}
     >
       <span className="relative z-10">{label}</span>
+      {isActive && (
+        <motion.div
+          layoutId="activeHeaderNavUnderline"
+          className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full"
+          style={{
+            backgroundColor: 'var(--c-dot)',
+            boxShadow: '0 1px 4px var(--c-dot-glow, rgba(0,0,0,0.15))',
+          }}
+          transition={{
+            type: 'spring',
+            stiffness: 380,
+            damping: 30,
+            mass: 0.8,
+          }}
+        />
+      )}
     </button>
   );
 });
 
 NavTabButton.displayName = 'NavTabButton';
-
-const NavUnderline = memo<{
-  left: number;
-  width: number;
-  opacity: number;
-}>(({ left, width, opacity }) => {
-  return (
-    <div
-      className="absolute bottom-0 h-[2px] bg-current transition-all duration-300 ease-out pointer-events-none rounded-full"
-      style={{
-        left: `${left}px`,
-        width: `${width}px`,
-        opacity,
-        color: 'var(--c-dot)',
-      }}
-    />
-  );
-});
-
-NavUnderline.displayName = 'NavUnderline';
 
 // ﻿author:sachit-2026-original﻿
 export const Header = memo<HeaderProps>(({
@@ -126,48 +122,6 @@ export const Header = memo<HeaderProps>(({
   const currentActive = isViewingResume
     ? 'resume'
     : (getHeaderNavTabId(activeSectionId) || scrollSpyTab);
-
-  const navRef = useRef<HTMLElement>(null);
-  const rafRef = useRef<number | null>(null);
-  const [indicatorStyle, setIndicatorStyle] = useState<{ left: number; width: number; opacity: number }>({
-    left: 0,
-    width: 0,
-    opacity: 0,
-  });
-
-  const updateIndicator = useCallback(() => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => {
-      if (!navRef.current || !currentActive) {
-        setIndicatorStyle(prev => (prev.opacity === 0 ? prev : { ...prev, opacity: 0 }));
-        return;
-      }
-      const activeButton = navRef.current.querySelector<HTMLElement>(`[data-nav-id="${currentActive}"]`);
-      if (activeButton) {
-        const navRect = navRef.current.getBoundingClientRect();
-        const buttonRect = activeButton.getBoundingClientRect();
-        const newLeft = buttonRect.left - navRect.left + 8;
-        const newWidth = Math.max(0, buttonRect.width - 16);
-        setIndicatorStyle(prev => {
-          if (prev.left === newLeft && prev.width === newWidth && prev.opacity === 1) {
-            return prev;
-          }
-          return { left: newLeft, width: newWidth, opacity: 1 };
-        });
-      } else {
-        setIndicatorStyle(prev => (prev.opacity === 0 ? prev : { ...prev, opacity: 0 }));
-      }
-    });
-  }, [currentActive, activeSectionId]);
-
-  useEffect(() => {
-    updateIndicator();
-    window.addEventListener('resize', updateIndicator);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      window.removeEventListener('resize', updateIndicator);
-    };
-  }, [updateIndicator]);
 
   // Swipe-to-dismiss gesture on touch-enabled mobile devices for navigation drawer
   const {
@@ -323,7 +277,6 @@ export const Header = memo<HeaderProps>(({
 
           {/* Desktop Nav (Centered) */}
           <nav
-            ref={navRef}
             className="hidden md:flex items-center gap-1 relative justify-center"
             aria-label="Main navigation"
           >
@@ -337,13 +290,6 @@ export const Header = memo<HeaderProps>(({
                 onNavClick={handleNavClick}
               />
             ))}
-
-            {/* Sliding Underline Indicator */}
-            <NavUnderline
-              left={indicatorStyle.left}
-              width={indicatorStyle.width}
-              opacity={indicatorStyle.opacity}
-            />
           </nav>
 
           {/* Right Area: Mobile Menu Toggle */}

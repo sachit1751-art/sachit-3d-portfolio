@@ -1,94 +1,92 @@
-# 📄 Sachit's Portfolio
+# 📄 Sachit — Full-Stack Developer & Prompt Engineer Portfolio
 
-A bespoke, immersive, and highly interactive **3D tactile paper-themed portfolio website** that merges physical metaphors with cutting-edge full-stack engineering, performance optimizations, and creative interfaces. 
-
----
-
-## 🎨 Design Philosophy & Metaphor
-
-This portfolio is built on a tactile, visceral metaphor of **physical paper & interactive craftsmanship**. The landing begins with a realistic, crumpled 3D paper ball floating on a modern workbench.
-- **Unfolding the Canvas**: Clicking or pinching the paper triggers a high-fidelity WebGL and GSAP simulation that unrolls the paper sheet, transitioning smoothly into a clean, minimalist, high-contrast digital resume and portfolio.
-- **Tactile Soundscapes**: Features high-fidelity paper crumpling and unfolding audio cues, powered by a non-intrusive sound manager and dual-synchronized volume toggles.
-- **Anti-Slop Aesthetics**: Standardized on high-contrast editorial typography (using Kalam & monospace primes), generous negative space, sophisticated neutral tones, and absolutely zero saturated SaaS blue-to-purple gradients.
+An engineering-focused, high-performance **tactile 3D paper-themed portfolio and developer workspace** featuring custom WebGL shaders, physics-based motion, spring-animated navigation tabs, zero CLS layouts, and native machine-readable AI agent specifications (`llms-full.txt`).
 
 ---
 
-## 🚀 Key Features
+## ⚡ Architectural Highlights
 
-*   **Interactive 3D WebGL Paper Engine**: Features procedural paper grain shaders, realistic crumple physics, custom GLSL lighting, and fluid deformation dynamics powered by Three.js and GSAP.
-*   **Unified CV & Resume Viewer**: An elegant, fully integrated, printable single-page curriculum vitae featuring decoupled JSON-driven experience records.
-*   **Tactile Mascot Character**: A dynamic, interactive handwritten avatar with beautiful floating, breathing, and responsive hovering animations, including a helpful handwritten instruction prompt.
-*   **Dynamic Projects Architecture**: A responsive grid utilizing independent height metrics (`items-start`) and complete CSS containment (`contain: content`) to eliminate layout thrashing or parent row stretching during micro-interactions.
-*   **Dual Audio Toggles**: Features intuitive global audio switches in both the introductory crumple scene and the portfolio header to give visitors complete control over the spatial sound effects.
-*   **Performance & SEO Optimized**: Achieves a smooth 60 FPS continuous animation pipeline through optimized event loop bindings. Pre-packaged with complete JSON-LD schema integrations, OpenGraph share-cards, and semantic metadata.
-*   **Interactive Easter Eggs**: Features deep interactive sequences and transition engines, including a retro *Doom* sequence and a customizable mood game.
+- **Spring-Physics Header Underline**: Active navigation tab indicator powered by `motion/react` spring physics (`stiffness: 420`, `damping: 32`, `mass: 0.8`) with hardware-accelerated CSS transforms (`x`) for weighted, organic movement across tabs during rapid scrolling.
+- **Dynamic Scroll-Spy Observer**: Section height-aware `IntersectionObserver` calculate dynamic `rootMargin` (`-${headerHeight}px 0px -${bottomMarginPct}% 0px`), guaranteeing crisp, reliable tab activation regardless of section height variance.
+- **3D WebGL & Physics Engine**: Custom procedural GLSL paper grain shaders, realistic crumpling physics, GLSL lighting, and fluid deformation dynamics built on Three.js and GSAP.
+- **Zero CLS & Fine-Grained Bundle Chunking**: Explicit sizing skeletons (`SectionSkeleton`) prevent layout shifts. Vite `manualChunks` split vendor modules (`vendor-three`, `vendor-gsap`, `vendor-motion`, `vendor-icons`, `vendor-react`) to keep main entry payloads under 50KB.
+- **Machine-Readable AI Agent Integration**: Serves `/llms-full.txt` (adhering to the [llmstxt.org specification](https://llmstxt.org/)) providing AI agents and crawlers with a structured dossier of all site sections, projects, technical skills, and provenance signatures.
 
 ---
 
-## 🛠️ Engineering Tech Stack
+## 🛠️ Tech Stack & Systems
 
-| Layer | Technologies & Libraries |
+| Layer | Technology / Specification |
 | :--- | :--- |
-| **Framework & Language** | React 19, TypeScript, Vite |
-| **Styling & Layout** | Tailwind CSS, Fluid Grid systems |
-| **3D & Math Pipeline** | Three.js, Custom WebGL (GLSL Shaders), `paperMath` |
-| **Motion & Physics** | GSAP (GreenSock), Anime.js, Framer Motion (`motion/react`) |
-| **Audio Pipeline** | HTML5 Web Audio API, `soundManager` wrapper |
-| **Data Engine** | JSON-driven modular state schemas |
+| **Framework & Language** | React 18, TypeScript (Strict ESM), Vite 6 |
+| **Styling & Layout** | Tailwind CSS v4, Fluid CSS Containment, Editorial Typography (`Kalam`, `Courier Prime`) |
+| **3D & Canvas** | Three.js, WebGL (Custom GLSL Shaders), HTML5 Canvas API |
+| **Animation Physics** | Framer Motion (`motion/react`), GSAP 3, Anime.js |
+| **Audio Pipeline** | Web Audio API, Spatial Sound Manager with global muted toggles |
+| **AI Documentation** | Machine-readable `/llms-full.txt` Index for LLM Agents |
+| **SEO & OpenGraph** | JSON-LD Schema.org Structured Data, Twitter Cards, OpenGraph Cards |
 
 ---
 
-## 📁 Repository Structure
+## 🚀 Live Projects Featured
 
-```bash
+1. **SKY ROMs** — Android Custom ROM Discovery & Management Platform (*React, TypeScript, Supabase, PostgreSQL, Capacitor*) | [Live App](https://sky-roms.vercel.app/)
+2. **MoneyPal** — Native Expense Tracker & Wear OS Companion (*Kotlin, Jetpack Compose, Room Database, Wear OS*) | [GitHub Repo](https://github.com/sachit1751-art/MoneyPal)
+3. **Audify** — Web Audio Streaming Player (*React, TypeScript, Web Audio API, Tailwind CSS*) | [GitHub Repo](https://github.com/sachit1751-art/Audify)
+4. **AI-Powered Model Context Protocol (MCP) Tool** — Developer Utility for LLM Tooling (*Python, Anthropic Claude API, MCP Protocol, JSON-RPC*)
+5. **Tic-Tac-Toe Mini Game** — Minimax AI Browser Game (*HTML5, CSS3, JavaScript ES6+, Minimax Algorithm*)
+
+---
+
+## 📁 Repository Map
+
+```
+├── public/
+│   ├── llms-full.txt        # Full machine-readable Markdown dossier for LLMs & AI agents
+│   ├── sitemap.xml          # XML sitemap with lastmod, priorities, and routes
+│   ├── fonts/               # Preloaded Kalam WOFF2 fonts
+│   └── mascots/             # Optimized WebP hero assets
 ├── src/
 │   ├── components/
-│   │   ├── PaperIntro/         # 3D WebGL crumple scene & physics animation
-│   │   ├── Portfolio/          # Portfolio views (Hero, About, Projects, Resume, Contact)
-│   │   ├── UI/                 # Motion components (Typewriter, ScrollReveal, TextReveal)
-│   │   ├── MoodGame/           # Interactive mood sequences & dynamic HUD
-│   │   └── DoomEasterEgg/      # Retro transition animations
-│   ├── hooks/                  # Custom react hooks (active section, sound controller, shortcuts)
-│   ├── utils/                  # Paper textures, sound manager, physics helpers, watermark
-│   ├── data/                   # Modular JSON resume & project states
-│   ├── main.tsx                # Client entry point
-│   └── index.css               # Global tailwind base layer & performance styles
-├── public/                     # Audio assets, fonts, textures, and static media
-├── package.json                # Project dependencies & startup scripts
-└── README.md                   # Project documentation
+│   │   ├── PaperIntro/      # 3D WebGL paper crumple & unroll canvas
+│   │   ├── Portfolio/       # Main portfolio sections (Hero, About, Projects, Resume, Contact)
+│   │   └── UI/              # Springs, skeletons, toast alerts, tech stack icons
+│   ├── hooks/               # useScrollSpy, useActiveSection, useSwipeToDismiss, useSound
+│   ├── utils/               # Sound manager, font loader, provenance watermark
+│   ├── main.tsx             # Entry point
+│   └── index.css            # Global CSS, font-display swap, theme variables
+├── vite.config.ts           # Fine-grained manualChunks bundle splitting
+├── package.json             # Build scripts & dependencies
+└── README.md                # Technical documentation
 ```
 
 ---
 
-## 💻 Local Development
+## 💻 Local Development & Build Commands
 
-Follow these steps to run the portfolio locally on your machine:
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/sachit1751-art/portfo-final-sachit.git
-   cd portfo-final-sachit
-   ```
-
-2. **Install dependencies:**
+1. **Install dependencies:**
    ```bash
    npm install
    ```
 
-3. **Start the local dev server:**
+2. **Run local dev server (port 3000):**
    ```bash
    npm run dev
    ```
-   The local environment will boot at `http://localhost:3000`.
 
-4. **Compile and build for production:**
+3. **Validate TypeScript & Linting:**
+   ```bash
+   npm run lint
+   ```
+
+4. **Compile production build:**
    ```bash
    npm run build
    ```
-   This generates a highly optimized static bundle inside the `dist/` directory.
 
 ---
 
-## 📄 Licensing
+## 🔒 Provenance & License
 
-This project is open-source and licensed under the [MIT License](LICENSE).
+© 2026 **Sachit** (sachit1771@gmail.com / sachit1751@gmail.com). All rights reserved.
+Open source code elements licensed under the [MIT License](LICENSE).

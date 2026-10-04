@@ -715,6 +715,7 @@ export const SiteMapModal: React.FC<SiteMapModalProps> = ({
               <div
                 {...swipeDismissBind()}
                 className="sm:hidden flex flex-col items-center pt-2.5 pb-1 cursor-grab active:cursor-grabbing select-none touch-none"
+                role="region"
                 aria-label="Swipe down to dismiss"
                 title="Swipe down to dismiss"
               >

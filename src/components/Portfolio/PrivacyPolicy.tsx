@@ -54,6 +54,7 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ theme = 'cotton', 
           <div
             {...swipeBackBind()}
             className="sm:hidden flex flex-col items-center pt-0 pb-3 cursor-grab active:cursor-grabbing select-none touch-none"
+            role="region"
             aria-label="Swipe down to return to portfolio"
           >
             <div className="w-10 h-1 rounded-full bg-[var(--c-border-hover)] opacity-70 transition-transform active:scale-95" />

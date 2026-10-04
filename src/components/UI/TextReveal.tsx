@@ -54,7 +54,7 @@ export const CharReveal = memo(({ text, baseDelay = 0, className = '' }: { text:
   let charCount = 0;
   
   return (
-    <span ref={ref} className={`inline ${className}`} aria-label={text}>
+    <span ref={ref} className={`inline ${className}`} role="text" aria-label={text}>
       {words.map((word, wordIdx) => {
         const chars = word.split('');
         return (
