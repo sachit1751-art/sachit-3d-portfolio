@@ -4,7 +4,8 @@ import { PaperTheme } from '../../types';
 import { ArrowUpRight, Sparkles, Compass, Search, FolderClosed, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
-import { useScrollSpy } from '../../hooks/useScrollSpy';
+import { useScrollSpy, getHeaderNavTabId } from '../../hooks/useScrollSpy';
+import { useActiveSection } from '../../hooks/useActiveSection';
 import { WATERMARKED_NAME } from '../../utils/watermark';
 
 interface HeaderProps {
@@ -47,6 +48,52 @@ const ALL_SECTIONS = [
   'contact',
 ];
 
+const NavTabButton = memo<{
+  id: string;
+  label: string;
+  isActive: boolean;
+  isResume?: boolean;
+  onNavClick: (id: string, isResume?: boolean) => void;
+}>(({ id, label, isActive, isResume, onNavClick }) => {
+  return (
+    <button
+      data-nav-id={id}
+      onClick={() => onNavClick(id, isResume)}
+      onMouseEnter={isResume ? () => { import('./ResumeViewer'); } : undefined}
+      className="relative px-3.5 py-1.5 text-sm font-body transition-colors cursor-pointer rounded-md touch-hitbox-expansion"
+      style={{
+        color: isActive ? 'var(--c-heading)' : 'var(--c-subtle)',
+        fontWeight: isActive ? 600 : 400,
+      }}
+      aria-current={isActive ? 'location' : undefined}
+    >
+      <span className="relative z-10">{label}</span>
+    </button>
+  );
+});
+
+NavTabButton.displayName = 'NavTabButton';
+
+const NavUnderline = memo<{
+  left: number;
+  width: number;
+  opacity: number;
+}>(({ left, width, opacity }) => {
+  return (
+    <div
+      className="absolute bottom-0 h-[2px] bg-current transition-all duration-300 ease-out pointer-events-none rounded-full"
+      style={{
+        left: `${left}px`,
+        width: `${width}px`,
+        opacity,
+        color: 'var(--c-dot)',
+      }}
+    />
+  );
+});
+
+NavUnderline.displayName = 'NavUnderline';
+
 // ﻿author:sachit-2026-original﻿
 export const Header = memo<HeaderProps>(({
   theme,
@@ -60,11 +107,14 @@ export const Header = memo<HeaderProps>(({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isScrollingRef = useRef(false);
 
+  // Active section tracking hook
+  const activeSectionId = useActiveSection();
+
   // Unified scroll-spy hook calculating section positions and active header tab
   const {
     activeSection,
     setActiveSection,
-    activeTab: currentActive,
+    activeTab: scrollSpyTab,
     scrolled,
     lastActiveSectionRef,
   } = useScrollSpy({
@@ -73,7 +123,12 @@ export const Header = memo<HeaderProps>(({
     isScrollingRef,
   });
 
+  const currentActive = isViewingResume
+    ? 'resume'
+    : (getHeaderNavTabId(activeSectionId) || scrollSpyTab);
+
   const navRef = useRef<HTMLElement>(null);
+  const rafRef = useRef<number | null>(null);
   const [indicatorStyle, setIndicatorStyle] = useState<{ left: number; width: number; opacity: number }>({
     left: 0,
     width: 0,
@@ -81,28 +136,37 @@ export const Header = memo<HeaderProps>(({
   });
 
   const updateIndicator = useCallback(() => {
-    if (!navRef.current || !currentActive) {
-      setIndicatorStyle(prev => (prev.opacity === 0 ? prev : { ...prev, opacity: 0 }));
-      return;
-    }
-    const activeButton = navRef.current.querySelector<HTMLElement>(`[data-nav-id="${currentActive}"]`);
-    if (activeButton) {
-      const navRect = navRef.current.getBoundingClientRect();
-      const buttonRect = activeButton.getBoundingClientRect();
-      setIndicatorStyle({
-        left: buttonRect.left - navRect.left + 8,
-        width: Math.max(0, buttonRect.width - 16),
-        opacity: 1,
-      });
-    } else {
-      setIndicatorStyle(prev => (prev.opacity === 0 ? prev : { ...prev, opacity: 0 }));
-    }
-  }, [currentActive]);
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      if (!navRef.current || !currentActive) {
+        setIndicatorStyle(prev => (prev.opacity === 0 ? prev : { ...prev, opacity: 0 }));
+        return;
+      }
+      const activeButton = navRef.current.querySelector<HTMLElement>(`[data-nav-id="${currentActive}"]`);
+      if (activeButton) {
+        const navRect = navRef.current.getBoundingClientRect();
+        const buttonRect = activeButton.getBoundingClientRect();
+        const newLeft = buttonRect.left - navRect.left + 8;
+        const newWidth = Math.max(0, buttonRect.width - 16);
+        setIndicatorStyle(prev => {
+          if (prev.left === newLeft && prev.width === newWidth && prev.opacity === 1) {
+            return prev;
+          }
+          return { left: newLeft, width: newWidth, opacity: 1 };
+        });
+      } else {
+        setIndicatorStyle(prev => (prev.opacity === 0 ? prev : { ...prev, opacity: 0 }));
+      }
+    });
+  }, [currentActive, activeSectionId]);
 
   useEffect(() => {
     updateIndicator();
     window.addEventListener('resize', updateIndicator);
-    return () => window.removeEventListener('resize', updateIndicator);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      window.removeEventListener('resize', updateIndicator);
+    };
   }, [updateIndicator]);
 
   // Swipe-to-dismiss gesture on touch-enabled mobile devices for navigation drawer
@@ -263,35 +327,22 @@ export const Header = memo<HeaderProps>(({
             className="hidden md:flex items-center gap-1 relative justify-center"
             aria-label="Main navigation"
           >
-            {NAV_ITEMS.map(({ id, label, isResume }) => {
-              const isActive = currentActive === id;
-              return (
-                <button
-                  key={id}
-                  data-nav-id={id}
-                  onClick={() => handleNavClick(id, isResume)}
-                  onMouseEnter={isResume ? () => { import('./ResumeViewer'); } : undefined}
-                  className="relative px-3.5 py-1.5 text-sm font-body transition-colors cursor-pointer rounded-md touch-hitbox-expansion"
-                  style={{
-                    color: isActive ? 'var(--c-heading)' : 'var(--c-subtle)',
-                    fontWeight: isActive ? 600 : 400,
-                  }}
-                  aria-current={isActive ? 'location' : undefined}
-                >
-                  <span className="relative z-10">{label}</span>
-                </button>
-              );
-            })}
+            {NAV_ITEMS.map(({ id, label, isResume }) => (
+              <NavTabButton
+                key={id}
+                id={id}
+                label={label}
+                isResume={isResume}
+                isActive={currentActive === id}
+                onNavClick={handleNavClick}
+              />
+            ))}
 
             {/* Sliding Underline Indicator */}
-            <div
-              className="absolute bottom-0 h-[2px] bg-current transition-all duration-300 ease-out pointer-events-none rounded-full"
-              style={{
-                left: `${indicatorStyle.left}px`,
-                width: `${indicatorStyle.width}px`,
-                opacity: indicatorStyle.opacity,
-                color: 'var(--c-dot)',
-              }}
+            <NavUnderline
+              left={indicatorStyle.left}
+              width={indicatorStyle.width}
+              opacity={indicatorStyle.opacity}
             />
           </nav>
 

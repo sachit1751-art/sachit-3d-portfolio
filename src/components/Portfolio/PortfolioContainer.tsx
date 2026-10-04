@@ -2,13 +2,13 @@ import React, { memo, useCallback, useRef, useEffect, lazy, Suspense } from 'rea
 import { PaperTheme, PaperState } from '../../types';
 import { Hero } from './Hero';
 import { ScrollTextPath } from '../UI/ScrollTextPath';
-import { About } from './About';
-import { Philosophy } from './Philosophy';
 import { ScrollReveal } from '../UI/ScrollReveal';
 import { SectionSkeleton } from '../UI/SectionSkeleton';
 import { attachPointerEventInspector } from '../../utils/pointerEventHandler';
 
 // Dynamic dynamic imports for below-the-fold content blocks to defer heavy JS execution
+const About = lazy(() => import('./About').then(m => ({ default: m.About })));
+const Philosophy = lazy(() => import('./Philosophy').then(m => ({ default: m.Philosophy })));
 const Projects = lazy(() => import('./Projects').then(m => ({ default: m.Projects })));
 const Skills = lazy(() => import('./Skills').then(m => ({ default: m.Skills })));
 const CurrentlyBuilding = lazy(() => import('./CurrentlyBuilding').then(m => ({ default: m.CurrentlyBuilding })));
@@ -137,10 +137,14 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
           <ScrollTextPath text="Coding • Building • Creating • Designing" className="my-10 md:-my-8" />
 
           <ScrollReveal>
-            <About />
+            <Suspense fallback={<SectionSkeleton id="about" variant="cards" />}>
+              <About />
+            </Suspense>
           </ScrollReveal>
           <ScrollReveal>
-            <Philosophy />
+            <Suspense fallback={<SectionSkeleton id="philosophy" variant="cards" />}>
+              <Philosophy />
+            </Suspense>
           </ScrollReveal>
           <ScrollReveal>
             <Suspense fallback={<SectionSkeleton id="projects" variant="projects" />}>

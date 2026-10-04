@@ -561,61 +561,68 @@ export const Projects = memo(() => {
   }, []);
 
   useEffect(() => {
-    if (!cardsGridRef.current) return;
+    let animRaf: number | null = null;
+    let unobserve: (() => void) | null = null;
+    let fallbackTimer: NodeJS.Timeout | null = null;
 
-    const cards = gsap.utils.toArray<HTMLElement>('.gsap-project-card');
-    if (!cards.length) return;
+    animRaf = requestAnimationFrame(() => {
+      if (!cardsGridRef.current) return;
 
-    const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const cards = gsap.utils.toArray<HTMLElement>('.gsap-project-card');
+      if (!cards.length) return;
 
-    if (simplify || prefersReducedMotion) {
-      gsap.set(cards, { opacity: 1, y: 0, scale: 1, clearProps: 'all' });
-      return;
-    }
+      const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    let hasAnimated = false;
+      if (simplify || prefersReducedMotion) {
+        gsap.set(cards, { opacity: 1, y: 0, scale: 1, clearProps: 'all' });
+        return;
+      }
 
-    const animateIn = () => {
-      if (hasAnimated) return;
-      hasAnimated = true;
+      let hasAnimated = false;
 
-      gsap.fromTo(
-        cards,
-        { opacity: 0, y: 24, scale: 0.98 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.55,
-          stagger: 0.08,
-          ease: 'power2.out',
-          overwrite: 'auto',
-          onComplete: () => {
-            gsap.set(cards, { clearProps: 'transform' });
-          },
-        }
+      const animateIn = () => {
+        if (hasAnimated) return;
+        hasAnimated = true;
+
+        gsap.fromTo(
+          cards,
+          { opacity: 0, y: 24, scale: 0.98 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.55,
+            stagger: 0.08,
+            ease: 'power2.out',
+            overwrite: 'auto',
+            onComplete: () => {
+              gsap.set(cards, { clearProps: 'transform' });
+            },
+          }
+        );
+      };
+
+      const scroller = document.getElementById('content-scroll-container');
+      unobserve = observeElement(
+        cardsGridRef.current,
+        (isIntersecting) => {
+          if (isIntersecting) {
+            animateIn();
+          }
+        },
+        { root: scroller, threshold: 0.02, rootMargin: '50px' }
       );
-    };
 
-    const scroller = document.getElementById('content-scroll-container');
-    const unobserve = observeElement(
-      cardsGridRef.current,
-      (isIntersecting) => {
-        if (isIntersecting) {
-          animateIn();
-        }
-      },
-      { root: scroller, threshold: 0.02, rootMargin: '50px' }
-    );
-
-    // Fallback: Ensure cards are visible after 250ms
-    const fallbackTimer = setTimeout(() => {
-      animateIn();
-    }, 250);
+      // Fallback: Ensure cards are visible after 250ms
+      fallbackTimer = setTimeout(() => {
+        animateIn();
+      }, 250);
+    });
 
     return () => {
+      if (animRaf) cancelAnimationFrame(animRaf);
       if (unobserve) unobserve();
-      clearTimeout(fallbackTimer);
+      if (fallbackTimer) clearTimeout(fallbackTimer);
     };
   }, [simplify]);
 

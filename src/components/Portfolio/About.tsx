@@ -13,35 +13,43 @@ export const About = memo(() => {
   const mascotBreathRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!mascotWrapperRef.current || !mascotBreathRef.current) return;
+    let ctx: gsap.Context | null = null;
+    let animRaf: number | null = null;
 
-    // Check prefers-reduced-motion
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
+    animRaf = requestAnimationFrame(() => {
+      if (!mascotWrapperRef.current || !mascotBreathRef.current) return;
 
-    const ctx = gsap.context(() => {
-      // 1. Gentle, subtle vertical float (weightless bobbing)
-      gsap.to(mascotWrapperRef.current, {
-        y: -6,
-        duration: 2.8,
-        ease: 'sine.inOut',
-        yoyo: true,
-        repeat: -1,
-      });
+      // Check prefers-reduced-motion
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) return;
 
-      // 2. Subtle rhythmic breathing expansion
-      gsap.to(mascotBreathRef.current, {
-        scaleY: 1.025,
-        scaleX: 1.01,
-        transformOrigin: '50% 85%',
-        duration: 2.2,
-        ease: 'sine.inOut',
-        yoyo: true,
-        repeat: -1,
+      ctx = gsap.context(() => {
+        // 1. Gentle, subtle vertical float (weightless bobbing)
+        gsap.to(mascotWrapperRef.current, {
+          y: -6,
+          duration: 2.8,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: -1,
+        });
+
+        // 2. Subtle rhythmic breathing expansion
+        gsap.to(mascotBreathRef.current, {
+          scaleY: 1.025,
+          scaleX: 1.01,
+          transformOrigin: '50% 85%',
+          duration: 2.2,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: -1,
+        });
       });
     });
 
-    return () => ctx.revert();
+    return () => {
+      if (animRaf) cancelAnimationFrame(animRaf);
+      if (ctx) ctx.revert();
+    };
   }, []);
 
   return (

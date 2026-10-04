@@ -27,11 +27,11 @@ export default defineConfig(() => {
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) {
-              if (id.includes('three')) return 'vendor-three';
+              if (id.includes('three') || id.includes('@react-three')) return 'vendor-three';
               if (id.includes('gsap')) return 'vendor-gsap';
               if (id.includes('animejs')) return 'vendor-anime';
               if (id.includes('motion')) return 'vendor-motion';
-              if (id.includes('react-markdown') || id.includes('remark-gfm') || id.includes('micromark') || id.includes('mdast') || id.includes('unist')) return 'vendor-markdown';
+              if (id.includes('react-markdown') || id.includes('remark-gfm') || id.includes('micromark') || id.includes('mdast') || id.includes('unist') || id.includes('decode-named-character-reference')) return 'vendor-markdown';
               if (id.includes('lucide-react')) return 'vendor-icons';
               if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) return 'vendor-react';
             }
