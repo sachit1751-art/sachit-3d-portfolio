@@ -85,7 +85,6 @@ Follow these steps to run the portfolio locally on your machine:
    ```bash
    npm run build
    ```
-   This generates a highly optimized static bundle inside the `dist/` directory.
 
 ---
 
