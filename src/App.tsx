@@ -5,6 +5,7 @@ import { Header } from './components/Portfolio/Header';
 import { PortfolioContainer } from './components/Portfolio/PortfolioContainer';
 import { NotFound } from './components/Portfolio/NotFound';
 import { HoneycombLoader } from './components/UI/HoneycombLoader';
+import { SEOHead } from './components/SEO/SEOHead';
 import { SEOMetadata } from './components/SEO/SEOMetadata';
 import { ShortcutHUD } from './components/UI/ShortcutHUD';
 import { ToastNotification } from './components/UI/Toast';

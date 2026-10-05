@@ -1,55 +1,61 @@
 import React, { memo } from 'react';
+import { Award } from 'lucide-react';
+import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
-import { SectionHeader } from '../UI/SectionHeader';
-import { Card } from '../UI/Card';
 
 const strengths = [
   {
     title: 'Curiosity',
-    description: 'I like understanding how technology works and exploring architectures beyond the surface.',
+    description: 'I like understanding how technology works and exploring things beyond the surface.',
   },
   {
     title: 'Creativity',
-    description: 'I enjoy coming up with novel product ideas and finding clean ways to approach technical problems.',
+    description: 'I enjoy coming up with ideas and finding different ways to approach a problem.',
   },
   {
     title: 'Problem Solving',
-    description: 'I enjoy breaking complex problems down and implementing structured, reliable solutions.',
+    description: 'I enjoy breaking problems down and figuring out practical solutions.',
   },
 ];
 
 export const Strengths = memo(() => {
   return (
     <ScrollReveal>
-      <section id="strengths" className="relative mb-20 pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
-        <SectionHeader
-          kicker="09. Strengths"
-          title="Core Strengths"
-        />
+      <section id="strengths" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
+        <div className="mb-8">
+          <div className="flex justify-center mb-3">
+            <Award className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
+          </div>
+          <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
+            [ 09 / STRENGTHS ]
+          </span>
+          <h2 className="font-sans text-4xl sm:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
+            <WordReveal text="Strengths" baseDelay={0.1} />
+          </h2>
+        </div>
 
-        <div className="space-y-4 max-w-3xl mx-auto">
+        <div className="space-y-6">
           {strengths.map((strength, idx) => (
-            <Card
+            <LineReveal
               key={idx}
-              className="p-5 sm:p-6"
+              delay={0.3 + idx * 0.15}
+              className="p-6 transition-colors rounded-[var(--radius-lg)]"
+              style={{ border: '1px solid var(--c-border)' }}
             >
               <div className="flex items-start gap-4">
-                <div
-                  className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-[var(--radius-md)] font-mono text-xs font-bold border border-[var(--c-border)]"
-                  style={{ backgroundColor: 'var(--c-surface-hover)', color: 'var(--c-heading)' }}
-                >
+                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full font-mono text-sm font-bold" style={{ backgroundColor: 'var(--c-card)', border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}>
                   0{idx + 1}
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-sans text-lg sm:text-xl font-bold mb-1 tracking-tight" style={{ color: 'var(--c-heading)' }}>
-                    {strength.title}
+                  <h3 className="font-sans text-xl font-bold mb-2 tracking-tight" style={{ color: 'var(--c-heading)' }}>
+                    <WordReveal text={strength.title} baseDelay={0.2 + idx * 0.1} />
                   </h3>
-                  <p className="text-sm sm:text-base leading-relaxed font-sans" style={{ color: 'var(--c-body)' }}>
-                    {strength.description}
+                  <p className="text-base sm:text-lg leading-relaxed font-body" style={{ color: 'var(--c-body)' }}>
+                    <WordReveal text={strength.description} baseDelay={0.35 + idx * 0.1} />
                   </p>
                 </div>
               </div>
-            </Card>
+            </LineReveal>
           ))}
         </div>
       </section>
@@ -58,6 +64,5 @@ export const Strengths = memo(() => {
 });
 
 Strengths.displayName = 'Strengths';
-
 
 export default Strengths;
