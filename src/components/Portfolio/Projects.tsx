@@ -14,6 +14,8 @@ import { ScrollReveal } from '../UI/ScrollReveal';
 import { observeElement } from '../../utils/observer';
 import { getTechStackSVG } from '../UI/TechIcons';
 import { triggerHaptic, HAPTIC_PATTERNS } from '../../utils/haptics';
+import { SectionHeader } from '../UI/SectionHeader';
+import { Badge } from '../UI/Badge';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -357,8 +359,8 @@ const ProjectCard = memo<ProjectCardProps>(({
         }}
       >
         <div>
-          {/* Header Meta: Category + Index + Touch Affordance Pill */}
-          <div className="flex items-center justify-between text-xs font-handwriting mb-3 gap-2" style={{ color: 'var(--c-subtle)' }}>
+          {/* Header Meta: Category + Index + Touch Affordance */}
+          <div className="flex items-center justify-between text-xs font-sans mb-3 gap-2" style={{ color: 'var(--c-subtle)' }}>
             <div className="flex items-center gap-1.5 flex-wrap">
               <span
                 className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-[var(--radius-sm)]"
@@ -773,17 +775,11 @@ export const Projects = memo(() => {
 
   return (
     <section id="projects" className="relative mb-16 sm:mb-20 pt-8 sm:pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
-      <div className="mb-6 sm:mb-8">
-        <div className="flex justify-center mb-2.5">
-          <Code2 className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'var(--c-dot)' }} />
-        </div>
-        <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-1.5" style={{ color: 'var(--c-muted)' }}>
-          [ 03 / PROJECTS ]
-        </span>
-        <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
-          <WordReveal text="Featured Projects" baseDelay={0.1} />
-        </h2>
-      </div>
+      <SectionHeader
+        kicker="03. Projects"
+        title="Featured Projects"
+        description="A selection of full-stack web applications, AI tools, and mobile software built for production."
+      />
 
       {/* Screen reader keyboard instructions */}
       <div className="sr-only" aria-live="polite">

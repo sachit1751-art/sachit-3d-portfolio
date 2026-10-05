@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { Hammer, Feather, FlaskConical, Palette, BookOpen } from 'lucide-react';
-import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
-import { PretextText } from '../UI/PretextText';
+import { SectionHeader } from '../UI/SectionHeader';
+import { Card } from '../UI/Card';
 
 const principles = [
   {
@@ -36,54 +36,44 @@ export const Philosophy = memo(() => {
   return (
     <ScrollReveal>
       <section id="philosophy" className="relative mb-16 sm:mb-20 pt-8 sm:pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
-        <div className="mb-6 sm:mb-8">
-          <div className="flex justify-center mb-2.5">
-            <Feather className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'var(--c-dot)' }} />
-          </div>
-          <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-1.5" style={{ color: 'var(--c-muted)' }}>
-            [ 02 / PHILOSOPHY ]
-          </span>
-          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
-            <WordReveal text="How I Think" baseDelay={0.1} />
-          </h2>
-        </div>
-        <div className="hidden sm:flex items-center gap-1.5 text-sm font-handwriting mb-6" style={{ color: 'var(--c-muted)' }}>
-          <BookOpen className="w-4 h-4" />
-          <WordReveal text="Guiding Principles" baseDelay={0.3} />
-        </div>
+        <SectionHeader
+          kicker="02. Philosophy"
+          title="How I Think"
+          description="A set of practical engineering principles that guide my decisions when building software."
+        />
 
-      <div className="space-y-6">
-        {principles.map((principle, idx) => (
-          <LineReveal
-            key={idx}
-            delay={0.3 + idx * 0.15}
-            className="p-6 transition-colors group rounded-[var(--radius-lg)]"
-            style={{ border: '1px solid var(--c-border)' }}
-          >
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg" style={{ backgroundColor: 'var(--c-card)', border: '1px solid var(--c-border)' }}>
-                <principle.icon className="w-6 h-6" style={{ color: 'var(--c-heading)' }} />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-sans text-xl font-bold mb-2 tracking-tight" style={{ color: 'var(--c-heading)' }}>
-                  <WordReveal text={principle.title} baseDelay={0.2 + idx * 0.1} />
-                </h3>
-                <PretextText
-                  text={principle.description}
-                  font="16px sans-serif"
-                  lineHeight={26}
-                  mode="balanced"
-                  className="text-base sm:text-lg leading-relaxed font-body"
-                  style={{ color: 'var(--c-body)' }}
-                />
-              </div>
-            </div>
-          </LineReveal>
-        ))}
-      </div>
-    </section>
+        <div className="space-y-4">
+          {principles.map((principle, idx) => {
+            const Icon = principle.icon;
+            return (
+              <Card
+                key={idx}
+                className="p-5 sm:p-6 transition-all duration-200"
+              >
+                <div className="flex items-start gap-4">
+                  <div
+                    className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-[var(--radius-md)] border border-[var(--c-border)]"
+                    style={{ backgroundColor: 'var(--c-surface-hover)' }}
+                  >
+                    <Icon className="w-5 h-5" style={{ color: 'var(--c-heading)' }} />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-sans text-lg sm:text-xl font-bold mb-1.5 tracking-tight" style={{ color: 'var(--c-heading)' }}>
+                      {principle.title}
+                    </h3>
+                    <p className="text-sm sm:text-base leading-relaxed" style={{ color: 'var(--c-body)' }}>
+                      {principle.description}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      </section>
     </ScrollReveal>
   );
 });
 
 Philosophy.displayName = 'Philosophy';
+

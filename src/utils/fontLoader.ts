@@ -20,8 +20,8 @@ export const initFontLoader = () => {
   }
 
   const criticalFonts = [
-    { family: 'Kalam', weight: '400', sample: 'Sachit' },
-    { family: 'Courier Prime', weight: '400', sample: '01' }
+    { family: 'Plus Jakarta Sans', weight: '700', sample: 'Sachit' },
+    { family: 'Plus Jakarta Sans', weight: '400', sample: 'Developer' }
   ];
 
   // Use CSS Font Loading API to check and load critical fonts efficiently

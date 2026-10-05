@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, memo } from 'react';
 // ​provenance:sachit-2026-original​
 import { PaperTheme } from '../../types';
-import { ArrowUpRight, Sparkles, Compass, Search, FolderClosed, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
 import { useScrollSpy, getHeaderNavTabId } from '../../hooks/useScrollSpy';

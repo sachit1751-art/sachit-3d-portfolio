@@ -2,11 +2,10 @@ import React, { memo, useRef, useEffect } from 'react';
 // ​‌sachit-2026-original-author‌​
 import gsap from 'gsap';
 import { ArrowDownRight, Mail, FileText } from 'lucide-react';
-import { WordReveal } from '../UI/TextReveal';
 import { DepthFlipText } from '../UI/DepthFlipText';
-import { QuoteRoll } from '../UI/QuoteRoll';
+import { Button } from '../UI/Button';
+import { Card } from '../UI/Card';
 import { GitHubIcon } from '../UI/Icons';
-import { DEV_QUOTES } from '../../data/quotes';
 import { WATERMARKED_NAME } from '../../utils/watermark';
 import { copyEmailToClipboard } from '../UI/Toast';
 
@@ -77,104 +76,100 @@ export const Hero = memo<HeroProps>(({
   }, []);
 
   return (
-    <section ref={heroRef} id="hero" className="relative mb-4 pt-0 pb-4">
-      <div className="mb-6">
+    <section ref={heroRef} id="hero" className="relative mb-8 pt-2 pb-6">
+      <div className="mb-8">
+        {/* Restrained single status kicker — no competing QuoteRoll */}
         <div
-          className="gsap-hero-status flex flex-wrap items-center justify-between gap-3 text-xs pb-3.5 mb-6 border-b"
-          style={{ borderColor: 'var(--c-border)', color: 'var(--c-subtle)' }}
+          className="gsap-hero-status flex flex-wrap items-center justify-between gap-3 text-xs pb-4 mb-6 border-b"
+          style={{ borderColor: 'var(--c-border)' }}
         >
-          <div className="flex items-center gap-2.5 min-w-0">
-            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--c-dot)' }} />
-            <QuoteRoll
-              quotes={DEV_QUOTES}
-              interval={4500}
-              className="font-handwriting text-base sm:text-lg italic tracking-normal"
-            />
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-600 inline-block animate-pulse" />
+            <span className="font-mono text-xs uppercase tracking-wider text-[var(--c-muted)]">
+              Available for projects & engineering
+            </span>
           </div>
-          <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] opacity-80 flex-shrink-0" style={{ color: 'var(--c-heading)' }}>
-            <span className="opacity-40">—</span>
-            <span>I CAN BUILD ANYTHING.</span>
+          <div className="font-mono text-xs uppercase tracking-[0.18em] text-[var(--c-muted)]">
+            Delhi, India
           </div>
         </div>
-        <div className="mb-4">
-          <p className="gsap-hero-subtitle font-handwriting text-lg sm:text-xl mb-2" style={{ color: 'var(--c-subtle)' }}>
+
+        {/* Hero Title & Subtitle */}
+        <div className="space-y-2">
+          <p className="gsap-hero-subtitle font-sans text-sm sm:text-base font-semibold uppercase tracking-[0.16em] text-[var(--c-muted)]">
             Independent Developer
           </p>
+
+          <h1 className="gsap-hero-title text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-[var(--c-heading)] leading-[1.08] my-3">
+            <span className="sr-only" data-author="Sachit" data-provenance="sachit-2026-original-creator">{WATERMARKED_NAME}</span>
+            <span className="block mb-2">{WATERMARKED_NAME}</span>
+            {/* The single restrained animated detail in Hero */}
+            <span className="block text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--c-muted)]" aria-hidden="true">
+              <DepthFlipText
+                phrases={[
+                  "Full-Stack Web Developer",
+                  "AI & Automation Engineer",
+                  "Frontend & Mobile Developer",
+                  "Systems & Backend Developer",
+                  "Open Source Builder"
+                ]}
+                interval={3200}
+              />
+            </span>
+          </h1>
+
+          <p className="gsap-hero-desc max-w-xl text-base sm:text-lg leading-relaxed text-[var(--c-body)] pt-2">
+            I build full-stack web applications, architect AI integrations, and automate workflows with TypeScript, React, Python, and modern cloud primitives.
+          </p>
         </div>
-        <h1 className="gsap-hero-title text-[clamp(2.2rem,1.25rem+4.5vw,5.25rem)] leading-[1.18] font-handwriting font-bold tracking-tight my-2 overflow-visible" style={{ color: 'var(--c-heading)', paddingRight: '0.1em' }}>
-          <span className="sr-only" data-author="Sachit" data-provenance="sachit-2026-original-creator">{WATERMARKED_NAME}</span>
-          <span className="inline-block" aria-hidden="true">
-            <DepthFlipText
-              phrases={[
-                "Full-Stack Web Developer",
-                "AI & Looping Engineer",
-                "Frontend Developer",
-                "Android Developer",
-                "Backend Engineer",
-                "Product Engineer",
-                "Opensource Dev",
-                "LLM Integration Developer",
-                "Web & Mobile Developer",
-                "UI & Motion Engineer",
-                "Best Vibecoder"
-              ]}
-              interval={3200}
-            />
-          </span>
-        </h1>
-        <p className="gsap-hero-desc max-w-[540px] leading-relaxed text-lg sm:text-xl font-body opacity-90 mt-5" style={{ color: 'var(--c-heading)' }}>
-          <WordReveal
-            text="I build full-stack web applications, architect AI integrations, and automate workflows."
-            baseDelay={0.1}
-          />
-        </p>
       </div>
 
-      <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4 mb-8">
-        <button
+      {/* Standardized Call to Action Buttons */}
+      <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4 mb-10">
+        <Button
           onClick={onExploreProjects}
           aria-label="View Projects"
-          className="gsap-hero-btn view-projects-btn px-5 sm:px-6 py-3 font-body text-sm sm:text-base transition-all hover:-translate-y-0.5 active:translate-y-0 hover:bg-[var(--c-btn-bg-hover)] flex items-center gap-2 cursor-pointer rounded-[var(--radius-md)]"
-          style={{ backgroundColor: 'var(--c-btn-bg)', color: 'var(--c-btn-text)' }}
+          size="lg"
+          variant="primary"
+          className="group gsap-hero-btn"
         >
           <span>View Projects</span>
-          <ArrowDownRight className="arrow-icon w-4 h-4" />
-        </button>
+          <ArrowDownRight className="w-4 h-4 transition-transform duration-150 ease-out group-hover:translate-x-1 group-hover:translate-y-1" />
+        </Button>
 
         {onViewResume && (
-          <button
+          <Button
             onClick={onViewResume}
-            className="gsap-hero-btn px-5 sm:px-6 py-3 font-body text-sm sm:text-base font-medium transition-all hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 cursor-pointer rounded-[var(--radius-md)]"
-            style={{
-              border: '1px solid var(--c-border)',
-              backgroundColor: 'var(--c-input-bg)',
-              color: 'var(--c-heading)',
-            }}
             aria-label="View Resume"
+            size="lg"
+            variant="secondary"
+            className="group gsap-hero-btn"
           >
-            <FileText className="w-4 h-4" />
+            <FileText className="w-4 h-4 transition-transform duration-150 ease-out group-hover:-translate-y-0.5" />
             <span>View Resume</span>
-          </button>
+          </Button>
         )}
 
-        <button
+        <Button
           onClick={onContactClick}
           aria-label="Contact Me"
-          className="gsap-hero-btn jellyfish-btn px-5 sm:px-6 py-3 bg-transparent font-handwriting text-base cursor-pointer"
+          size="lg"
+          variant="outline"
+          className="group gsap-hero-btn"
         >
           <span>Contact Me</span>
-        </button>
+        </Button>
       </div>
 
-      <div className="relative z-10 flex flex-col gap-3 mb-8">
-        <div className="flex flex-wrap items-center gap-4">
+      {/* Social Links Bar */}
+      <div className="relative z-10 flex flex-wrap items-center gap-3 mb-10 text-sm">
+        <div className="flex items-center gap-2">
           <a
             href="https://github.com/sachit1751-art"
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub"
-            className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
-            style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
+            className="gsap-hero-social w-9 h-9 flex items-center justify-center rounded-md border border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-heading)] hover:border-[var(--c-border-hover)] hover:bg-[var(--c-surface-hover)] transition-all"
           >
             <GitHubIcon className="w-4 h-4" />
           </a>
@@ -183,103 +178,90 @@ export const Hero = memo<HeroProps>(({
             target="_blank"
             rel="noreferrer"
             aria-label="LinkedIn"
-            className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
-            style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
+            className="gsap-hero-social w-9 h-9 flex items-center justify-center rounded-md border border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-heading)] hover:border-[var(--c-border-hover)] hover:bg-[var(--c-surface-hover)] transition-all"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           </a>
-          <a
-            href="mailto:sachit1751@gmail.com"
-            onClick={(e) => {
-              e.preventDefault();
-              copyEmailToClipboard('sachit1751@gmail.com');
-            }}
-            aria-label="Copy email address: sachit1751@gmail.com"
-            title="Click to copy email address to clipboard"
-            className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
-            style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
+          <button
+            onClick={() => copyEmailToClipboard('sachit1751@gmail.com')}
+            aria-label="Copy email address"
+            title="Click to copy email address"
+            className="gsap-hero-social w-9 h-9 flex items-center justify-center rounded-md border border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-heading)] hover:border-[var(--c-border-hover)] hover:bg-[var(--c-surface-hover)] transition-all cursor-pointer"
           >
             <Mail className="w-4 h-4" />
-          </a>
+          </button>
         </div>
 
-        <div className="gsap-hero-social flex flex-wrap items-center gap-4 text-sm font-mono">
-          <a
-            href="mailto:sachit1751@gmail.com"
-            onClick={(e) => {
-              e.preventDefault();
-              copyEmailToClipboard('sachit1751@gmail.com');
-            }}
-            className="hover:underline cursor-pointer transition-colors"
-            style={{ color: 'var(--c-heading)' }}
-            aria-label="Copy email address: sachit1751@gmail.com"
-            title="Click to copy email address to clipboard"
-          >
-            sachit1751@gmail.com
-          </a>
-        </div>
+        <button
+          onClick={() => copyEmailToClipboard('sachit1751@gmail.com')}
+          className="font-mono text-xs text-[var(--c-body)] hover:text-[var(--c-heading)] transition-colors cursor-pointer pl-1"
+        >
+          sachit1751@gmail.com
+        </button>
       </div>
 
-      <div className="relative z-10 flex flex-col sm:flex-row gap-6 pt-4" role="list" aria-label="Focus areas">
-        <div className="gsap-hero-card hero-card flex-1 cursor-default p-5 flex flex-col justify-between min-h-[160px] relative" role="listitem" aria-label="Web Development focus area">
-          <div className="relative z-10 flex justify-between items-start">
-            <span className="text-xs uppercase tracking-widest font-mono font-bold" style={{ color: 'var(--c-subtle)' }}>
-              Focus • Building
+      {/* Focus Area Cards — Standardized with Card primitive */}
+      <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2" role="list" aria-label="Focus areas">
+        <Card className="gsap-hero-card p-5 flex flex-col justify-between min-h-[140px]" role="listitem">
+          <div className="flex justify-between items-start mb-4">
+            <span className="text-xs uppercase tracking-wider font-mono font-semibold text-[var(--c-muted)]">
+              Focus 01
             </span>
-            <span className="hero-card-number text-[9px] uppercase tracking-widest font-mono" style={{ color: 'var(--c-faint)' }}>
-              001
+            <span className="font-mono text-xs text-[var(--c-muted)]">
+              Web
             </span>
           </div>
-          <div className="relative z-10 mt-auto">
-            <h3 className="hero-card-title text-xl font-bold font-sans" style={{ color: 'var(--c-heading)' }}>
+          <div>
+            <h3 className="text-lg font-bold text-[var(--c-heading)]">
               Web Development
             </h3>
-            <p className="text-xs mt-1 font-mono uppercase tracking-wider" style={{ color: 'var(--c-body)' }}>
-              React · TypeScript · Vite
+            <p className="text-xs mt-1 text-[var(--c-body)]">
+              React · TypeScript · Vite · APIs
             </p>
           </div>
-        </div>
+        </Card>
 
-        <div className="gsap-hero-card hero-card flex-1 cursor-default p-5 flex flex-col justify-between min-h-[160px] relative" role="listitem" aria-label="AI & Agents focus area">
-          <div className="relative z-10 flex justify-between items-start">
-            <span className="text-xs uppercase tracking-widest font-mono font-bold" style={{ color: 'var(--c-subtle)' }}>
-              Focus • Intelligence
+        <Card className="gsap-hero-card p-5 flex flex-col justify-between min-h-[140px]" role="listitem">
+          <div className="flex justify-between items-start mb-4">
+            <span className="text-xs uppercase tracking-wider font-mono font-semibold text-[var(--c-muted)]">
+              Focus 02
             </span>
-            <span className="hero-card-number text-[9px] uppercase tracking-widest font-mono" style={{ color: 'var(--c-faint)' }}>
-              002
+            <span className="font-mono text-xs text-[var(--c-muted)]">
+              AI
             </span>
           </div>
-          <div className="relative z-10 mt-auto">
-            <h3 className="hero-card-title text-xl font-bold font-sans" style={{ color: 'var(--c-heading)' }}>
+          <div>
+            <h3 className="text-lg font-bold text-[var(--c-heading)]">
               AI & Automation
             </h3>
-            <p className="text-xs mt-1 font-mono uppercase tracking-wider" style={{ color: 'var(--c-body)' }}>
-              Claude API · MCP · Prompt Engineering
+            <p className="text-xs mt-1 text-[var(--c-body)]">
+              Claude API · MCP · Agent Workflows
             </p>
           </div>
-        </div>
+        </Card>
 
-        <div className="gsap-hero-card hero-card flex-1 cursor-default p-5 flex flex-col justify-between min-h-[160px] relative" role="listitem" aria-label="UI/UX focus area">
-          <div className="relative z-10 flex justify-between items-start">
-            <span className="text-xs uppercase tracking-widest font-mono font-bold" style={{ color: 'var(--c-subtle)' }}>
-              Focus • Craft
+        <Card className="gsap-hero-card p-5 flex flex-col justify-between min-h-[140px]" role="listitem">
+          <div className="flex justify-between items-start mb-4">
+            <span className="text-xs uppercase tracking-wider font-mono font-semibold text-[var(--c-muted)]">
+              Focus 03
             </span>
-            <span className="hero-card-number text-[9px] uppercase tracking-widest font-mono" style={{ color: 'var(--c-faint)' }}>
-              003
+            <span className="font-mono text-xs text-[var(--c-muted)]">
+              Systems
             </span>
           </div>
-          <div className="relative z-10 mt-auto">
-            <h3 className="hero-card-title text-xl font-bold font-sans" style={{ color: 'var(--c-heading)' }}>
-              UI / UX
+          <div>
+            <h3 className="text-lg font-bold text-[var(--c-heading)]">
+              Full-Stack Architecture
             </h3>
-            <p className="text-xs mt-1 font-mono uppercase tracking-wider" style={{ color: 'var(--c-body)' }}>
-              Interface · Interaction · Design
+            <p className="text-xs mt-1 text-[var(--c-body)]">
+              Supabase · Python · UI Motion
             </p>
           </div>
-        </div>
+        </Card>
       </div>
     </section>
   );
 });
 
 Hero.displayName = 'Hero';
+
