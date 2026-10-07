@@ -22,9 +22,8 @@ import {
   Laptop,
 } from 'lucide-react';
 import { SkillCategory } from '../../types';
+import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
-import { SectionHeader } from '../UI/SectionHeader';
-import { Card } from '../UI/Card';
 
 const ICON_COMPONENTS: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
   Terminal,
@@ -239,51 +238,57 @@ const renderCustomSVG = (name: string): React.ReactNode | null => {
 export const Skills = memo(() => {
   return (
     <ScrollReveal>
-      <section id="skills" className="relative mb-16 sm:mb-20 pt-8 sm:pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
-        <SectionHeader
-          kicker="04. Capabilities"
-          title="Skills & Stack"
-          description="Core languages, libraries, frameworks, and developer tools I work with daily."
-        />
+    <section id="skills" className="relative mb-16 sm:mb-20 pt-8 sm:pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
+      <div className="mb-8 text-center">
+        <span className="font-mono text-xs font-semibold tracking-widest uppercase block mb-2" style={{ color: 'var(--c-muted)' }}>
+          04. Skills & Stack
+        </span>
+        <h2 className="font-handwriting text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight" style={{ color: 'var(--c-heading)' }}>
+          <WordReveal text="Capabilities & Architecture" baseDelay={0.1} />
+        </h2>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          {categories.map((category, cIdx) => (
-            <Card
-              key={cIdx}
-              className="p-6 sm:p-8"
-            >
-              <div className="mb-6">
-                <h3 className="font-sans text-xl font-bold mb-1.5 tracking-tight" style={{ color: 'var(--c-heading)' }}>
-                  {category.title}
-                </h3>
-                <p className="text-sm font-sans" style={{ color: 'var(--c-body)' }}>
-                  {category.description}
-                </p>
-              </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        {categories.map((category, cIdx) => (
+          <LineReveal 
+            key={cIdx} 
+            delay={0.1 * cIdx} 
+            className="p-6 sm:p-8 rounded-[var(--radius-lg)] transition-all duration-300 hover:bg-[var(--c-border)]/10" 
+            style={{ border: '1px solid var(--c-border)' }}
+          >
+            <div className="mb-6">
+              <h3 className="font-sans text-xl font-bold mb-1 tracking-tight" style={{ color: 'var(--c-heading)' }}>
+                {category.title}
+              </h3>
+              <p className="text-sm font-body opacity-70" style={{ color: 'var(--c-body)' }}>
+                {category.description}
+              </p>
+            </div>
 
-              <div className="flex flex-wrap gap-2">
-                {category.skills.map((skill, sIdx) => {
-                  const CustomIcon = renderCustomSVG(skill.name);
-                  const LucideIcon = skill.iconName ? ICON_COMPONENTS[skill.iconName] : null;
-                  return (
-                    <span
-                      key={sIdx}
-                      className="px-2.5 py-1 text-xs font-mono rounded-[var(--radius-sm)] flex items-center gap-2 border border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-body)] hover:border-[var(--c-border-hover)] hover:text-[var(--c-heading)] transition-colors select-none"
-                    >
-                      {CustomIcon ? (
-                        CustomIcon
-                      ) : (
-                        LucideIcon && <LucideIcon size={12} className="opacity-70" />
-                      )}
-                      <span>{skill.name}</span>
-                    </span>
-                  );
-                })}
-              </div>
-            </Card>
-          ))}
-        </div>
-      </section>
+            <div className="flex flex-wrap gap-2.5">
+              {category.skills.map((skill, sIdx) => {
+                const CustomIcon = renderCustomSVG(skill.name);
+                const LucideIcon = skill.iconName ? ICON_COMPONENTS[skill.iconName] : null;
+                return (
+                  <span
+                    key={sIdx}
+                    className="px-2.5 py-1.5 text-[10px] font-mono uppercase tracking-wider rounded-[var(--radius-sm)] flex items-center gap-2 transition-all"
+                    style={{ border: '1px solid var(--c-border)', color: 'var(--c-body)' }}
+                  >
+                    {CustomIcon ? (
+                      CustomIcon
+                    ) : (
+                      LucideIcon && <LucideIcon size={12} className="opacity-60" />
+                    )}
+                    {skill.name}
+                  </span>
+                );
+              })}
+            </div>
+          </LineReveal>
+        ))}
+      </div>
+    </section>
     </ScrollReveal>
   );
 });

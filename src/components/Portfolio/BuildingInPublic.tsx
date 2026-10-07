@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
+import { Feather } from 'lucide-react';
+import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
-import { SectionHeader } from '../UI/SectionHeader';
-import { Card } from '../UI/Card';
 
 const updates = [
   {
@@ -29,39 +29,41 @@ const updates = [
 export const BuildingInPublic = memo(() => {
   return (
     <ScrollReveal>
-      <section id="building-in-public" className="relative mb-20 pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
-        <SectionHeader
-          kicker="10. Journal"
-          title="Building in Public"
-          description="Milestones, engineering logs, and updates on what I'm creating."
-        />
+      <section id="building-in-public" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
+      <div className="mb-8 text-center">
+        <span className="font-mono text-xs font-semibold tracking-widest uppercase block mb-2" style={{ color: 'var(--c-muted)' }}>
+          10. Journal
+        </span>
+        <h2 className="font-handwriting text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight" style={{ color: 'var(--c-heading)' }}>
+          <WordReveal text="Building in Public" baseDelay={0.1} />
+        </h2>
+      </div>
 
-        <div className="space-y-4 max-w-3xl mx-auto">
+        <div className="space-y-6">
           {updates.map((update, idx) => (
-            <Card
+            <LineReveal
               key={idx}
-              className="p-5 sm:p-6"
+              delay={0.3 + idx * 0.15}
+              className="p-6 transition-colors rounded-[var(--radius-lg)]"
+              style={{ border: '1px solid var(--c-border)' }}
             >
               <div className="flex items-start gap-4">
-                <div
-                  className="flex-shrink-0 w-11 h-11 flex items-center justify-center rounded-[var(--radius-md)] font-mono text-xs font-bold border border-[var(--c-border)]"
-                  style={{ backgroundColor: 'var(--c-surface-hover)', color: 'var(--c-heading)' }}
-                >
+                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full font-mono text-xs font-bold" style={{ backgroundColor: 'var(--c-card)', border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}>
                   {update.date.split(' ')[0].slice(0, 3)}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] block mb-1" style={{ color: 'var(--c-muted)' }}>
+                <div className="flex-1">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] block mb-1" style={{ color: 'var(--c-faint)' }}>
                     {update.date}
                   </span>
-                  <h3 className="font-sans text-lg sm:text-xl font-bold mb-1.5 tracking-tight" style={{ color: 'var(--c-heading)' }}>
-                    {update.title}
+                  <h3 className="font-sans text-xl font-bold mb-2 tracking-tight" style={{ color: 'var(--c-heading)' }}>
+                    <WordReveal text={update.title} baseDelay={0.2 + idx * 0.1} />
                   </h3>
-                  <p className="text-sm sm:text-base leading-relaxed font-sans" style={{ color: 'var(--c-body)' }}>
-                    {update.description}
+                  <p className="text-base sm:text-lg leading-relaxed font-body" style={{ color: 'var(--c-body)' }}>
+                    <WordReveal text={update.description} baseDelay={0.35 + idx * 0.1} />
                   </p>
                 </div>
               </div>
-            </Card>
+            </LineReveal>
           ))}
         </div>
       </section>

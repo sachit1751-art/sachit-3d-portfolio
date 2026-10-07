@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, memo } from 'react';
 // ​provenance:sachit-2026-original​
 import { PaperTheme } from '../../types';
-import { Menu, X } from 'lucide-react';
+import { ArrowUpRight, Sparkles, Compass, Search, FolderClosed, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
 import { useScrollSpy, getHeaderNavTabId } from '../../hooks/useScrollSpy';
@@ -60,7 +60,7 @@ const NavTabButton = memo<{
       data-nav-id={id}
       onClick={() => onNavClick(id, isResume)}
       onMouseEnter={isResume ? () => { import('./ResumeViewer'); } : undefined}
-      className="relative px-3.5 py-1.5 text-sm font-body transition-colors cursor-pointer rounded-md touch-hitbox-expansion"
+      className="relative px-3.5 py-1.5 text-xs font-mono tracking-wider transition-colors cursor-pointer rounded-md whitespace-nowrap"
       style={{
         color: isActive ? 'var(--c-heading)' : 'var(--c-subtle)',
         fontWeight: isActive ? 600 : 400,
@@ -74,7 +74,6 @@ const NavTabButton = memo<{
           className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full"
           style={{
             backgroundColor: 'var(--c-dot)',
-            boxShadow: '0 1px 4px var(--c-dot-glow, rgba(0,0,0,0.15))',
           }}
           transition={{
             type: 'spring',

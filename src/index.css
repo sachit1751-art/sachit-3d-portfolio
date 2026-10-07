@@ -1,6 +1,50 @@
 @import "tailwindcss";
 /* ​‌‍Original author: sachit-portfolio-2026‍‌​ */
 
+@font-face {
+  font-family: 'Kalam';
+  src: url('/fonts/Kalam-Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kalam';
+  src: url('/fonts/Kalam-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kalam';
+  src: url('/fonts/Kalam-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Fallback font definitions with size-adjust to match custom font metrics */
+/* Prevents Layout Shift (CLS) during font loading */
+@font-face {
+  font-family: 'Kalam-Fallback';
+  src: local('Comic Sans MS'), local('Chalkboard SE'), local('cursive');
+  ascent-override: 95%;
+  descent-override: 25%;
+  line-gap-override: 0%;
+  size-adjust: 105%;
+}
+
+@font-face {
+  font-family: 'Courier-Fallback';
+  src: local('Courier New'), local('Courier'), local('monospace');
+  ascent-override: 90%;
+  descent-override: 20%;
+  line-gap-override: 0%;
+  size-adjust: 98%;
+}
+
 @layer base {
   :root {
     --radius-sm: 6px;
@@ -8,12 +52,10 @@
     --radius-lg: 14px;
     --radius-xl: 20px;
 
-    /* Font Variables: Unified Modern Typography System */
-    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    --font-handwriting: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    /* Font Variables */
+    --font-handwriting: 'Kalam', 'Kalam-Fallback', cursive;
+    --font-mono: 'Courier Prime', 'Courier-Fallback', 'JetBrains Mono', monospace;
+    --font-body: 'Courier Prime', 'Courier-Fallback', monospace;
     --_wm: '\200B\FEFFsachit-2026\FEFF\200B';
 
     /* Invisible Design Watermarks & Steganographic Fingerprints */
@@ -222,13 +264,15 @@
 
   /* Fluid Header Scaling & Character Glyph Bounds Protection */
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
+    font-family: var(--font-handwriting);
     max-width: 100%;
     box-sizing: border-box;
     overflow-wrap: break-word;
     word-break: normal;
     text-wrap: balance;
+    /* Safeguard for handwritten glyph swashes and terminal strokes (e.g. 'L', 'l', italics) */
     overflow: visible;
+    padding-inline: 0.08em;
   }
 
   h1 {
@@ -270,7 +314,7 @@
   }
 
   .font-handwriting {
-    font-family: var(--font-sans);
+    font-family: var(--font-handwriting);
   }
 
   .font-body {
@@ -278,29 +322,25 @@
   }
 
   .font-sans {
-    font-family: var(--font-sans);
+    font-family: var(--font-handwriting);
   }
 }
 
-/* Font & Fluid Typography overrides */
+/* Font & Fluid Typography overrides OUTSIDE @layer to beat Tailwind v4 utilities */
 .font-sans {
-  font-family: var(--font-sans) !important;
-}
-
-.font-heading {
-  font-family: var(--font-heading) !important;
+  font-family: var(--font-handwriting) !important;
 }
 
 .font-handwriting {
-  font-family: var(--font-sans) !important;
+  font-family: var(--font-handwriting) !important;
 }
 
 .font-body {
   font-family: var(--font-body) !important;
 }
 
-.font-mono {
-  font-family: var(--font-mono) !important;
+.font-serif {
+  font-family: var(--font-body) !important;
 }
 
 /* Fluid Typography utility classes and responsive header clamp overrides */
@@ -326,6 +366,7 @@ h2.sm\:text-5xl,
   font-size: var(--fluid-h2) !important;
   line-height: clamp(1.18, 1.14 + 0.2vw, 1.26) !important;
   letter-spacing: -0.01em !important;
+  padding-inline: 0.08em;
   overflow: visible;
 }
 
@@ -348,50 +389,47 @@ h2.sm\:text-5xl,
   /* Smooth theme transitions for all elements */
   [data-theme], [data-theme] * {
     transition-property: background-color, border-color, color, fill, stroke;
-    transition-duration: 300ms;
+    transition-duration: 500ms;
     transition-timing-function: ease-in-out;
   }
 
-  /* Theme color tokens: Clear contrast and intentional visual layers */
+  /* Theme color tokens */
   :root,
   [data-theme="kraft"] {
-    --c-bg: #F5EFE3;
-    --c-heading: #181512;
-    --c-body: #3A342D;
-    --c-muted: #635B50;
-    --c-subtle: #4F483E;
-    --c-faint: #8F8576;
-    --c-name: #181512;
-    --c-border: rgba(24, 21, 18, 0.18);
-    --c-border-hover: rgba(24, 21, 18, 0.38);
-    --c-border-focus: #181512;
-    --c-btn-bg: #181512;
-    --c-btn-bg-hover: #2D2721;
-    --c-btn-text: #FAF6F0;
-    --c-card-gradient-from: rgba(255,255,255,0.75);
-    --c-card-gradient-to: rgba(255,255,255,0.5);
-    --c-card: rgba(255,255,255,0.68);
-    --c-surface: rgba(255,255,255,0.68);
-    --c-surface-hover: rgba(255,255,255,0.88);
-    --c-surface-elevated: rgba(255,255,255,0.95);
-    --c-header-bg: rgba(245, 239, 227, 0.94);
-    --c-header-border: rgba(24,21,18,0.14);
-    --c-input-bg: rgba(255,255,255,0.70);
-    --c-input-bg-focus: rgba(255,255,255,0.95);
-    --c-modal-bg: rgba(245,239,227,0.98);
-    --c-modal-backdrop: rgba(24,21,18,0.65);
-    --c-progress-track: rgba(24,21,18,0.1);
-    --c-progress-fill-from: rgba(24,21,18,0.7);
-    --c-progress-fill-to: #181512;
-    --c-tab-active-bg: rgba(24,21,18,0.9);
-    --c-tab-active-text: #FAF6F0;
-    --c-dot: #181512;
-    --c-git-0: rgba(24, 21, 18, 0.06);
+    --c-bg: #EFE6D5;
+    --c-heading: #241F1A;
+    --c-body: #5A5248;
+    --c-muted: #9A9284;
+    --c-subtle: #706A5E;
+    --c-faint: #ADA599;
+    --c-name: #2A2520;
+    --c-border: rgba(36, 31, 26, 0.12);
+    --c-border-hover: rgba(36, 31, 26, 0.3);
+    --c-border-focus: #241F1A;
+    --c-btn-bg: #241F1A;
+    --c-btn-bg-hover: #3A3328;
+    --c-btn-text: #F4EDE0;
+    --c-card-gradient-from: rgba(255,255,255,0.3);
+    --c-card-gradient-to: rgba(255,255,255,0.05);
+    --c-card: rgba(255,255,255,0.18);
+    --c-header-bg: #EFE6D5;
+    --c-header-border: rgba(36,31,26,0.08);
+    --c-input-bg: rgba(255,255,255,0.3);
+    --c-input-bg-focus: rgba(255,255,255,0.5);
+    --c-modal-bg: rgba(239,230,213,0.95);
+    --c-modal-backdrop: rgba(36,31,26,0.7);
+    --c-progress-track: rgba(36,31,26,0.1);
+    --c-progress-fill-from: rgba(36,31,26,0.7);
+    --c-progress-fill-to: #241F1A;
+    --c-tab-active-bg: rgba(36,31,26,0.85);
+    --c-tab-active-text: #F4EDE0;
+    --c-dot: #241F1A;
+    --c-git-0: rgba(36, 31, 26, 0.06);
     --c-git-1: #decbb4;
     --c-git-2: #c89962;
     --c-git-3: #9a602a;
     --c-git-4: #4a2c0f;
-    --c-git-border: rgba(24, 21, 18, 0.18);
+    --c-git-border: rgba(36, 31, 26, 0.14);
   }
 
   /* Focus-visible styles — visible keyboard focus ring for all interactive elements */
@@ -683,45 +721,77 @@ h2.sm\:text-5xl,
 .hero-card:hover {
   border-color: var(--c-border-hover);
   background: var(--c-card);
-  transform: translateY(-3px) scale(1.02) !important;
-  box-shadow: 0 8px 24px -4px var(--c-border-hover), 0 2px 8px -1px var(--c-card);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px -2px rgba(36, 31, 26, 0.08);
 }
 
 .hero-card:hover .hero-card-number {
-  transform: scale(1.15);
-  opacity: 1;
+  opacity: 0.9;
 }
 
 .hero-card-number {
-  transition: all 0.3s ease-out;
+  transition: opacity 0.2s ease-out;
   opacity: 0.6;
 }
 
-/* Slippy Jellyfish button replaced with fast intentional interaction */
-.jellyfish-btn {
-  border: 1px solid var(--c-border);
+/* Unified restrained button style for primary/secondary actions */
+.btn-primary {
+  background-color: var(--c-btn-bg);
+  color: var(--c-btn-text);
+  border: 1px solid var(--c-btn-bg);
   border-radius: var(--radius-md);
-  color: var(--c-heading);
-  transition: all 0.18s ease-out;
+  padding: 0.625rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease-out;
 }
 
-.jellyfish-btn:hover {
-  background: var(--c-surface-hover);
+.btn-primary:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: var(--c-input-bg);
+  color: var(--c-heading);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: 0.625rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease-out;
+}
+
+.btn-secondary:hover {
   border-color: var(--c-border-hover);
   transform: translateY(-1px);
 }
 
-.jellyfish-btn:active {
-  transform: translateY(0);
+.jellyfish-btn {
+  border: 1px solid var(--c-border);
+  background-color: var(--c-input-bg);
+  border-radius: var(--radius-md);
+  color: var(--c-heading);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease-out;
 }
 
-/* View Projects button arrow animation - fast and intentional */
+.jellyfish-btn:hover {
+  border-color: var(--c-border-hover);
+  transform: translateY(-1px);
+}
+
+/* View Projects button arrow animation */
 .view-projects-btn .arrow-icon {
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s ease-out;
 }
 
 .view-projects-btn:hover .arrow-icon {
-  transform: translate(3px, 3px);
+  transform: translateX(3px);
 }
 
 /* Paper grain texture overlay */

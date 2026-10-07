@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect, memo } from 'react';
-import { Send, User, Bot, Loader2, MessageSquare, RotateCcw, Minus, Copy, Check } from 'lucide-react';
+import { Send, User, Bot, Loader2, MessageSquare, Trash2, RotateCcw, FileText, ExternalLink, Minus, Copy, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ScrollReveal } from '../UI/ScrollReveal';
+import { WordReveal } from '../UI/TextReveal';
 import { useActiveSection } from '../../hooks/useActiveSection';
 import { useConversationContext } from '../../hooks/useConversationContext';
 import { PaperTheme, PaperState } from '../../types';
@@ -734,18 +735,12 @@ export const ChatAboutMe = memo<ChatAboutMeProps>(({
     <ScrollReveal>
       <section id="chat-about-me" className="relative mb-16 sm:mb-20 pt-8 sm:pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
         <div className="mb-8 text-center">
-          <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block mb-2" style={{ color: 'var(--c-muted)' }}>
-            [ 11 / INTERACTIVE ASSISTANT ]
+          <span className="font-mono text-xs font-semibold tracking-widest uppercase block mb-2" style={{ color: 'var(--c-muted)' }}>
+            11. Interactive Assistant
           </span>
-          <div className="flex items-center justify-center gap-2.5 mb-3">
-            <MessageSquare className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
-            <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight" style={{ color: 'var(--c-heading)' }}>
-              Chat About Me
-            </h2>
-          </div>
-          <p className="max-w-2xl mx-auto text-sm sm:text-base font-handwriting leading-relaxed" style={{ color: 'var(--c-body)' }}>
-            Curious about my workflow, tech stack, or specific projects? Ask my AI assistant for instant answers.
-          </p>
+          <h2 className="font-handwriting text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight" style={{ color: 'var(--c-heading)' }}>
+            <WordReveal text="Chat About Me" baseDelay={0.1} />
+          </h2>
         </div>
 
         <div 

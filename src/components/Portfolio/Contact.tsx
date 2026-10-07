@@ -4,8 +4,6 @@ import { Mail, Check, Copy, Send, AlertCircle, CheckCircle2, Info, Loader2 } fro
 import { animate } from 'animejs';
 import { CharReveal, WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
-import { SectionHeader } from '../UI/SectionHeader';
-import { Button } from '../UI/Button';
 import { HoneycombLoader } from '../UI/HoneycombLoader';
 import { GitHubIcon } from '../UI/Icons';
 import { WATERMARKED_NAME } from '../../utils/watermark';
@@ -235,12 +233,14 @@ export const Contact = memo(() => {
           {isSuccess ? 'Message sent successfully' : ''}
         </div>
 
-        {/* Section Header */}
-        <SectionHeader
-          kicker="12. Contact"
-          title="Let's Build Something"
-          description="Reach out for full-stack engineering, AI integrations, or collaborative opportunities."
-        />
+        <div className="mb-8 text-center">
+          <span className="font-mono text-xs font-semibold tracking-widest uppercase block mb-2" style={{ color: 'var(--c-muted)' }}>
+            12. Contact
+          </span>
+          <h2 className="font-handwriting text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight" style={{ color: 'var(--c-heading)' }}>
+            <WordReveal text="Let's Build Something" baseDelay={0.1} />
+          </h2>
+        </div>
 
         {/* ========================================================= */}
         {/* CONTACT FORM & LIVE DISPATCH RECEIPT                     */}
@@ -476,25 +476,25 @@ export const Contact = memo(() => {
                     )}
                   </div>
 
-                  <Button
+                  <button
                     type="submit"
-                    variant="primary"
-                    size="lg"
                     disabled={isSubmitting || isAutoTypingForm}
-                    className="w-full"
+                    className="w-full p-3 font-mono text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:pointer-events-none rounded-[var(--radius-md)] cursor-pointer hover:brightness-110 active:scale-[0.99]"
+                    style={{ border: '1px solid var(--c-border-focus)', backgroundColor: 'var(--c-btn-bg)', color: 'var(--c-btn-text)' }}
                   >
                     {isSubmitting ? (
                       <div className="flex items-center gap-2">
                         <Loader2 className="w-4 h-4 animate-spin text-current" />
-                        <span>Sending message...</span>
+                        <HoneycombLoader size="sm" color="var(--c-btn-text)" />
+                        <span>TRANSMITTING PAYLOAD...</span>
                       </div>
                     ) : (
                       <>
-                        <span>Send Message</span>
+                        <span>Transmit Message</span>
                         <Send className="w-4 h-4" />
                       </>
                     )}
-                  </Button>
+                  </button>
                 </form>
               </div>
               )}
@@ -634,8 +634,8 @@ export const Contact = memo(() => {
                   </svg>
                 </button>
               </div>
-              <p className="text-xs sm:text-sm font-sans" style={{ color: 'var(--c-muted)' }}>
-                © 2026 {WATERMARKED_NAME} · Built with React &amp; TypeScript
+              <p className="text-sm font-handwriting tracking-wide" style={{ color: 'var(--c-muted)' }}>
+                <WordReveal text={`© 2026 ${WATERMARKED_NAME} • Built with React, TypeScript & Interactive Typewriter Engine`} baseDelay={0.2} />
               </p>
             </footer>
       </section>

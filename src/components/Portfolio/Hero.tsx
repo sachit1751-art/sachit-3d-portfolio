@@ -1,8 +1,7 @@
 import React, { memo, useRef, useEffect } from 'react';
 // ​‌sachit-2026-original-author‌​
 import gsap from 'gsap';
-import { ArrowDownRight } from 'lucide-react';
-import { PixelGithub, PixelMail, PixelBriefcase, PixelCode, PixelTerminal, PixelSparkle } from '../UI/PixelIcons';
+import { ArrowDownRight, Mail, FileText } from 'lucide-react';
 import { WordReveal } from '../UI/TextReveal';
 import { DepthFlipText } from '../UI/DepthFlipText';
 import { QuoteRoll } from '../UI/QuoteRoll';
@@ -135,25 +134,19 @@ export const Hero = memo<HeroProps>(({
         <button
           onClick={onExploreProjects}
           aria-label="View Projects"
-          className="gsap-hero-btn view-projects-btn px-5 sm:px-6 py-3 font-body text-sm sm:text-base transition-all hover:-translate-y-0.5 active:translate-y-0 hover:bg-[var(--c-btn-bg-hover)] flex items-center gap-2 cursor-pointer rounded-[var(--radius-md)]"
-          style={{ backgroundColor: 'var(--c-btn-bg)', color: 'var(--c-btn-text)' }}
+          className="gsap-hero-btn btn-primary flex items-center gap-2 cursor-pointer"
         >
           <span>View Projects</span>
-          <ArrowDownRight className="arrow-icon w-4 h-4" />
+          <ArrowDownRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:translate-y-0.5" />
         </button>
 
         {onViewResume && (
           <button
             onClick={onViewResume}
-            className="gsap-hero-btn px-5 sm:px-6 py-3 font-body text-sm sm:text-base font-medium transition-all hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 cursor-pointer rounded-[var(--radius-md)]"
-            style={{
-              border: '1px solid var(--c-border)',
-              backgroundColor: 'var(--c-input-bg)',
-              color: 'var(--c-heading)',
-            }}
+            className="gsap-hero-btn btn-secondary flex items-center gap-2 cursor-pointer"
             aria-label="View Resume"
           >
-            <PixelBriefcase size={16} />
+            <FileText className="w-4 h-4" />
             <span>View Resume</span>
           </button>
         )}
@@ -161,7 +154,7 @@ export const Hero = memo<HeroProps>(({
         <button
           onClick={onContactClick}
           aria-label="Contact Me"
-          className="gsap-hero-btn jellyfish-btn px-5 sm:px-6 py-3 bg-transparent font-handwriting text-base cursor-pointer"
+          className="gsap-hero-btn btn-secondary flex items-center gap-2 cursor-pointer"
         >
           <span>Contact Me</span>
         </button>
@@ -177,7 +170,7 @@ export const Hero = memo<HeroProps>(({
             className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
             style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
           >
-            <PixelGithub size={18} />
+            <GitHubIcon className="w-4 h-4" />
           </a>
           <a
             href="https://www.linkedin.com/in/sachit-undefined-975503440"
@@ -200,7 +193,7 @@ export const Hero = memo<HeroProps>(({
             className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
             style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
           >
-            <PixelMail size={18} />
+            <Mail className="w-4 h-4" />
           </a>
         </div>
 
