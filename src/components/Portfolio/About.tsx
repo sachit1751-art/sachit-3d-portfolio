@@ -1,10 +1,11 @@
 import React, { memo, useRef, useEffect } from 'react';
 // ​sachit-2026-original-authored​
-import { Feather, User } from 'lucide-react';
 import gsap from 'gsap';
 import { LocalMascot } from '../UI/LocalMascot';
-import { WordReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
+import { SectionHeader } from '../UI/SectionHeader';
+import { Card } from '../UI/Card';
+import { Compass } from 'lucide-react';
 import { WATERMARKED_NAME } from '../../utils/watermark';
 
 // ﻿watermark:sachit-2026﻿
@@ -54,32 +55,25 @@ export const About = memo(() => {
 
   return (
     <ScrollReveal>
-    <section id="about" className="relative mb-16 sm:mb-20 pt-8 sm:pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
-      <div className="mb-6 sm:mb-8">
-        <div className="flex justify-center mb-2.5">
-          <User className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'var(--c-dot)' }} />
-        </div>
-        <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-1.5" style={{ color: 'var(--c-muted)' }}>
-          [ 01 / BACKGROUND ]
-        </span>
-        <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
-          <WordReveal text="About Me" baseDelay={0.1} />
-        </h2>
-      </div>
+      <section id="about" className="relative mb-16 sm:mb-20 pt-8 sm:pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
+        <SectionHeader
+          kicker="01. Background"
+          title="About Me"
+        />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
-        {/* Paragraphs Column */}
-        <div className="lg:col-span-7 lg:order-1 space-y-4 text-sm sm:text-base leading-relaxed font-body" style={{ color: 'var(--c-body)', border: 'none' }}>
-          <p>
-            I’m <span className="font-handwriting font-bold text-lg sm:text-xl" style={{ color: 'var(--c-heading)' }}>{WATERMARKED_NAME}</span> — a student and developer who enjoys building things from the ground up.
-          </p>
-          <p>
-            I work across web development, AI, automation, and open-source software, mostly learning through projects I build myself. I like taking an idea, figuring out how it could work, learning whatever I need along the way, and turning it into something real.
-          </p>
-          <p>
-            Most of what I learn comes from building — whether it’s a full-stack application, an automation system, an AI-powered tool, or an experiment that started as a simple idea. I care less about having projects on a résumé and more about making things that actually work, understanding what breaks, and improving them until they’re worth using.
-          </p>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
+          {/* Paragraphs Column */}
+          <div className="lg:col-span-7 lg:order-1 space-y-4 text-base sm:text-lg leading-relaxed font-sans" style={{ color: 'var(--c-body)' }}>
+            <p>
+              I’m <span className="font-bold text-[var(--c-heading)]">{WATERMARKED_NAME}</span> — an independent developer who enjoys building software products from the ground up.
+            </p>
+            <p>
+              I work across full-stack web development, AI integrations, automation, and open-source systems. My approach is project-driven: I take ideas, architect how they should work, learn whatever tools are needed, and turn them into resilient production software.
+            </p>
+            <p>
+              I care less about adding items to a résumé and more about building tools that actually solve problems, understanding failure modes, and refining the user experience until every interaction feels deliberate.
+            </p>
+          </div>
 
         {/* Mascot & Snapshot Column */}
         <div className="lg:col-span-5 lg:order-2 flex flex-col items-center gap-6 w-full">
@@ -125,47 +119,41 @@ export const About = memo(() => {
               </div>
             </div>
 
-            {/* Polaroid Bottom Handwritten Caption */}
+            {/* Polaroid Bottom Caption */}
             <div 
-              className="pt-2 text-center text-xs font-handwriting select-none"
+              className="pt-2 text-center text-xs font-mono select-none"
               style={{
-                color: 'var(--c-subtle)',
+                color: 'var(--c-muted)',
               }}
             >
-              ( tap me! )
+              ( interactive mascot )
             </div>
           </div>
 
-          {/* Snapshot Card */}
-          <div 
-            className="w-full p-5 sm:p-6 relative flex flex-col justify-between rounded-[var(--radius-lg)] overflow-hidden transition-all duration-300" 
-            style={{ 
-              backgroundColor: 'transparent',
-              border: 'none',
-            }}
-          >
+          {/* Snapshot Card — Standardized with Card primitive */}
+          <Card className="w-full p-5 sm:p-6 flex flex-col justify-between">
             <div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.25em] mb-4 flex items-center gap-1.5 font-semibold" style={{ color: 'var(--c-subtle)' }}>
-                <Feather className="w-3.5 h-3.5" style={{ color: 'var(--c-heading)' }} />
+              <div className="font-mono text-xs uppercase tracking-[0.2em] mb-4 flex items-center gap-1.5 font-semibold" style={{ color: 'var(--c-muted)' }}>
+                <Compass className="w-4 h-4" style={{ color: 'var(--c-heading)' }} />
                 Snapshot
               </div>
-              <ul className="space-y-4 text-base font-body" style={{ color: 'var(--c-body)' }}>
+              <ul className="space-y-4 font-sans" style={{ color: 'var(--c-body)' }}>
                 <li>
-                  <span className="block font-mono text-[10px] uppercase tracking-[0.2em] mb-1" style={{ color: 'var(--c-faint)' }}>Currently</span>
-                  <span className="font-handwriting text-lg" style={{ color: 'var(--c-heading)' }}>Class 12 — PCMB</span>
+                  <span className="block font-mono text-[11px] uppercase tracking-[0.16em] mb-1" style={{ color: 'var(--c-muted)' }}>Currently</span>
+                  <span className="font-sans font-semibold text-base sm:text-lg" style={{ color: 'var(--c-heading)' }}>Class 12 — PCMB</span>
                 </li>
                 <li>
-                  <span className="block font-mono text-[10px] uppercase tracking-[0.2em] mb-1" style={{ color: 'var(--c-faint)' }}>Primary Focus</span>
-                  <span className="font-handwriting text-lg" style={{ color: 'var(--c-heading)' }}>Full-Stack · AI · Automation</span>
+                  <span className="block font-mono text-[11px] uppercase tracking-[0.16em] mb-1" style={{ color: 'var(--c-muted)' }}>Primary Focus</span>
+                  <span className="font-sans font-semibold text-base sm:text-lg" style={{ color: 'var(--c-heading)' }}>Full-Stack · AI · Automation</span>
                 </li>
               </ul>
             </div>
 
-            <div className="mt-6 pt-4 flex items-center justify-between text-sm font-handwriting" style={{ borderTop: 'none', color: 'var(--c-muted)' }}>
+            <div className="mt-6 pt-4 flex items-center justify-between text-xs font-mono uppercase tracking-wider" style={{ borderTop: '1px solid var(--c-border)', color: 'var(--c-muted)' }}>
               <span>Based: Remote</span>
               <span>Mode: Building</span>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </section>

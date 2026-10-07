@@ -31,7 +31,7 @@ export function usePerformance() {
   return {
     reducedMotion,
     isLowPower,
-    // Combined flag for "simplify everything"
-    simplify: reducedMotion || isLowPower
+    // Low performance degradation disabled — maintains full 3D paper quality and rendering
+    simplify: false
   };
 }

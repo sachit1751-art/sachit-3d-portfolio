@@ -1,7 +1,8 @@
 import React, { memo, useRef, useEffect } from 'react';
 // ​‌sachit-2026-original-author‌​
 import gsap from 'gsap';
-import { ArrowDownRight, Mail, FileText } from 'lucide-react';
+import { ArrowDownRight } from 'lucide-react';
+import { PixelGithub, PixelMail, PixelBriefcase, PixelCode, PixelTerminal, PixelSparkle } from '../UI/PixelIcons';
 import { WordReveal } from '../UI/TextReveal';
 import { DepthFlipText } from '../UI/DepthFlipText';
 import { QuoteRoll } from '../UI/QuoteRoll';
@@ -152,7 +153,7 @@ export const Hero = memo<HeroProps>(({
             }}
             aria-label="View Resume"
           >
-            <FileText className="w-4 h-4" />
+            <PixelBriefcase size={16} />
             <span>View Resume</span>
           </button>
         )}
@@ -176,7 +177,7 @@ export const Hero = memo<HeroProps>(({
             className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
             style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
           >
-            <GitHubIcon className="w-4 h-4" />
+            <PixelGithub size={18} />
           </a>
           <a
             href="https://www.linkedin.com/in/sachit-undefined-975503440"
@@ -199,7 +200,7 @@ export const Hero = memo<HeroProps>(({
             className="gsap-hero-social w-10 h-10 flex items-center justify-center rounded-full hover:border-[var(--c-border-focus)] hover:bg-[var(--c-input-bg)] cursor-pointer transition-colors"
             style={{ border: '1px solid var(--c-border)', color: 'var(--c-heading)' }}
           >
-            <Mail className="w-4 h-4" />
+            <PixelMail size={18} />
           </a>
         </div>
 

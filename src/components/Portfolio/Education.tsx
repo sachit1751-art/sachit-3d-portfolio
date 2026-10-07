@@ -1,7 +1,9 @@
 import React, { memo } from 'react';
 import { GraduationCap, Award } from 'lucide-react';
-import { WordReveal, LineReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
+import { SectionHeader } from '../UI/SectionHeader';
+import { Card } from '../UI/Card';
+import { Badge } from '../UI/Badge';
 
 const educationItems = [
   {
@@ -23,49 +25,43 @@ const educationItems = [
 export const Education = memo(() => {
   return (
     <ScrollReveal>
-      <section id="education" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
-        <div className="mb-8">
-          <div className="flex justify-center mb-3">
-            <GraduationCap className="w-6 h-6" style={{ color: 'var(--c-dot)' }} />
-          </div>
-          <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
-            [ 08 / EDUCATION & CERTIFICATIONS ]
-          </span>
-          <h2 className="font-sans text-4xl sm:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
-            <WordReveal text="Education & Certifications" baseDelay={0.1} />
-          </h2>
-        </div>
+      <section id="education" className="relative mb-20 pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
+        <SectionHeader
+          kicker="08. Education"
+          title="Education & Certifications"
+        />
 
-        <div className="space-y-6">
+        <div className="space-y-4 max-w-3xl mx-auto">
           {educationItems.map((item, idx) => {
             const Icon = item.icon;
             return (
-              <LineReveal
+              <Card
                 key={idx}
-                delay={0.3 + idx * 0.2}
-                className="p-6 sm:p-8 rounded-[var(--radius-lg)]"
-                style={{ border: '1px solid var(--c-border)' }}
+                className="p-6 sm:p-7"
               >
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-[var(--radius-md)]" style={{ backgroundColor: 'var(--c-card)', border: '1px solid var(--c-border)' }}>
-                    <Icon className="w-6 h-6" style={{ color: 'var(--c-heading)' }} />
+                  <div
+                    className="flex-shrink-0 w-11 h-11 flex items-center justify-center rounded-[var(--radius-md)] border border-[var(--c-border)]"
+                    style={{ backgroundColor: 'var(--c-surface-hover)' }}
+                  >
+                    <Icon className="w-5 h-5" style={{ color: 'var(--c-heading)' }} />
                   </div>
-                  <div className="flex-1">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.25em] font-semibold" style={{ color: 'var(--c-muted)' }}>
+                  <div className="flex-1 min-w-0">
+                    <Badge variant="outline" className="mb-2">
                       {item.label}
-                    </span>
-                    <h3 className="font-sans text-xl font-bold mt-1 mb-2 tracking-tight" style={{ color: 'var(--c-heading)' }}>
-                      <WordReveal text={item.title} baseDelay={0.2 + idx * 0.12} />
+                    </Badge>
+                    <h3 className="font-sans text-lg sm:text-xl font-bold mb-1.5 tracking-tight" style={{ color: 'var(--c-heading)' }}>
+                      {item.title}
                     </h3>
-                    <p className="text-base sm:text-lg font-body mb-1" style={{ color: 'var(--c-body)' }}>
-                      <WordReveal text={item.subtitle} baseDelay={0.35 + idx * 0.12} />
+                    <p className="text-sm sm:text-base font-sans mb-1.5" style={{ color: 'var(--c-body)' }}>
+                      {item.subtitle}
                     </p>
-                    <p className="text-sm font-body" style={{ color: 'var(--c-muted)' }}>
-                      <WordReveal text={item.detail} baseDelay={0.5 + idx * 0.12} />
+                    <p className="text-xs sm:text-sm font-sans" style={{ color: 'var(--c-muted)' }}>
+                      {item.detail}
                     </p>
                   </div>
                 </div>
-              </LineReveal>
+              </Card>
             );
           })}
         </div>
@@ -77,4 +73,5 @@ export const Education = memo(() => {
 Education.displayName = 'Education';
 
 export default Education;
+
 

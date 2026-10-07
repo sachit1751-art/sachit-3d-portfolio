@@ -1,7 +1,6 @@
 import React, { memo, useCallback, useRef, useEffect, lazy, Suspense } from 'react';
 import { PaperTheme, PaperState } from '../../types';
 import { Hero } from './Hero';
-import { ScrollTextPath } from '../UI/ScrollTextPath';
 import { ScrollReveal } from '../UI/ScrollReveal';
 import { SectionSkeleton } from '../UI/SectionSkeleton';
 import { attachPointerEventInspector } from '../../utils/pointerEventHandler';
@@ -133,8 +132,6 @@ export const PortfolioContainer = memo<PortfolioContainerProps>(({
             onContactClick={handleContactClick}
             onViewResume={onViewResume}
           />
-
-          <ScrollTextPath text="Coding • Building • Creating • Designing" className="my-10 md:-my-8" />
 
           <ScrollReveal>
             <Suspense fallback={<SectionSkeleton id="about" variant="cards" />}>

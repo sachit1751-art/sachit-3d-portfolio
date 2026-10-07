@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 // ​provenance:sachit-2026-original​
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { motion, AnimatePresence } from 'motion/react';
 import { Project } from '../../types';
 import { ExternalLink, Code2 } from 'lucide-react';
 import { GitHubIcon } from '../UI/Icons';
@@ -94,134 +93,6 @@ const projects: Project[] = [
 ];
 
 
-interface ProjectPreviewProps {
-  project: Project;
-}
-
-const ProjectPreviewPopover = memo<ProjectPreviewProps>(({ project }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 6, scale: 0.96 }}
-      transition={{ type: 'spring', stiffness: 420, damping: 28 }}
-      className="absolute right-2 bottom-full mb-3 w-72 sm:w-80 z-50 pointer-events-none rounded-xl overflow-hidden shadow-2xl border"
-      style={{
-        backgroundColor: 'var(--c-card)',
-        borderColor: 'var(--c-border-focus, var(--c-border))',
-        boxShadow: '0 20px 40px -12px rgba(0, 0, 0, 0.28), 0 0 0 1px var(--c-border)',
-      }}
-    >
-      {/* Mock Browser Header */}
-      <div
-        className="px-3 py-1.5 flex items-center justify-between text-[10px] font-mono border-b"
-        style={{
-          backgroundColor: 'var(--c-input-bg)',
-          borderColor: 'var(--c-border)',
-          color: 'var(--c-muted)',
-        }}
-      >
-        <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-red-400 opacity-80" />
-          <span className="w-2 h-2 rounded-full bg-amber-400 opacity-80" />
-          <span className="w-2 h-2 rounded-full bg-emerald-400 opacity-80" />
-        </div>
-        <span className="truncate max-w-[170px] font-semibold opacity-90" style={{ color: 'var(--c-heading)' }}>
-          {project.demoUrl ? project.demoUrl.replace('https://', '') : project.githubUrl ? project.githubUrl.replace('https://github.com/', 'gh/') : project.title}
-        </span>
-        <span className="inline-flex items-center gap-1 text-[9px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-          Live
-        </span>
-      </div>
-
-      {/* Snapshot Mockup Content */}
-      <div className="p-3 bg-[var(--c-card)] min-h-[135px] flex flex-col justify-between">
-        {project.id === 'sky-roms' && (
-          <div className="space-y-2 font-mono text-[10px]">
-            <div className="flex items-center justify-between p-2 rounded bg-[var(--c-input-bg)] border border-[var(--c-border)]">
-              <div>
-                <p className="font-bold text-[11px] text-[var(--c-heading)]">LineageOS 21.0 Android 14</p>
-                <p className="text-[9px] text-[var(--c-muted)]">Official • Kernel 5.10 • GAPPS Built-in</p>
-              </div>
-              <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">1.8 GB</span>
-            </div>
-            <div className="grid grid-cols-2 gap-1.5 text-[9px]">
-              <div className="p-1.5 rounded bg-[var(--c-input-bg)] border border-[var(--c-border)] text-center">
-                <span className="text-[var(--c-muted)]">Supabase Auth</span>: Active
-              </div>
-              <div className="p-1.5 rounded bg-[var(--c-input-bg)] border border-[var(--c-border)] text-center">
-                <span className="text-[var(--c-muted)]">Capacitor Sync</span>: 60 FPS
-              </div>
-            </div>
-          </div>
-        )}
-
-        {project.id === 'moneypal' && (
-          <div className="space-y-2 font-mono text-[10px]">
-            <div className="p-2.5 rounded bg-[var(--c-input-bg)] border border-[var(--c-border)] text-center">
-              <span className="text-[9px] uppercase tracking-wider text-[var(--c-muted)] font-bold">Jetpack Compose Calculator UI</span>
-              <p className="text-base font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">$1,240.50 / $1,500 Budget</p>
-            </div>
-            <div className="flex items-center justify-between text-[9px] px-1 text-[var(--c-muted)]">
-              <span>Wear OS Wrist Sync: Active</span>
-              <span>Room DB: Offline-First</span>
-            </div>
-          </div>
-        )}
-
-        {project.id === 'audify' && (
-          <div className="space-y-2 font-mono text-[10px]">
-            <div className="p-2 rounded bg-[var(--c-input-bg)] border border-[var(--c-border)]">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="font-bold text-[var(--c-heading)]">Web Audio Streaming Player</span>
-                <span className="text-emerald-500 animate-pulse">● 320kbps</span>
-              </div>
-              <div className="flex items-end gap-0.5 h-6">
-                {[40, 70, 30, 90, 100, 60, 80, 45, 95, 30, 65, 85, 50, 90, 40].map((h, i) => (
-                  <div key={i} className="flex-1 bg-[var(--c-dot)] rounded-t" style={{ height: `${h}%` }} />
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {project.id === 'mcp-tool' && (
-          <div className="space-y-1.5 font-mono text-[10px]">
-            <div className="p-2 rounded bg-[var(--c-input-bg)] border border-[var(--c-border)]">
-              <p className="font-bold text-[10px] text-[var(--c-heading)]">JSON-RPC 2.0 Message Handler</p>
-              <pre className="text-[8px] text-[var(--c-muted)] mt-1 truncate">
-                &#123;&quot;jsonrpc&quot;: &quot;2.0&quot;, &quot;method&quot;: &quot;mcp.query_resource&quot;&#125;
-              </pre>
-            </div>
-            <p className="text-[9px] text-[var(--c-muted)] text-center">Claude API Agent Context Injection Active</p>
-          </div>
-        )}
-
-        {project.id === 'tic-tac-toe' && (
-          <div className="space-y-2 font-mono text-[10px]">
-            <div className="grid grid-cols-3 gap-1 w-24 mx-auto p-1 bg-[var(--c-input-bg)] rounded border border-[var(--c-border)]">
-              {['X', 'O', 'X', 'O', 'X', 'O', '', 'X', 'O'].map((cell, i) => (
-                <div key={i} className="h-6 flex items-center justify-center font-bold text-xs bg-[var(--c-card)] border border-[var(--c-border)] rounded">
-                  {cell}
-                </div>
-              ))}
-            </div>
-            <p className="text-[9px] text-[var(--c-muted)] text-center">Minimax AI Evaluation Tree: Depth 9</p>
-          </div>
-        )}
-
-        <div className="pt-2 mt-2 border-t border-[var(--c-border)] flex items-center justify-between text-[9px] font-mono text-[var(--c-muted)]">
-          <span>{project.tags.slice(0, 3).join(' • ')}</span>
-          <span className="font-bold text-[var(--c-heading)]">Interactive Live Snapshot</span>
-        </div>
-      </div>
-    </motion.div>
-  );
-});
-
-ProjectPreviewPopover.displayName = 'ProjectPreviewPopover';
-
 interface ProjectCardProps {
   project: Project;
   idx: number;
@@ -243,7 +114,6 @@ const ProjectCard = memo<ProjectCardProps>(({
   const lastActiveElementRef = useRef<HTMLElement | null>(null);
   const isTouchDevice = useTouchDevice();
   const touchStartPos = useRef<{ x: number; y: number } | null>(null);
-  const [hoveredLink, setHoveredLink] = useState<'demo' | 'code' | 'title' | null>(null);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (e.touches.length === 1) {
@@ -323,9 +193,6 @@ const ProjectCard = memo<ProjectCardProps>(({
 
   return (
     <div className="relative w-full h-full min-h-[320px] sm:min-h-[340px] md:min-h-[360px] flex flex-col">
-      <AnimatePresence>
-        {hoveredLink && <ProjectPreviewPopover project={project} />}
-      </AnimatePresence>
       <div
         id={`project-card-${project.id}`}
         data-project-card="true"
@@ -389,10 +256,6 @@ const ProjectCard = memo<ProjectCardProps>(({
             role="button"
             tabIndex={0}
             data-project-title-btn="true"
-            onMouseEnter={() => setHoveredLink('title')}
-            onMouseLeave={() => setHoveredLink(null)}
-            onFocus={() => setHoveredLink('title')}
-            onBlur={() => setHoveredLink(null)}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -558,10 +421,6 @@ const ProjectCard = memo<ProjectCardProps>(({
                 target="_blank"
                 rel="noopener noreferrer"
                 data-action="github"
-                onMouseEnter={() => setHoveredLink('code')}
-                onMouseLeave={() => setHoveredLink(null)}
-                onFocus={() => setHoveredLink('code')}
-                onBlur={() => setHoveredLink(null)}
                 className={`project-btn-github min-h-[38px] px-3 py-2 text-xs font-mono uppercase tracking-wider rounded-[var(--radius-md)] flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95 pointer-events-auto relative z-20 ${
                   !project.demoUrl 
                     ? 'hover:brightness-105' 
@@ -590,10 +449,6 @@ const ProjectCard = memo<ProjectCardProps>(({
                 target="_blank"
                 rel="noopener noreferrer"
                 data-action="live-demo"
-                onMouseEnter={() => setHoveredLink('demo')}
-                onMouseLeave={() => setHoveredLink(null)}
-                onFocus={() => setHoveredLink('demo')}
-                onBlur={() => setHoveredLink(null)}
                 className="project-btn-live-demo min-h-[38px] px-3.5 py-2 text-xs font-mono uppercase tracking-wider rounded-[var(--radius-md)] flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:brightness-105 active:scale-95 pointer-events-auto relative z-20"
                 style={{
                   backgroundColor: 'var(--c-btn-bg)',

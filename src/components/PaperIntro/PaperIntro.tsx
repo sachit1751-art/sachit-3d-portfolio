@@ -8,7 +8,6 @@ import { PaperState, PaperTheme } from '../../types';
 import { PaperScene, PaperSceneAPI } from './PaperScene';
 import { CursorHint } from '../UI/CursorHint';
 import { FloatingPieces } from '../DoomEasterEgg/FloatingPieces';
-import { usePerformance } from '../../hooks/usePerformance';
 import { HoneycombLoader } from '../UI/HoneycombLoader';
 const MoodGame = lazy(() => import('../MoodGame/MoodGame').then(m => ({ default: m.MoodGame })));
 
@@ -45,7 +44,6 @@ export const PaperIntro = memo<PaperIntroProps>(({
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const { playUnfold, playCrumple } = usePaperSound();
   const { isMuted, toggleMute } = useSound();
-  const { simplify } = usePerformance();
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const touchStartDistRef = useRef<number | null>(null);
@@ -243,7 +241,7 @@ export const PaperIntro = memo<PaperIntroProps>(({
           }}
         />
 
-        {paperState === 'crumpled' && !simplify && isDesktop && (
+        {paperState === 'crumpled' && isDesktop && (
           <video
             ref={videoRef}
             autoPlay

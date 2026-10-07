@@ -4,7 +4,6 @@ import gsap from 'gsap';
 import { PaperState, PaperTheme } from '../../types';
 import { calculatePaperVertex } from '../../utils/paperMath';
 import { getProceduralPaperTextures } from '../../utils/paperTexture';
-import { usePerformance } from '../../hooks/usePerformance';
 import {
   createPaperUnfoldTimeline,
   createPaperCrumpleTimeline,
@@ -42,7 +41,6 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
 }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const animTimelineRef = useRef<AnimationTimeline | null>(null);
-  const { simplify } = usePerformance();
 
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -103,9 +101,8 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
 
   const width = 3.8;
   const height = 5.1;
-  // Optimized segments density — maintains tactile paper crumple folds while reducing vertex array overhead
-  const segmentsX = simplify ? 18 : 32;
-  const segmentsY = simplify ? 24 : 44;
+  const segmentsX = 32;
+  const segmentsY = 44;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -129,56 +126,49 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
     const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || widthPx < 768;
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: !simplify && !isMobile,
-      powerPreference: isMobile ? 'low-power' : 'high-performance',
+      antialias: true,
+      powerPreference: 'high-performance',
       preserveDrawingBuffer: false,
     });
     renderer.setSize(widthPx, heightPx);
-    // Cap pixel ratio to 1.0 for mobile, 1.5 for desktop to avoid high-DPI fragment shader fill-rate lag
-    const maxPixelRatio = simplify ? 1.0 : (isMobile ? 1.0 : 1.5);
+    const maxPixelRatio = isMobile ? 1.0 : 1.5;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxPixelRatio));
     
-    if (!simplify && !isMobile) {
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.05;
-      renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    }
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     container.replaceChildren(renderer.domElement);
     rendererRef.current = renderer;
 
-    const ambientLight = new THREE.AmbientLight(0xfff8ee, simplify ? 1.0 : 0.8);
+    const ambientLight = new THREE.AmbientLight(0xfff8ee, 0.8);
     scene.add(ambientLight);
 
     const mainLight = new THREE.DirectionalLight(0xfffdf7, 1.8);
     mainLight.position.set(4, 6, 5);
-    if (!simplify && !isMobile) {
-      mainLight.castShadow = true;
-      mainLight.shadow.mapSize.width = 512;
-      mainLight.shadow.mapSize.height = 512;
-      mainLight.shadow.camera.near = 0.5;
-      mainLight.shadow.camera.far = 20;
-      mainLight.shadow.bias = -0.0008;
-    }
+    mainLight.castShadow = true;
+    mainLight.shadow.mapSize.width = 512;
+    mainLight.shadow.mapSize.height = 512;
+    mainLight.shadow.camera.near = 0.5;
+    mainLight.shadow.camera.far = 20;
+    mainLight.shadow.bias = -0.0008;
     scene.add(mainLight);
     mainLightRef.current = mainLight;
 
-    if (!simplify) {
-      const fillLight = new THREE.DirectionalLight(0xebe2d8, 0.6);
-      fillLight.position.set(-4.0, -2.0, 4.0);
-      scene.add(fillLight);
+    const fillLight = new THREE.DirectionalLight(0xebe2d8, 0.6);
+    fillLight.position.set(-4.0, -2.0, 4.0);
+    scene.add(fillLight);
 
-      const softTopLight = new THREE.PointLight(0xffffff, 0.8, 12);
-      softTopLight.position.set(0, 3.0, 4.0);
-      scene.add(softTopLight);
-    }
+    const softTopLight = new THREE.PointLight(0xffffff, 0.8, 12);
+    softTopLight.position.set(0, 3.0, 4.0);
+    scene.add(softTopLight);
 
     const { map, roughnessMap, bumpMap } = getProceduralPaperTextures(theme);
     const material = new THREE.MeshStandardMaterial({
       map,
-      roughnessMap: simplify ? null : roughnessMap,
-      bumpMap: simplify ? null : bumpMap,
+      roughnessMap,
+      bumpMap,
       bumpScale: 0.12,
       roughness: 0.75,
       metalness: 0.0,
@@ -243,12 +233,12 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
     paperMeshRef.current = paperMesh;
 
     // Shadow
-    const shadowGeo = new THREE.PlaneGeometry(3.0, 3.0, simplify ? 4 : 16, simplify ? 4 : 16);
+    const shadowGeo = new THREE.PlaneGeometry(3.0, 3.0, 16, 16);
     const shadowCanvas = document.createElement('canvas');
-    shadowCanvas.width = simplify ? 32 : 128;
-    shadowCanvas.height = simplify ? 32 : 128;
+    shadowCanvas.width = 128;
+    shadowCanvas.height = 128;
     const sCtx = shadowCanvas.getContext('2d')!;
-    const sSize = simplify ? 32 : 128;
+    const sSize = 128;
     const sMid = sSize / 2;
     const sGrad = sCtx.createRadialGradient(sMid, sMid, 1, sMid, sMid, sMid);
     sGrad.addColorStop(0, 'rgba(30, 22, 14, 0.55)');
@@ -550,7 +540,7 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
         creaseHighlightRef.current += (targetCreaseHighlight - creaseHighlightRef.current) * Math.min(0.12 * dtScale, 1.0);
         const creaseHl = creaseHighlightRef.current;
 
-        if (materialRef.current && !simplify) {
+        if (materialRef.current) {
           const mat = materialRef.current;
           mat.bumpScale = THREE.MathUtils.lerp(0.12, 0.28, creaseHl);
           mat.roughness = THREE.MathUtils.lerp(0.75, 0.38, creaseHl);
@@ -558,7 +548,7 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
           mat.emissive.setRGB(0.12 * creaseHl, 0.10 * creaseHl, 0.06 * creaseHl);
         }
 
-        if (mainLightRef.current && !simplify) {
+        if (mainLightRef.current) {
           mainLightRef.current.intensity = THREE.MathUtils.lerp(1.8, 2.45, creaseHl);
           mainLightRef.current.position.x = 4 + inter.rotY * 0.8;
           mainLightRef.current.position.y = 6 - inter.rotX * 0.8;
@@ -655,7 +645,7 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
         cleanupFn();
       }
     };
-  }, [theme, simplify]);
+  }, [theme]);
 
   // Mood Game API
   useImperativeHandle(ref, () => ({
