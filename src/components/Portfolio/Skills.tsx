@@ -238,13 +238,16 @@ const renderCustomSVG = (name: string): React.ReactNode | null => {
 export const Skills = memo(() => {
   return (
     <ScrollReveal>
-    <section id="skills" className="relative mb-16 sm:mb-20 pt-8 sm:pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
-      <div className="mb-8 text-center">
-        <span className="font-mono text-xs font-semibold tracking-widest uppercase block mb-2" style={{ color: 'var(--c-muted)' }}>
-          04. Skills & Stack
+    <section id="skills" className="relative mb-12 sm:mb-16 md:mb-20 pt-6 sm:pt-8" style={{ borderTop: '1px solid var(--c-border)' }}>
+      <div className="mb-6 sm:mb-8">
+        <div className="flex justify-center mb-2.5">
+          <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'var(--c-dot)' }} />
+        </div>
+        <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
+          [ 04 / CAPABILITIES ]
         </span>
-        <h2 className="font-handwriting text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight" style={{ color: 'var(--c-heading)' }}>
-          <WordReveal text="Capabilities & Architecture" baseDelay={0.1} />
+        <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
+          <WordReveal text="Skills & Stack" baseDelay={0.1} />
         </h2>
       </div>
 

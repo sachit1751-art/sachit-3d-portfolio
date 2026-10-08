@@ -225,7 +225,7 @@ export const Contact = memo(() => {
 
   return (
     <ScrollReveal>
-      <section id="contact" className="relative pt-12 pb-16" style={{ borderTop: '1px solid var(--c-border)' }}>
+      <section id="contact" className="relative pt-6 sm:pt-8 pb-12 sm:pb-16" style={{ borderTop: '1px solid var(--c-border)' }}>
         {/* Screen reader announcements */}
         <div className="sr-only" aria-live="polite" aria-atomic="true">
           {copied ? 'Email address copied to clipboard' : ''}
@@ -233,11 +233,15 @@ export const Contact = memo(() => {
           {isSuccess ? 'Message sent successfully' : ''}
         </div>
 
-        <div className="mb-8 text-center">
-          <span className="font-mono text-xs font-semibold tracking-widest uppercase block mb-2" style={{ color: 'var(--c-muted)' }}>
-            12. Contact
+        {/* Section Header */}
+        <div className="mb-6 sm:mb-8">
+          <div className="flex justify-center mb-2.5">
+            <Send className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'var(--c-dot)' }} />
+          </div>
+          <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
+            [ 12 / CONTACT ]
           </span>
-          <h2 className="font-handwriting text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight" style={{ color: 'var(--c-heading)' }}>
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
             <WordReveal text="Let's Build Something" baseDelay={0.1} />
           </h2>
         </div>

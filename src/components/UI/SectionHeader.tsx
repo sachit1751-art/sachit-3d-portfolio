@@ -1,46 +1,55 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { WordReveal } from './TextReveal';
 
 export interface SectionHeaderProps {
-  kicker?: string;
-  title: string;
-  description?: string;
+  icon?: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  sectionNumber?: string;
+  sectionTitle?: string;
+  title?: string;
+  centered?: boolean;
   className?: string;
-  align?: 'left' | 'center';
+  style?: React.CSSProperties;
 }
 
-export const SectionHeader: React.FC<SectionHeaderProps> = ({
-  kicker,
+export const SectionHeader = memo<SectionHeaderProps>(({
+  icon: Icon,
+  sectionNumber,
+  sectionTitle,
   title,
-  description,
+  centered = true,
   className = '',
-  align = 'left',
+  style,
 }) => {
-  const isCenter = align === 'center';
+  const displayTitle = title || sectionTitle || '';
 
   return (
-    <div className={`mb-8 sm:mb-10 ${isCenter ? 'text-center max-w-2xl mx-auto' : ''} ${className}`}>
-      {kicker && (
+    <div
+      className={`mb-6 sm:mb-8 ${centered ? 'text-center' : 'text-left'} ${className}`.trim()}
+      style={style}
+    >
+      {Icon && (
+        <div className={`flex ${centered ? 'justify-center' : 'justify-start'} mb-2.5`}>
+          <Icon className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'var(--c-dot)' }} />
+        </div>
+      )}
+      {sectionNumber && (
         <span
-          className="font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] block mb-2"
+          className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block mb-2"
           style={{ color: 'var(--c-muted)' }}
         >
-          {kicker}
+          [ {sectionNumber} ]
         </span>
       )}
-      <h2
-        className="font-sans text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight"
-        style={{ color: 'var(--c-heading)' }}
-      >
-        {title}
-      </h2>
-      {description && (
-        <p
-          className="mt-2.5 sm:mt-3 text-base sm:text-lg leading-relaxed font-sans max-w-2xl"
-          style={{ color: 'var(--c-body)' }}
+      {displayTitle && (
+        <h2
+          className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight"
+          style={{ color: 'var(--c-heading)' }}
         >
-          {description}
-        </p>
+          <WordReveal text={displayTitle} baseDelay={0.1} />
+        </h2>
       )}
     </div>
   );
-};
+});
+
+SectionHeader.displayName = 'SectionHeader';

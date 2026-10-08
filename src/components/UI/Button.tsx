@@ -1,54 +1,105 @@
 import React, { forwardRef } from 'react';
 
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'jellyfish';
+export type ButtonSize = 'sm' | 'md' | 'lg';
+
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  icon?: React.ReactNode;
+  iconPosition?: 'left' | 'right';
+  asChild?: boolean;
+  href?: string;
+  target?: string;
+  rel?: string;
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      variant = 'primary',
-      size = 'md',
-      className = '',
-      children,
-      disabled,
-      style,
-      type = 'button',
-      ...props
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
+  variant = 'primary',
+  size = 'md',
+  icon,
+  iconPosition = 'right',
+  className = '',
+  children,
+  style,
+  href,
+  target,
+  rel,
+  disabled,
+  ...props
+}, ref) => {
+  const sizeClasses = {
+    sm: 'px-3 py-1.5 text-xs font-mono',
+    md: 'px-5 sm:px-6 py-3 text-sm sm:text-base font-body',
+    lg: 'px-6 sm:px-8 py-3.5 sm:py-4 text-base sm:text-lg font-body',
+  }[size];
+
+  const variantStyles: Record<ButtonVariant, { base: string; inlineStyle?: React.CSSProperties }> = {
+    primary: {
+      base: 'transition-all hover:-translate-y-0.5 active:translate-y-0 hover:bg-[var(--c-btn-bg-hover)] rounded-[var(--radius-md)] cursor-pointer font-body',
+      inlineStyle: { backgroundColor: 'var(--c-btn-bg)', color: 'var(--c-btn-text)' },
     },
-    ref
-  ) => {
-    const sizeClasses = {
-      sm: 'px-3 py-1.5 text-xs',
-      md: 'px-4 py-2.5 text-sm',
-      lg: 'px-6 py-3.5 text-base',
-    }[size];
+    secondary: {
+      base: 'font-medium transition-all hover:-translate-y-0.5 active:translate-y-0 rounded-[var(--radius-md)] cursor-pointer font-body',
+      inlineStyle: {
+        border: '1px solid var(--c-border)',
+        backgroundColor: 'var(--c-input-bg)',
+        color: 'var(--c-heading)',
+      },
+    },
+    ghost: {
+      base: 'bg-transparent font-handwriting text-base cursor-pointer hover:opacity-80 transition-opacity',
+      inlineStyle: { color: 'var(--c-heading)' },
+    },
+    outline: {
+      base: 'transition-colors hover:border-[var(--c-border-focus)] rounded-[var(--radius-md)] cursor-pointer font-mono text-xs uppercase tracking-wider',
+      inlineStyle: {
+        border: '1px solid var(--c-border)',
+        backgroundColor: 'var(--c-input-bg)',
+        color: 'var(--c-heading)',
+      },
+    },
+    jellyfish: {
+      base: 'jellyfish-btn bg-transparent font-handwriting text-base cursor-pointer',
+      inlineStyle: {},
+    },
+  };
 
-    const variantClasses = {
-      primary:
-        'bg-[var(--c-btn-bg)] text-[var(--c-btn-text)] hover:bg-[var(--c-btn-bg-hover)] shadow-sm active:translate-y-0.5',
-      secondary:
-        'bg-[var(--c-surface)] text-[var(--c-heading)] border border-[var(--c-border)] hover:bg-[var(--c-surface-hover)] hover:border-[var(--c-border-hover)] active:translate-y-0.5',
-      outline:
-        'bg-transparent text-[var(--c-heading)] border border-[var(--c-border)] hover:bg-[var(--c-surface)] hover:border-[var(--c-border-hover)] active:translate-y-0.5',
-      ghost:
-        'bg-transparent text-[var(--c-heading)] hover:bg-[var(--c-surface-hover)]',
-    }[variant];
+  const selectedVariant = variantStyles[variant];
 
+  const combinedClass = `inline-flex items-center justify-center gap-2 select-none outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] disabled:opacity-50 disabled:cursor-not-allowed ${sizeClasses} ${selectedVariant.base} ${className}`.trim();
+  const combinedStyle = { ...selectedVariant.inlineStyle, ...style };
+
+  if (href) {
     return (
-      <button
-        ref={ref}
-        type={type}
-        disabled={disabled}
-        className={`inline-flex items-center justify-center gap-2 font-medium font-sans rounded-[var(--radius-md)] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none select-none ${sizeClasses} ${variantClasses} ${className}`}
-        style={style}
-        {...props}
+      <a
+        href={href}
+        target={target}
+        rel={rel}
+        className={combinedClass}
+        style={combinedStyle}
+        {...(props as unknown as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
       >
-        {children}
-      </button>
+        {icon && iconPosition === 'left' && <span className="inline-flex shrink-0">{icon}</span>}
+        <span>{children}</span>
+        {icon && iconPosition === 'right' && <span className="inline-flex shrink-0">{icon}</span>}
+      </a>
     );
   }
-);
+
+  return (
+    <button
+      ref={ref}
+      disabled={disabled}
+      className={combinedClass}
+      style={combinedStyle}
+      {...props}
+    >
+      {icon && iconPosition === 'left' && <span className="inline-flex shrink-0">{icon}</span>}
+      <span>{children}</span>
+      {icon && iconPosition === 'right' && <span className="inline-flex shrink-0">{icon}</span>}
+    </button>
+  );
+});
 
 Button.displayName = 'Button';

@@ -18,15 +18,18 @@ export const GitHubSection = memo<GitHubSectionProps>(({ theme }) => {
 
   return (
     <ScrollReveal>
-      <section id="github" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
-      <div className="mb-8 text-center">
-        <span className="font-mono text-xs font-semibold tracking-widest uppercase block mb-2" style={{ color: 'var(--c-muted)' }}>
-          06. Open Source
-        </span>
-        <h2 className="font-handwriting text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight" style={{ color: 'var(--c-heading)' }}>
-          <WordReveal text="GitHub Contributions" baseDelay={0.1} />
-        </h2>
-      </div>
+      <section id="github" className="relative mb-12 sm:mb-16 md:mb-20 pt-6 sm:pt-8" style={{ borderTop: '1px solid var(--c-border)' }}>
+        <div className="mb-6 sm:mb-8">
+          <div className="flex justify-center mb-2.5">
+            <GitBranch className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'var(--c-dot)' }} />
+          </div>
+          <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
+            [ 06 / OPEN SOURCE ]
+          </span>
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
+            <WordReveal text="GitHub Contributions" baseDelay={0.1} />
+          </h2>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           <div className="md:col-span-8">
@@ -90,7 +93,7 @@ export const GitHubSection = memo<GitHubSectionProps>(({ theme }) => {
                   }}
                 >
                   <GitHubIcon className="w-12 h-12 mb-3 transition-transform duration-300 group-hover:rotate-[360deg]" />
-                  <span className="font-sans text-xl font-extrabold tracking-tight">@{GITHUB_USERNAME}</span>
+                  <span className="social-handle text-xl font-bold">@{GITHUB_USERNAME}</span>
                   <span className="font-mono text-[10px] uppercase tracking-widest mt-1 opacity-70 flex items-center gap-1">
                     Visit GitHub Profile <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">↗</span>
                   </span>

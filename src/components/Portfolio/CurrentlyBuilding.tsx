@@ -7,15 +7,18 @@ import { PretextText } from '../UI/PretextText';
 export const CurrentlyBuilding = memo(() => {
   return (
     <ScrollReveal>
-      <section id="currently-building" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
-      <div className="mb-8 text-center">
-        <span className="font-mono text-xs font-semibold tracking-widest uppercase block mb-2" style={{ color: 'var(--c-muted)' }}>
-          05. Currently Building
-        </span>
-        <h2 className="font-handwriting text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight" style={{ color: 'var(--c-heading)' }}>
-          <WordReveal text="In Progress" baseDelay={0.1} />
-        </h2>
-      </div>
+      <section id="currently-building" className="relative mb-12 sm:mb-16 md:mb-20 pt-6 sm:pt-8" style={{ borderTop: '1px solid var(--c-border)' }}>
+        <div className="mb-6 sm:mb-8">
+          <div className="flex justify-center mb-2.5">
+            <Cpu className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'var(--c-dot)' }} />
+          </div>
+          <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
+            [ 05 / NOW ]
+          </span>
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
+            <WordReveal text="Something New" baseDelay={0.1} />
+          </h2>
+        </div>
 
         <LineReveal delay={0.3} className="p-6 sm:p-8 rounded-[var(--radius-lg)]" style={{ border: '1px solid var(--c-border)' }}>
           <PretextText

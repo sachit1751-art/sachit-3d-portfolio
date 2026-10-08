@@ -226,11 +226,8 @@ const ProjectCard = memo<ProjectCardProps>(({
         <div>
           {/* Header Meta: Category + Index + Touch Affordance Pill */}
           <div className="flex items-center justify-between text-xs font-handwriting mb-3 gap-2" style={{ color: 'var(--c-subtle)' }}>
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span
-                className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-[var(--radius-sm)]"
-                style={{ backgroundColor: 'var(--c-input-bg)', border: '1px solid var(--c-border)' }}
-              >
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-mono text-[11px] font-bold uppercase tracking-wider opacity-85" style={{ color: 'var(--c-subtle)' }}>
                 {project.category}
               </span>
               {isTouchDevice && (
@@ -627,12 +624,12 @@ export const Projects = memo(() => {
   }, [simplify]);
 
   return (
-    <section id="projects" className="relative mb-16 sm:mb-20 pt-8 sm:pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
+    <section id="projects" className="relative mb-12 sm:mb-16 md:mb-20 pt-6 sm:pt-8" style={{ borderTop: '1px solid var(--c-border)' }}>
       <div className="mb-6 sm:mb-8">
         <div className="flex justify-center mb-2.5">
           <Code2 className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'var(--c-dot)' }} />
         </div>
-        <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-1.5" style={{ color: 'var(--c-muted)' }}>
+        <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
           [ 03 / PROJECTS ]
         </span>
         <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>

@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { LocalMascot } from '../UI/LocalMascot';
 import { WordReveal } from '../UI/TextReveal';
 import { ScrollReveal } from '../UI/ScrollReveal';
+import { SectionHeader } from '../UI/SectionHeader';
 import { WATERMARKED_NAME } from '../../utils/watermark';
 
 // ﻿watermark:sachit-2026﻿
@@ -54,17 +55,14 @@ export const About = memo(() => {
 
   return (
     <ScrollReveal>
-    <section id="about" className="relative mb-16 sm:mb-20 pt-8 sm:pt-10" style={{ borderTop: '1px solid var(--c-border)' }}>
-      <div className="mb-8 text-center">
-        <span className="font-mono text-xs font-semibold tracking-widest uppercase block mb-2" style={{ color: 'var(--c-muted)' }}>
-          01. About Me
-        </span>
-        <h2 className="font-handwriting text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight" style={{ color: 'var(--c-heading)' }}>
-          <WordReveal text="Background & Principles" baseDelay={0.1} />
-        </h2>
-      </div>
+    <section id="about" className="relative mb-12 sm:mb-16 md:mb-20 pt-6 sm:pt-8" style={{ borderTop: '1px solid var(--c-border)' }}>
+      <SectionHeader
+        icon={User}
+        sectionNumber="01 / BACKGROUND"
+        sectionTitle="About Me"
+      />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         {/* Paragraphs Column */}
         <div className="lg:col-span-7 lg:order-1 space-y-4 text-sm sm:text-base leading-relaxed font-body" style={{ color: 'var(--c-body)', border: 'none' }}>
           <p>

@@ -135,7 +135,7 @@ export const ScrollTextPath = memo(({ text, className = '' }: ScrollTextPathProp
     <div
       ref={containerRef}
       aria-hidden="true"
-      className={`w-full overflow-hidden flex items-center justify-center py-2 sm:py-4 pointer-events-none select-none ${className}`}
+      className={`w-full overflow-hidden flex items-center justify-center py-0.5 sm:py-1 pointer-events-none select-none ${className}`}
       style={{
         opacity: 0.8,
         transform: 'translateZ(0)',

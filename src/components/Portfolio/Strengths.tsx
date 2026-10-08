@@ -21,17 +21,20 @@ const strengths = [
 export const Strengths = memo(() => {
   return (
     <ScrollReveal>
-      <section id="strengths" className="relative mb-28 pt-12" style={{ borderTop: '1px solid var(--c-border)' }}>
-      <div className="mb-8 text-center">
-        <span className="font-mono text-xs font-semibold tracking-widest uppercase block mb-2" style={{ color: 'var(--c-muted)' }}>
-          09. Strengths
-        </span>
-        <h2 className="font-handwriting text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight" style={{ color: 'var(--c-heading)' }}>
-          <WordReveal text="Core Traits & Mindset" baseDelay={0.1} />
-        </h2>
-      </div>
+      <section id="strengths" className="relative mb-12 sm:mb-16 md:mb-20 pt-6 sm:pt-8" style={{ borderTop: '1px solid var(--c-border)' }}>
+        <div className="mb-6 sm:mb-8">
+          <div className="flex justify-center mb-2.5">
+            <Award className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'var(--c-dot)' }} />
+          </div>
+          <span className="font-mono text-[10px] font-bold tracking-[0.25em] uppercase block text-center mb-2" style={{ color: 'var(--c-muted)' }}>
+            [ 09 / STRENGTHS ]
+          </span>
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-center tracking-tight" style={{ color: 'var(--c-heading)' }}>
+            <WordReveal text="Strengths" baseDelay={0.1} />
+          </h2>
+        </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 sm:space-y-8">
           {strengths.map((strength, idx) => (
             <LineReveal
               key={idx}

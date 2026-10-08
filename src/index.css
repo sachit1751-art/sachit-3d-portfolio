@@ -39,10 +39,10 @@
 @font-face {
   font-family: 'Courier-Fallback';
   src: local('Courier New'), local('Courier'), local('monospace');
-  ascent-override: 90%;
-  descent-override: 20%;
+  ascent-override: 100%;
+  descent-override: 25%;
   line-gap-override: 0%;
-  size-adjust: 98%;
+  size-adjust: 100%;
 }
 
 @layer base {
@@ -54,7 +54,7 @@
 
     /* Font Variables */
     --font-handwriting: 'Kalam', 'Kalam-Fallback', cursive;
-    --font-mono: 'Courier Prime', 'Courier-Fallback', 'JetBrains Mono', monospace;
+    --font-mono: 'JetBrains Mono', 'Courier Prime', 'Courier-Fallback', monospace;
     --font-body: 'Courier Prime', 'Courier-Fallback', monospace;
     --_wm: '\200B\FEFFsachit-2026\FEFF\200B';
 
@@ -385,6 +385,26 @@ h2.sm\:text-5xl,
   padding-inline-end: 0.05em;
 }
 
+/* Monospace social handle with responsive letter-spacing for '@' and usernames across screen sizes */
+.social-handle {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace) !important;
+  font-style: normal;
+  letter-spacing: clamp(0.015em, 0.4vw, 0.035em);
+  text-rendering: optimizeLegibility;
+}
+
+@media (max-width: 640px) {
+  .social-handle {
+    letter-spacing: 0.015em;
+  }
+}
+
+@media (min-width: 641px) {
+  .social-handle {
+    letter-spacing: 0.03em;
+  }
+}
+
 @layer base {
   /* Smooth theme transitions for all elements */
   [data-theme], [data-theme] * {
@@ -398,13 +418,13 @@ h2.sm\:text-5xl,
   [data-theme="kraft"] {
     --c-bg: #EFE6D5;
     --c-heading: #241F1A;
-    --c-body: #5A5248;
-    --c-muted: #9A9284;
-    --c-subtle: #706A5E;
-    --c-faint: #ADA599;
+    --c-body: #443E35;
+    --c-muted: #686053;
+    --c-subtle: #544C40;
+    --c-faint: #7D7569;
     --c-name: #2A2520;
     --c-border: rgba(36, 31, 26, 0.12);
-    --c-border-hover: rgba(36, 31, 26, 0.3);
+    --c-border-hover: rgba(36, 31, 26, 0.28);
     --c-border-focus: #241F1A;
     --c-btn-bg: #241F1A;
     --c-btn-bg-hover: #3A3328;
@@ -415,21 +435,21 @@ h2.sm\:text-5xl,
     --c-header-bg: #EFE6D5;
     --c-header-border: rgba(36,31,26,0.08);
     --c-input-bg: rgba(255,255,255,0.3);
-    --c-input-bg-focus: rgba(255,255,255,0.5);
-    --c-modal-bg: rgba(239,230,213,0.95);
+    --c-input-bg-focus: rgba(255,255,255,0.65);
+    --c-modal-bg: rgba(239,230,213,0.96);
     --c-modal-backdrop: rgba(36,31,26,0.7);
-    --c-progress-track: rgba(36,31,26,0.1);
-    --c-progress-fill-from: rgba(36,31,26,0.7);
+    --c-progress-track: rgba(36,31,26,0.12);
+    --c-progress-fill-from: rgba(36,31,26,0.75);
     --c-progress-fill-to: #241F1A;
     --c-tab-active-bg: rgba(36,31,26,0.85);
     --c-tab-active-text: #F4EDE0;
     --c-dot: #241F1A;
-    --c-git-0: rgba(36, 31, 26, 0.06);
+    --c-git-0: rgba(36, 31, 26, 0.08);
     --c-git-1: #decbb4;
     --c-git-2: #c89962;
     --c-git-3: #9a602a;
     --c-git-4: #4a2c0f;
-    --c-git-border: rgba(36, 31, 26, 0.14);
+    --c-git-border: rgba(36, 31, 26, 0.12);
   }
 
   /* Focus-visible styles — visible keyboard focus ring for all interactive elements */
@@ -721,77 +741,66 @@ h2.sm\:text-5xl,
 .hero-card:hover {
   border-color: var(--c-border-hover);
   background: var(--c-card);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px -2px rgba(36, 31, 26, 0.08);
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 0 8px 24px -4px var(--c-border-hover), 0 2px 8px -1px var(--c-card);
 }
 
 .hero-card:hover .hero-card-number {
-  opacity: 0.9;
+  transform: scale(1.15);
+  opacity: 1;
 }
 
 .hero-card-number {
-  transition: opacity 0.2s ease-out;
+  transition: all 0.3s ease-out;
   opacity: 0.6;
 }
 
-/* Unified restrained button style for primary/secondary actions */
-.btn-primary {
-  background-color: var(--c-btn-bg);
-  color: var(--c-btn-text);
-  border: 1px solid var(--c-btn-bg);
-  border-radius: var(--radius-md);
-  padding: 0.625rem 1.25rem;
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.2s ease-out;
-}
-
-.btn-primary:hover {
-  opacity: 0.92;
-  transform: translateY(-1px);
-}
-
-.btn-secondary {
-  background-color: var(--c-input-bg);
-  color: var(--c-heading);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-md);
-  padding: 0.625rem 1.25rem;
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.2s ease-out;
-}
-
-.btn-secondary:hover {
-  border-color: var(--c-border-hover);
-  transform: translateY(-1px);
-}
-
+/* Slippy Jellyfish button animation (from Uiverse.io) */
 .jellyfish-btn {
-  border: 1px solid var(--c-border);
-  background-color: var(--c-input-bg);
+  --jf-color: var(--c-heading);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  border: 2px solid var(--jf-color);
   border-radius: var(--radius-md);
-  color: var(--c-heading);
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.2s ease-out;
+  color: var(--jf-color);
+  transition: color 0.5s;
+}
+
+.jellyfish-btn::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  background: var(--jf-color);
+  width: 200px;
+  height: 150px;
+  border-radius: 50%;
+  top: 100%;
+  left: 100%;
+  transition: all 0.7s;
 }
 
 .jellyfish-btn:hover {
-  border-color: var(--c-border-hover);
-  transform: translateY(-1px);
+  color: #fff;
+}
+
+.jellyfish-btn:hover::before {
+  top: -30px;
+  left: -30px;
+}
+
+.jellyfish-btn:active::before {
+  transition: background 0s;
 }
 
 /* View Projects button arrow animation */
 .view-projects-btn .arrow-icon {
-  transition: transform 0.3s ease-out;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 
 .view-projects-btn:hover .arrow-icon {
-  transform: translateX(3px);
+  transform: translateX(4px);
 }
 
 /* Paper grain texture overlay */

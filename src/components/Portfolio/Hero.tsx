@@ -1,11 +1,12 @@
 import React, { memo, useRef, useEffect } from 'react';
 // ​‌sachit-2026-original-author‌​
 import gsap from 'gsap';
-import { ArrowDownRight, Mail, FileText } from 'lucide-react';
+import { ArrowRight, Mail, FileText } from 'lucide-react';
 import { WordReveal } from '../UI/TextReveal';
 import { DepthFlipText } from '../UI/DepthFlipText';
 import { QuoteRoll } from '../UI/QuoteRoll';
 import { GitHubIcon } from '../UI/Icons';
+import { Button } from '../UI/Button';
 import { DEV_QUOTES } from '../../data/quotes';
 import { WATERMARKED_NAME } from '../../utils/watermark';
 import { copyEmailToClipboard } from '../UI/Toast';
@@ -77,7 +78,7 @@ export const Hero = memo<HeroProps>(({
   }, []);
 
   return (
-    <section ref={heroRef} id="hero" className="relative mb-4 pt-0 pb-4">
+    <section ref={heroRef} id="hero" className="relative mb-6 sm:mb-8 md:mb-10 pt-0 pb-0">
       <div className="mb-6">
         <div
           className="gsap-hero-status flex flex-wrap items-center justify-between gap-3 text-xs pb-3.5 mb-6 border-b"
@@ -130,37 +131,41 @@ export const Hero = memo<HeroProps>(({
         </p>
       </div>
 
-      <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4 mb-8">
-        <button
+      <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4 mb-6">
+        <Button
           onClick={onExploreProjects}
           aria-label="View Projects"
-          className="gsap-hero-btn btn-primary flex items-center gap-2 cursor-pointer"
+          className="gsap-hero-btn view-projects-btn"
+          icon={<ArrowRight className="arrow-icon w-4 h-4" />}
+          iconPosition="right"
         >
-          <span>View Projects</span>
-          <ArrowDownRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:translate-y-0.5" />
-        </button>
+          View Projects
+        </Button>
 
         {onViewResume && (
-          <button
+          <Button
+            variant="secondary"
             onClick={onViewResume}
-            className="gsap-hero-btn btn-secondary flex items-center gap-2 cursor-pointer"
             aria-label="View Resume"
+            className="gsap-hero-btn"
+            icon={<FileText className="w-4 h-4" />}
+            iconPosition="left"
           >
-            <FileText className="w-4 h-4" />
-            <span>View Resume</span>
-          </button>
+            View Resume
+          </Button>
         )}
 
-        <button
+        <Button
+          variant="jellyfish"
           onClick={onContactClick}
           aria-label="Contact Me"
-          className="gsap-hero-btn btn-secondary flex items-center gap-2 cursor-pointer"
+          className="gsap-hero-btn"
         >
-          <span>Contact Me</span>
-        </button>
+          Contact Me
+        </Button>
       </div>
 
-      <div className="relative z-10 flex flex-col gap-3 mb-8">
+      <div className="relative z-10 flex flex-col gap-3 mb-6">
         <div className="flex flex-wrap items-center gap-4">
           <a
             href="https://github.com/sachit1751-art"
@@ -204,17 +209,31 @@ export const Hero = memo<HeroProps>(({
               e.preventDefault();
               copyEmailToClipboard('sachit1751@gmail.com');
             }}
-            className="hover:underline cursor-pointer transition-colors"
-            style={{ color: 'var(--c-heading)' }}
+            className="social-handle hover:underline cursor-pointer transition-colors inline-flex items-baseline"
+            style={{
+              color: 'var(--c-heading)',
+              fontFamily: "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+            }}
             aria-label="Copy email address: sachit1751@gmail.com"
             title="Click to copy email address to clipboard"
           >
-            sachit1751@gmail.com
+            <span>sachit1751</span>
+            <span
+              className="inline-block px-[0.5px] align-baseline font-normal"
+              style={{
+                fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                fontSize: '1em',
+                lineHeight: 1,
+              }}
+            >
+              @
+            </span>
+            <span>gmail.com</span>
           </a>
         </div>
       </div>
 
-      <div className="relative z-10 flex flex-col sm:flex-row gap-6 pt-4" role="list" aria-label="Focus areas">
+      <div className="relative z-10 flex flex-col sm:flex-row gap-5 sm:gap-6 pt-2" role="list" aria-label="Focus areas">
         <div className="gsap-hero-card hero-card flex-1 cursor-default p-5 flex flex-col justify-between min-h-[160px] relative" role="listitem" aria-label="Web Development focus area">
           <div className="relative z-10 flex justify-between items-start">
             <span className="text-xs uppercase tracking-widest font-mono font-bold" style={{ color: 'var(--c-subtle)' }}>
