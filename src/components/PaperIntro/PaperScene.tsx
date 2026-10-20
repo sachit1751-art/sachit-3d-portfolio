@@ -101,8 +101,6 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
 
   const width = 3.8;
   const height = 5.1;
-  const segmentsX = 32;
-  const segmentsY = 44;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -116,6 +114,9 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
       const widthPx = Math.max(container.clientWidth, 100) || window.innerWidth;
     const heightPx = Math.max(container.clientHeight, 100) || window.innerHeight;
 
+    const segmentsX = 32;
+    const segmentsY = 44;
+
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
@@ -123,7 +124,6 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
     camera.position.set(0, 0, animControllerRef.current.cameraZ);
     cameraRef.current = camera;
 
-    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || widthPx < 768;
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
       antialias: true,
@@ -131,8 +131,7 @@ export const PaperScene = forwardRef<PaperSceneAPI, PaperSceneProps>(({
       preserveDrawingBuffer: false,
     });
     renderer.setSize(widthPx, heightPx);
-    const maxPixelRatio = isMobile ? 1.0 : 1.5;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxPixelRatio));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.05;

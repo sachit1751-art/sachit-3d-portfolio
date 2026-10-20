@@ -279,9 +279,6 @@ export const Contact = memo(() => {
                     <span className="font-mono text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--c-heading)' }}>
                       DIRECT DISPATCH FORM
                     </span>
-                    <span className="text-[10px] font-mono opacity-70" style={{ color: 'var(--c-muted)' }}>
-                      Use presets or fill manually
-                    </span>
                   </div>
 
                   {/* Auto-Type Preset Quick Chips */}
@@ -454,31 +451,14 @@ export const Contact = memo(() => {
                     )}
                   </div>
 
-                  {/* Form Readiness & Validation Status Banner */}
-                  <div className="pt-2 space-y-2">
-                    {submitError && (
+                  {submitError && (
+                    <div className="pt-2">
                       <div className="p-2.5 rounded-[var(--radius-md)] font-mono text-xs flex items-center gap-2 bg-red-500/10 text-red-600 border border-red-500/30">
                         <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-500" />
                         <span>{submitError}</span>
                       </div>
-                    )}
-                    {touched.name && touched.email && touched.message && !errors.name && !errors.email && !errors.message && formData.name.trim() && formData.email.trim() && formData.message.trim() ? (
-                      <div className="p-2.5 rounded-[var(--radius-md)] font-mono text-xs flex items-center gap-2 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
-                        <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-emerald-500" />
-                        <span className="font-bold tracking-wide">PAYLOAD VALIDATED — READY TO TRANSMIT</span>
-                      </div>
-                    ) : ((touched.name && errors.name) || (touched.email && errors.email) || (touched.message && errors.message)) ? (
-                      <div className="p-2.5 rounded-[var(--radius-md)] font-mono text-xs flex items-center gap-2 bg-red-500/10 text-red-600 border border-red-500/20">
-                        <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-500" />
-                        <span>PLEASE RESOLVE ATTENTION HIGHLIGHTS BEFORE TRANSMITTING</span>
-                      </div>
-                    ) : (
-                      <div className="p-2.5 rounded-[var(--radius-md)] font-mono text-[11px] flex items-center gap-2" style={{ backgroundColor: 'var(--c-input-bg)', border: '1px solid var(--c-border)', color: 'var(--c-subtle)' }}>
-                        <Info className="w-3.5 h-3.5 flex-shrink-0" />
-                        <span>Real-time client-side validation active. Fill out all required fields (*).</span>
-                      </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
 
                   <button
                     type="submit"
@@ -585,7 +565,7 @@ export const Contact = memo(() => {
 
             <LineReveal delay={0.6} className="p-6 flex items-center rounded-[var(--radius-lg)] shadow-sm" style={{ border: '1px solid var(--c-border)', backgroundColor: 'var(--c-card)' }}>
               <p className="font-sans text-2xl sm:text-3xl leading-tight font-bold" style={{ color: 'var(--c-heading)' }}>
-                <WordReveal text="Contact me below" baseDelay={0.2} />
+                <WordReveal text="Folding ideas into something real." baseDelay={0.2} />
               </p>
             </LineReveal>
           </div>

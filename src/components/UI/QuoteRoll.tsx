@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+// sachit-portfolio-2026-quoteroll
 import { motion, AnimatePresence } from 'motion/react';
 import { usePerformance } from '../../hooks/usePerformance';
 import { observeElement } from '../../utils/observer';
@@ -22,20 +23,22 @@ export function QuoteRoll({ quotes, interval = 5000, className = '', mode = 'rol
 
     return observeElement(
       el,
-      (isIntersecting) => setIsVisible(isIntersecting),
-      { threshold: 0 },
-      false // continuous tracking (not once)
+      (isIntersecting) => {
+        if (isIntersecting) setIsVisible(true);
+      },
+      { threshold: 0, rootMargin: '200px' },
+      false // continuous tracking
     );
   }, []);
 
   useEffect(() => {
-    if (mode === 'grid' || !isVisible || simplify) return;
+    if (mode === 'grid' || simplify) return;
 
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % quotes.length);
     }, interval);
     return () => clearInterval(timer);
-  }, [quotes.length, interval, isVisible, simplify, mode]);
+  }, [quotes.length, interval, simplify, mode]);
 
   if (mode === 'grid') {
     return <QuotesGrid quotes={quotes} className={className} />;
@@ -44,14 +47,14 @@ export function QuoteRoll({ quotes, interval = 5000, className = '', mode = 'rol
   return (
     <span
       ref={containerRef as any}
-      className={`relative inline-grid overflow-hidden align-baseline max-w-full ${className}`}
+      className={`relative inline-flex items-center overflow-visible max-w-full ${className}`}
     >
       {/* Invisible ghost elements to reserve space without forcing layout overflow */}
       {quotes.map((q, i) => (
         <span
           key={`ghost-${i}`}
           aria-hidden="true"
-          className="[grid-area:1/1] invisible pointer-events-none select-none opacity-0 line-clamp-1 truncate max-w-full"
+          className="absolute opacity-0 pointer-events-none select-none whitespace-nowrap"
         >
           {q}
         </span>
@@ -61,11 +64,11 @@ export function QuoteRoll({ quotes, interval = 5000, className = '', mode = 'rol
       <AnimatePresence mode="wait">
         <motion.span
           key={index}
-          initial={simplify ? { opacity: 0 } : { y: 12, opacity: 0, filter: 'blur(3px)' }}
-          animate={simplify ? { opacity: 1 } : { y: 0, opacity: 1, filter: 'blur(0px)' }}
-          exit={simplify ? { opacity: 0 } : { y: -12, opacity: 0, filter: 'blur(3px)' }}
-          transition={simplify ? { duration: 0.2 } : { type: 'spring', stiffness: 300, damping: 28 }}
-          className="[grid-area:1/1] line-clamp-1 truncate max-w-full pr-1.5"
+          initial={simplify ? { opacity: 0 } : { y: 8, opacity: 0 }}
+          animate={simplify ? { opacity: 1 } : { y: 0, opacity: 1 }}
+          exit={simplify ? { opacity: 0 } : { y: -8, opacity: 0 }}
+          transition={simplify ? { duration: 0.2 } : { duration: 0.3, ease: 'easeOut' }}
+          className="relative inline-block whitespace-normal sm:whitespace-nowrap break-words"
         >
           {quotes[index]}
         </motion.span>
@@ -114,7 +117,6 @@ export function QuotesGrid({ quotes, className = '' }: QuotesGridProps) {
       className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4 md:gap-5 w-full p-1 overflow-visible ${className}`}
     >
       {quotes.map((q, i) => {
-        // Parse quote text and author delimiter ('—' or '·' or '-')
         let quoteText = q;
         let author = '';
 
@@ -152,4 +154,3 @@ export function QuotesGrid({ quotes, className = '' }: QuotesGridProps) {
     </motion.div>
   );
 }
-

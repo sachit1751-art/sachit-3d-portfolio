@@ -230,7 +230,7 @@ const ProjectCard = memo<ProjectCardProps>(({
         className="gsap-project-card group relative flex flex-col justify-between w-full h-full rounded-[var(--radius-lg)] focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] outline-none transition-all duration-300"
         style={{
           backgroundColor: 'var(--c-card)',
-          border: isExpanded ? '1px solid var(--c-border-focus, var(--c-heading))' : '1px solid var(--c-border)',
+          border: '1px solid var(--c-border)',
           padding: 'clamp(1rem, 2vw + 0.5rem, 1.5rem)',
           zIndex: isExpanded ? 10 : 1,
           transform: isTouchDevice && isExpanded ? 'translateY(-4px)' : undefined,

@@ -291,17 +291,8 @@ export const Header = memo<HeaderProps>(({
             ))}
           </nav>
 
-          {/* Right Area: Mobile Menu Toggle */}
+          {/* Right Area */}
           <div className="flex flex-1 items-center justify-end gap-2">
-            {/* Mobile Menu Toggle Button */}
-            <button
-              onClick={() => setMobileMenuOpen(prev => !prev)}
-              className="md:hidden min-w-[44px] min-h-[44px] p-2.5 rounded-lg border border-[var(--c-border)] hover:border-[var(--c-border-hover)] active:scale-95 transition-all cursor-pointer flex items-center justify-center touch-manipulation"
-              style={{ color: 'var(--c-heading)', backgroundColor: 'var(--c-card)' }}
-              aria-label={mobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
           </div>
         </div>
       </motion.header>
