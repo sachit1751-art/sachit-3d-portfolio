@@ -37,6 +37,16 @@
   ],
   "projects": [
     {
+      "id": "pk-road-community",
+      "title": "PK Road Community Platform — Full-Stack Development & UI/UX Design",
+      "technologies": "React, TypeScript, Vite, Supabase, PostgreSQL, SQL, Edge Functions, Git, GitHub, Stitch",
+      "bullets": [
+        "Designed and developed a full-stack community management platform for Panchkuian Road Railway Colony, focused on improving resident communication, transparency, and community operations.",
+        "Worked on responsive UI/UX design, authentication flows, public announcements, community chat, resident and colony-scoped access control, and backend security.",
+        "Implemented and verified database security repairs, notification workflows, and dashboard integrations, with emphasis on privacy, secure authorization, mobile usability, and production readiness."
+      ]
+    },
+    {
       "id": "sky-roms",
       "title": "SKY ROMs — Android Custom ROM Discovery & Management Platform",
       "liveUrl": "https://sky-roms.vercel.app",

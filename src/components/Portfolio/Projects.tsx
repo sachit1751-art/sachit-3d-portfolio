@@ -18,6 +18,20 @@ gsap.registerPlugin(ScrollTrigger);
 
 const projects: Project[] = [
   {
+    id: 'pk-road-community',
+    title: 'PK Road Community Platform',
+    category: 'Full-Stack & UI/UX',
+    filterCategories: ['WEB', 'FULLSTACK'],
+    year: '2026',
+    description:
+      'Full-stack community management platform for Panchkuian Road Railway Colony focused on resident communication, announcements, chat, and secure access control.',
+    longDescription:
+      'Designed and developed a full-stack community management platform for Panchkuian Road Railway Colony, focused on improving resident communication, transparency, and community operations.\n\nWorked on responsive UI/UX design, authentication flows, public announcements, community chat, resident and colony-scoped access control, and backend security.\n\nImplemented and verified database security repairs, notification workflows, and dashboard integrations, with emphasis on privacy, secure authorization, mobile usability, and production readiness.',
+    tags: ['React', 'TypeScript', 'Vite', 'Supabase', 'PostgreSQL', 'SQL', 'Edge Functions', 'Git', 'GitHub', 'Stitch'],
+    featured: true,
+    stats: { stars: 92, forks: 21, score: 91 }
+  },
+  {
     id: 'sky-roms',
     title: 'SKY ROMs',
     category: 'Android & Web',
