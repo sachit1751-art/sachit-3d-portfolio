@@ -64,7 +64,7 @@ export const About = memo(() => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         {/* Paragraphs Column */}
-        <div className="lg:col-span-7 lg:order-1 space-y-4 text-sm sm:text-base leading-relaxed font-body" style={{ color: 'var(--c-body)', border: 'none' }}>
+        <div className="lg:col-span-7 lg:order-1 space-y-4 text-sm sm:text-base leading-relaxed font-body" style={{ color: 'var(--c-heading)', border: 'none' }}>
           <p>
             I’m <span className="font-handwriting font-bold text-lg sm:text-xl" style={{ color: 'var(--c-heading)' }}>{WATERMARKED_NAME}</span> — a student and developer who enjoys building things from the ground up.
           </p>

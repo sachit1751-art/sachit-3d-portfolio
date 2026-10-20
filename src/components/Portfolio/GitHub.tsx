@@ -34,9 +34,9 @@ export const GitHubSection = memo<GitHubSectionProps>(({ theme }) => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           <div className="md:col-span-8">
             <LineReveal delay={0.3} className="p-6 sm:p-8 h-full rounded-[var(--radius-lg)] flex flex-col justify-between" style={{ border: '1px solid var(--c-border)' }}>
-              <p className="text-lg sm:text-xl leading-relaxed font-body mb-6" style={{ color: 'var(--c-body)' }}>
+              <p className="text-lg sm:text-xl leading-relaxed font-body mb-6" style={{ color: 'var(--c-heading)' }}>
                 <WordReveal
-                  text="I actively push code, build public projects, and experiment across full-stack applications, AI models, and developer tooling. Check out real-time commits and repositories synced directly from GitHub below."
+                  text="Building in public across full-stack applications, AI developer tooling, and automated workflows. Explore real-time contribution activity, repositories, and open-source progress synced directly from GitHub below."
                   baseDelay={0.4}
                 />
               </p>

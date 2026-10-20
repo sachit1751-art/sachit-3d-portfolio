@@ -519,7 +519,6 @@ export const GitHubContributions: React.FC<GitHubContributionsProps> = ({
                 style={{ color: 'var(--c-muted)' }}
                 onMouseLeave={() => setHighlightLevel(null)}
               >
-                <span>Less</span>
                 {INTENSITY_TIERS.map((tier) => (
                   <button
                     key={tier.level}
@@ -538,7 +537,6 @@ export const GitHubContributions: React.FC<GitHubContributionsProps> = ({
                     title={`Level ${tier.level}: ${tier.range} (${tier.label})`}
                   />
                 ))}
-                <span>More</span>
               </div>
             </div>
           </div>

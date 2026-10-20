@@ -585,7 +585,7 @@ export const Contact = memo(() => {
 
             <LineReveal delay={0.6} className="p-6 flex items-center rounded-[var(--radius-lg)] shadow-sm" style={{ border: '1px solid var(--c-border)', backgroundColor: 'var(--c-card)' }}>
               <p className="font-sans text-2xl sm:text-3xl leading-tight font-bold" style={{ color: 'var(--c-heading)' }}>
-                <WordReveal text="Folding ideas into something real." baseDelay={0.2} />
+                <WordReveal text="Contact me below" baseDelay={0.2} />
               </p>
             </LineReveal>
           </div>

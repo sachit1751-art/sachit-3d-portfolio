@@ -98,7 +98,7 @@ export const Hero = memo<HeroProps>(({
           </div>
         </div>
         <div className="mb-4">
-          <p className="gsap-hero-subtitle font-handwriting text-lg sm:text-xl mb-2" style={{ color: 'var(--c-subtle)' }}>
+          <p className="gsap-hero-subtitle font-mono text-xs uppercase tracking-[0.25em] font-semibold mb-2" style={{ color: 'var(--c-subtle)' }}>
             Independent Developer
           </p>
         </div>

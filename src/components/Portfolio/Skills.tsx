@@ -263,7 +263,7 @@ export const Skills = memo(() => {
               <h3 className="font-sans text-xl font-bold mb-1 tracking-tight" style={{ color: 'var(--c-heading)' }}>
                 {category.title}
               </h3>
-              <p className="text-sm font-body opacity-70" style={{ color: 'var(--c-body)' }}>
+              <p className="text-sm font-body" style={{ color: 'var(--c-heading)' }}>
                 {category.description}
               </p>
             </div>

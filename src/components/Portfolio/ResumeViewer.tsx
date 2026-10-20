@@ -25,6 +25,7 @@ import {
 import { PaperTheme } from '../../types';
 import { resumeData, generateResumePlainText } from '../../data/resume';
 import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
+import { PrintableResume } from './PrintableResume';
 
 /**
  * Editorial framer-motion variants applying a soft fade-in and subtle slide-up effect
@@ -685,6 +686,7 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({ theme, onBack }) => 
           </div>
         </div>
       </motion.div>
+      <PrintableResume />
     </motion.main>
   );
 };
