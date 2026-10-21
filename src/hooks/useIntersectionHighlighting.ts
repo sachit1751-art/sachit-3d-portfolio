@@ -247,13 +247,11 @@ export function useIntersectionHighlighting({
           updateHashAndSection('hero');
           return;
         }
-        
-        // Calculate the section immediately after settling, not before
         const settledActiveId = calculateActiveSection(container);
         if (settledActiveId && lastActiveSectionRef.current !== settledActiveId) {
           updateHashAndSection(settledActiveId);
         }
-      }, 100); // Increased debounce time to 100ms for better performance
+      }, 50);
     };
 
     container.addEventListener('scroll', handleScroll, { passive: true });

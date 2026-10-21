@@ -41,6 +41,27 @@ export const GitHubSection = memo<GitHubSectionProps>(({ theme }) => {
                 />
               </p>
               
+              {/* GitHub Stats Row from Screenshot */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6" style={{ borderTop: '1px solid var(--c-border)' }}>
+                <div>
+                  <span className="block font-mono text-[9px] uppercase tracking-wider mb-1" style={{ color: 'var(--c-muted)' }}>Public Repos</span>
+                  <span className="font-sans text-2xl font-black" style={{ color: 'var(--c-heading)' }}>5+</span>
+                </div>
+                <div>
+                  <span className="block font-mono text-[9px] uppercase tracking-wider mb-1" style={{ color: 'var(--c-muted)' }}>Stars Accrued</span>
+                  <span className="font-sans text-2xl font-black flex items-center gap-1" style={{ color: 'var(--c-heading)' }}>
+                    2 <span style={{ color: '#EAB308' }}>★</span>
+                  </span>
+                </div>
+                <div>
+                  <span className="block font-mono text-[9px] uppercase tracking-wider mb-1" style={{ color: 'var(--c-muted)' }}>Recent Commits</span>
+                  <span className="font-sans text-2xl font-black" style={{ color: 'var(--c-heading)' }}>5+</span>
+                </div>
+                <div>
+                  <span className="block font-mono text-[9px] uppercase tracking-wider mb-1" style={{ color: 'var(--c-muted)' }}>Primary Stack</span>
+                  <span className="font-sans text-sm font-bold block truncate uppercase tracking-tight" style={{ color: 'var(--c-heading)' }}>TypeScript</span>
+                </div>
+              </div>
             </LineReveal>
           </div>
           
