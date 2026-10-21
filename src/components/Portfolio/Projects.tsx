@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 // ​provenance:sachit-2026-original​
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { motion, AnimatePresence } from 'motion/react';
 import { Project } from '../../types';
 import { ExternalLink, Code2 } from 'lucide-react';
 import { GitHubIcon } from '../UI/Icons';
@@ -9,12 +8,8 @@ import { AnimatedMenuIcon } from '../UI/AnimatedMenuIcon';
 import { WordReveal } from '../UI/TextReveal';
 import { usePerformance } from '../../hooks/usePerformance';
 import { useTouchDevice } from '../../hooks/useTouchDevice';
-import { ScrollReveal } from '../UI/ScrollReveal';
-import { observeElement } from '../../utils/observer';
 import { getTechStackSVG } from '../UI/TechIcons';
 import { triggerHaptic, HAPTIC_PATTERNS } from '../../utils/haptics';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const projects: Project[] = [
   {
@@ -206,7 +201,14 @@ const ProjectCard = memo<ProjectCardProps>(({
   };
 
   return (
-    <div className="relative w-full h-full min-h-[320px] sm:min-h-[340px] md:min-h-[360px] flex flex-col">
+    <motion.div
+      layoutId={`project-card-${project.id}`}
+      initial={{ opacity: 0, y: 24, scale: 0.98 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: '-50px' }}
+      className="relative w-full h-full min-h-[320px] sm:min-h-[340px] md:min-h-[360px] flex flex-col"
+    >
       <div
         id={`project-card-${project.id}`}
         data-project-card="true"
@@ -227,7 +229,7 @@ const ProjectCard = memo<ProjectCardProps>(({
             onCardNavigate(idx, e);
           }
         }}
-        className="gsap-project-card group relative flex flex-col justify-between w-full h-full rounded-[var(--radius-lg)] focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] outline-none transition-all duration-300"
+        className="group relative flex flex-col justify-between w-full h-full rounded-[var(--radius-lg)] focus-visible:ring-2 focus-visible:ring-[var(--c-border-focus)] outline-none transition-all duration-300"
         style={{
           backgroundColor: 'var(--c-card)',
           border: '1px solid var(--c-border)',
@@ -235,6 +237,7 @@ const ProjectCard = memo<ProjectCardProps>(({
           zIndex: isExpanded ? 10 : 1,
           transform: isTouchDevice && isExpanded ? 'translateY(-4px)' : undefined,
           boxShadow: isTouchDevice && isExpanded ? '0 12px 28px rgba(0,0,0,0.12)' : undefined,
+          willChange: 'transform',
         }}
       >
         <div>
@@ -477,7 +480,7 @@ const ProjectCard = memo<ProjectCardProps>(({
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 });
 
@@ -571,71 +574,6 @@ export const Projects = memo(() => {
     }
   }, []);
 
-  useEffect(() => {
-    let animRaf: number | null = null;
-    let unobserve: (() => void) | null = null;
-    let fallbackTimer: NodeJS.Timeout | null = null;
-
-    animRaf = requestAnimationFrame(() => {
-      if (!cardsGridRef.current) return;
-
-      const cards = gsap.utils.toArray<HTMLElement>('.gsap-project-card');
-      if (!cards.length) return;
-
-      const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      if (simplify || prefersReducedMotion) {
-        gsap.set(cards, { opacity: 1, y: 0, scale: 1, clearProps: 'all' });
-        return;
-      }
-
-      let hasAnimated = false;
-
-      const animateIn = () => {
-        if (hasAnimated) return;
-        hasAnimated = true;
-
-        gsap.fromTo(
-          cards,
-          { opacity: 0, y: 24, scale: 0.98 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.55,
-            stagger: 0.08,
-            ease: 'power2.out',
-            overwrite: 'auto',
-            onComplete: () => {
-              gsap.set(cards, { clearProps: 'transform' });
-            },
-          }
-        );
-      };
-
-      const scroller = document.getElementById('content-scroll-container');
-      unobserve = observeElement(
-        cardsGridRef.current,
-        (isIntersecting) => {
-          if (isIntersecting) {
-            animateIn();
-          }
-        },
-        { root: scroller, threshold: 0.02, rootMargin: '50px' }
-      );
-
-      // Fallback: Ensure cards are visible after 250ms
-      fallbackTimer = setTimeout(() => {
-        animateIn();
-      }, 250);
-    });
-
-    return () => {
-      if (animRaf) cancelAnimationFrame(animRaf);
-      if (unobserve) unobserve();
-      if (fallbackTimer) clearTimeout(fallbackTimer);
-    };
-  }, [simplify]);
 
   return (
     <section id="projects" className="relative mb-12 sm:mb-16 md:mb-20 pt-6 sm:pt-8" style={{ borderTop: '1px solid var(--c-border)' }}>
