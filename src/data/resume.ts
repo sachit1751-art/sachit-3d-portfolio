@@ -80,27 +80,27 @@ export function generateResumePlainText(data: ResumeData = resumeData): string {
     [personalInfo.phone, personalInfo.email, personalInfo.github, personalInfo.portfolio]
       .filter(Boolean)
       .join(' | '),
-  ].join('\\n'));
+  ].join('\n'));
 
-  sections.push(`PROFESSIONAL SUMMARY\\n${professionalSummary}`);
-  sections.push(`TECHNICAL SKILLS\\n${technicalSkills.map((s) => `${s.category}: ${s.skills}`).join('\\n')}`);
+  sections.push(`PROFESSIONAL SUMMARY\n${professionalSummary}`);
+  sections.push(`TECHNICAL SKILLS\n${technicalSkills.map((s) => `${s.category}: ${s.skills}`).join('\n')}`);
 
   const projectsText = projects.map((project) => {
     const links = [
       project.liveUrlLabel || project.liveUrl,
       project.sourceUrl ? `Source: ${project.sourceUrl}` : '',
     ].filter(Boolean).join(' | ');
-    const bullets = project.bullets.map((bullet) => `• ${bullet}`).join('\\n');
-    return [project.title, links, `Technologies: ${project.technologies}`, bullets].filter(Boolean).join('\\n');
-  }).join('\\n\\n');
-  if (projectsText) sections.push(`PROJECTS\\n${projectsText}`);
+    const bullets = project.bullets.map((bullet) => `• ${bullet}`).join('\n');
+    return [project.title, links, `Technologies: ${project.technologies}`, bullets].filter(Boolean).join('\n');
+  }).join('\n\n');
+  if (projectsText) sections.push(`PROJECTS\n${projectsText}`);
 
-  sections.push(`LEARNING & DEVELOPMENT\\n${education.institution}\\n${education.degree} | ${education.stream}\\n${education.graduationYear}`);
-  if (certifications.length) sections.push(`CERTIFICATIONS\\n${certifications.map((item) => `• ${item}`).join('\\n')}`);
-  if (achievements.length) sections.push(`PROJECT HIGHLIGHTS\\n${achievements.map((item) => `• ${item}`).join('\\n')}`);
-  if (leadershipAndActivities.length) sections.push(`LEADERSHIP / ACTIVITIES\\n${leadershipAndActivities.map((item) => `• ${item}`).join('\\n')}`);
-  if (languages.length) sections.push(`LANGUAGES\\n${languages.map((item) => `${item.name} (${item.fluency})`).join(', ')}`);
-  if (interests.length) sections.push(`INTERESTS\\n${interests.join(', ')}`);
+  sections.push(`LEARNING & DEVELOPMENT\n${education.institution}\n${education.degree} | ${education.stream}\n${education.graduationYear}`);
+  if (certifications.length) sections.push(`CERTIFICATIONS\n${certifications.map((item) => `• ${item}`).join('\n')}`);
+  if (achievements.length) sections.push(`PROJECT HIGHLIGHTS\n${achievements.map((item) => `• ${item}`).join('\n')}`);
+  if (leadershipAndActivities.length) sections.push(`LEADERSHIP / ACTIVITIES\n${leadershipAndActivities.map((item) => `• ${item}`).join('\n')}`);
+  if (languages.length) sections.push(`LANGUAGES\n${languages.map((item) => `${item.name} (${item.fluency})`).join(', ')}`);
+  if (interests.length) sections.push(`INTERESTS\n${interests.join(', ')}`);
 
-  return sections.join('\\n\\n');
+  return sections.join('\n\n');
 }
