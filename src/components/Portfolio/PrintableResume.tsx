@@ -11,7 +11,7 @@ export const PrintableResume: React.FC = () => {
           {resumeData.personalInfo.name}
         </h1>
         <p className="text-sm font-bold uppercase tracking-wider text-black mb-3">
-          {resumeData.personalInfo.title} | {resumeData.personalInfo.educationSummary}
+          {resumeData.personalInfo.title}
         </p>
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 text-xs text-black font-mono">
           {resumeData.personalInfo.phone && (
