@@ -14,14 +14,14 @@ import { triggerHaptic, HAPTIC_PATTERNS } from '../../utils/haptics';
 const projects: Project[] = [
   {
     id: 'pk-road-community',
-    title: 'PK Road Community Platform',
+    title: 'Community Management Platform',
     category: 'Full-Stack & UI/UX',
     filterCategories: ['WEB', 'FULLSTACK'],
     year: '2026',
     description:
-      'Full-stack community management platform for Panchkuian Road Railway Colony focused on resident communication, announcements, chat, and secure access control.',
+      'Full-stack community management platform focused on resident communication, announcements, chat, and role-aware access.',
     longDescription:
-      'Designed and developed a full-stack community management platform for Panchkuian Road Railway Colony, focused on improving resident communication, transparency, and community operations.\n\nWorked on responsive UI/UX design, authentication flows, public announcements, community chat, resident and colony-scoped access control, and backend security.\n\nImplemented and verified database security repairs, notification workflows, and dashboard integrations, with emphasis on privacy, secure authorization, mobile usability, and production readiness.',
+      'Designed and developed a community management platform to support resident communication and day-to-day operations.\\n\\nWorked on responsive interfaces, authentication flows, announcements, community chat, and role-aware access control.\\n\\nBuilt workflows across database operations, notifications, and dashboard integrations, with an emphasis on usability and clear authorization boundaries.',
     tags: ['React', 'TypeScript', 'Vite', 'Supabase', 'PostgreSQL', 'SQL', 'Edge Functions', 'Git', 'GitHub', 'Stitch'],
     featured: true,
   },
