@@ -22,7 +22,7 @@ export const CurrentlyBuilding = memo(() => {
 
         <LineReveal delay={0.3} className="p-6 sm:p-8 rounded-[var(--radius-lg)]" style={{ border: '1px solid var(--c-border)' }}>
           <PretextText
-            text="I'm currently working on a new application. The project is still in the idea and planning stage, so I'm focusing on defining the problem, planning the product, and figuring out how it should work before development begins."
+            text="I'm building OutreachOS, a personal CRM for tracking startup research, contacts, email outreach, and follow-ups. It's currently in development; I'm working through setup and validating the core workflows before calling it ready to use."
             font="20px sans-serif"
             lineHeight={30}
             mode="balanced"
