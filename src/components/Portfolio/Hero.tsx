@@ -94,7 +94,7 @@ export const Hero = memo<HeroProps>(({
           </div>
           <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] opacity-80 flex-shrink-0" style={{ color: 'var(--c-heading)' }}>
             <span className="opacity-40">—</span>
-            <span>I CAN BUILD ANYTHING.</span>
+            <span>BUILDING, TESTING, ITERATING.</span>
           </div>
         </div>
         <div className="mb-4">
@@ -107,17 +107,12 @@ export const Hero = memo<HeroProps>(({
           <span className="inline-block" aria-hidden="true">
             <DepthFlipText
               phrases={[
-                "Full-Stack Web Developer",
-                "AI & Looping Engineer",
+                "Full-Stack Developer",
                 "Frontend Developer",
+                "React & TypeScript Developer",
+                "Next.js Developer",
                 "Android Developer",
-                "Backend Engineer",
-                "Product Engineer",
-                "Opensource Dev",
-                "LLM Integration Developer",
-                "Web & Mobile Developer",
-                "UI & Motion Engineer",
-                "Best Vibecoder"
+                "AI Integration Builder"
               ]}
               interval={3200}
             />
@@ -125,7 +120,7 @@ export const Hero = memo<HeroProps>(({
         </h1>
         <p className="gsap-hero-desc max-w-[540px] leading-relaxed text-lg sm:text-xl font-body opacity-90 mt-5" style={{ color: 'var(--c-heading)' }}>
           <WordReveal
-            text="I build full-stack web applications, architect AI integrations, and automate workflows."
+            text="I build web applications with React, TypeScript, and Next.js, alongside Android apps and practical AI integrations."
             baseDelay={0.1}
           />
         </p>
@@ -178,7 +173,7 @@ export const Hero = memo<HeroProps>(({
             <GitHubIcon className="w-4 h-4" />
           </a>
           <a
-            href="https://www.linkedin.com/in/sachit-undefined-975503440"
+            href="https://www.linkedin.com/in/sachit1751"
             target="_blank"
             rel="noreferrer"
             aria-label="LinkedIn"
