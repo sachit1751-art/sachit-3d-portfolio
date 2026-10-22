@@ -72,56 +72,35 @@ export const resumeData: ResumeData = resumeJson as ResumeData;
  */
 export function generateResumePlainText(data: ResumeData = resumeData): string {
   const { personalInfo, professionalSummary, technicalSkills, projects, education, certifications, achievements, leadershipAndActivities, languages, interests } = data;
+  const sections: string[] = [];
 
-  const skillsText = technicalSkills
-    .map((s) => `${s.category}: ${s.skills}`)
-    .join('\n');
+  sections.push([
+    personalInfo.name.toUpperCase(),
+    personalInfo.title,
+    [personalInfo.phone, personalInfo.email, personalInfo.github, personalInfo.portfolio]
+      .filter(Boolean)
+      .join(' | '),
+  ].join('\\n'));
 
-  const projectsText = projects
-    .map((p) => {
-      const header = p.liveUrlLabel ? `${p.title} (${p.liveUrlLabel})` : p.title;
-      const tech = `Technologies: ${p.technologies}`;
-      const bullets = p.bullets.map((b) => `• ${b}`).join('\n');
-      return `${header}\n${tech}\n${bullets}`;
-    })
-    .join('\n\n');
+  sections.push(`PROFESSIONAL SUMMARY\\n${professionalSummary}`);
+  sections.push(`TECHNICAL SKILLS\\n${technicalSkills.map((s) => `${s.category}: ${s.skills}`).join('\\n')}`);
 
-  const certsText = certifications.map((c) => `• ${c}`).join('\n');
-  const achieveText = achievements.map((a) => `• ${a}`).join('\n');
-  const activitiesText = leadershipAndActivities.map((la) => `• ${la}`).join('\n');
-  const langsText = languages.map((l) => `${l.name} (${l.fluency})`).join(', ');
-  const interestsText = interests.join(', ');
+  const projectsText = projects.map((project) => {
+    const links = [
+      project.liveUrlLabel || project.liveUrl,
+      project.sourceUrl ? `Source: ${project.sourceUrl}` : '',
+    ].filter(Boolean).join(' | ');
+    const bullets = project.bullets.map((bullet) => `• ${bullet}`).join('\\n');
+    return [project.title, links, `Technologies: ${project.technologies}`, bullets].filter(Boolean).join('\\n');
+  }).join('\\n\\n');
+  if (projectsText) sections.push(`PROJECTS\\n${projectsText}`);
 
-  return `${personalInfo.name.toUpperCase()}
-${personalInfo.title}
-${personalInfo.phone} | ${personalInfo.email} | ${personalInfo.github}
+  sections.push(`LEARNING & DEVELOPMENT\\n${education.institution}\\n${education.degree} | ${education.stream}\\n${education.graduationYear}`);
+  if (certifications.length) sections.push(`CERTIFICATIONS\\n${certifications.map((item) => `• ${item}`).join('\\n')}`);
+  if (achievements.length) sections.push(`PROJECT HIGHLIGHTS\\n${achievements.map((item) => `• ${item}`).join('\\n')}`);
+  if (leadershipAndActivities.length) sections.push(`LEADERSHIP / ACTIVITIES\\n${leadershipAndActivities.map((item) => `• ${item}`).join('\\n')}`);
+  if (languages.length) sections.push(`LANGUAGES\\n${languages.map((item) => `${item.name} (${item.fluency})`).join(', ')}`);
+  if (interests.length) sections.push(`INTERESTS\\n${interests.join(', ')}`);
 
-PROFESSIONAL SUMMARY
-${professionalSummary}
-
-TECHNICAL SKILLS
-${skillsText}
-
-PROJECTS
-${projectsText}
-
-EDUCATION
-${education.institution}
-${education.degree} | ${education.stream}
-${education.graduationYear}
-
-CERTIFICATIONS
-${certsText}
-
-ACHIEVEMENTS
-${achieveText}
-
-LEADERSHIP / EXTRACURRICULAR ACTIVITIES
-${activitiesText}
-
-LANGUAGES
-${langsText}
-
-INTERESTS
-${interestsText}`;
+  return sections.join('\\n\\n');
 }
