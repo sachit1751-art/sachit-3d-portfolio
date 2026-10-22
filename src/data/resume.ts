@@ -24,6 +24,7 @@ export interface ResumeProject {
   title: string;
   liveUrl?: string;
   liveUrlLabel?: string;
+  sourceUrl?: string;
   technologies: string;
   bullets: string[];
 }
