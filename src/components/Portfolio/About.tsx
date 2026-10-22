@@ -66,13 +66,13 @@ export const About = memo(() => {
         {/* Paragraphs Column */}
         <div className="lg:col-span-7 lg:order-1 space-y-4 text-sm sm:text-base leading-relaxed font-body" style={{ color: 'var(--c-heading)', border: 'none' }}>
           <p>
-            I’m <span className="font-handwriting font-bold text-lg sm:text-xl" style={{ color: 'var(--c-heading)' }}>{WATERMARKED_NAME}</span> — a student and developer who enjoys building things from the ground up.
+            I’m <span className="font-handwriting font-bold text-lg sm:text-xl" style={{ color: 'var(--c-heading)' }}>{WATERMARKED_NAME}</span> — an independent developer who enjoys turning ideas into working software.
           </p>
           <p>
-            I work across web development, AI, automation, and open-source software, mostly learning through projects I build myself. I like taking an idea, figuring out how it could work, learning whatever I need along the way, and turning it into something real.
+            My main focus is web development with React, TypeScript, and Next.js. I also build Android applications and experiment with practical AI integrations. I learn by shipping projects, investigating failures, and improving the implementation.
           </p>
           <p>
-            Most of what I learn comes from building — whether it’s a full-stack application, an automation system, an AI-powered tool, or an experiment that started as a simple idea. I care less about having projects on a résumé and more about making things that actually work, understanding what breaks, and improving them until they’re worth using.
+            I care about the details behind a working product: clear state management, sensible data flows, error handling, accessible interfaces, and documentation that helps another developer run the project. I want the code and the product to stand up to inspection, not just look impressive in a screenshot.
           </p>
         </div>
 
@@ -146,8 +146,8 @@ export const About = memo(() => {
               </div>
               <ul className="space-y-4 text-base font-body" style={{ color: 'var(--c-body)' }}>
                 <li>
-                  <span className="block font-mono text-[10px] uppercase tracking-[0.2em] mb-1" style={{ color: 'var(--c-faint)' }}>Currently</span>
-                  <span className="font-handwriting text-lg" style={{ color: 'var(--c-heading)' }}>Class 12 — PCMB</span>
+                  <span className="block font-mono text-[10px] uppercase tracking-[0.2em] mb-1" style={{ color: 'var(--c-faint)' }}>Working style</span>
+                  <span className="font-handwriting text-lg" style={{ color: 'var(--c-heading)' }}>Project-led development</span>
                 </li>
                 <li>
                   <span className="block font-mono text-[10px] uppercase tracking-[0.2em] mb-1" style={{ color: 'var(--c-faint)' }}>Primary Focus</span>
