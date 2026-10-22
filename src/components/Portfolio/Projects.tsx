@@ -24,7 +24,6 @@ const projects: Project[] = [
       'Designed and developed a full-stack community management platform for Panchkuian Road Railway Colony, focused on improving resident communication, transparency, and community operations.\n\nWorked on responsive UI/UX design, authentication flows, public announcements, community chat, resident and colony-scoped access control, and backend security.\n\nImplemented and verified database security repairs, notification workflows, and dashboard integrations, with emphasis on privacy, secure authorization, mobile usability, and production readiness.',
     tags: ['React', 'TypeScript', 'Vite', 'Supabase', 'PostgreSQL', 'SQL', 'Edge Functions', 'Git', 'GitHub', 'Stitch'],
     featured: true,
-    stats: { stars: 92, forks: 21, score: 91 }
   },
   {
     id: 'sky-roms',
@@ -38,8 +37,8 @@ const projects: Project[] = [
       'Built and deployed a full-stack React and TypeScript platform for discovering and managing Android custom ROM information, hosted on Vercel with automated routing, SEO sitemaps, and Google Search Console verification.\n\nDeveloped a secure Supabase and PostgreSQL backend featuring user authentication, role-based authorization, CRUD operations, and persistent cloud storage, ensuring administrative controls and role assignments are enforced strictly server-side.\n\nSynchronized the production web application into a native mobile experience using Capacitor and Android Studio, maintaining version control through Git branching workflows.',
     tags: ['React', 'TypeScript', 'Vite', 'Supabase', 'PostgreSQL', 'Capacitor', 'Android Studio'],
     demoUrl: 'https://sky-roms.vercel.app',
+    githubUrl: 'https://github.com/sachit1751-art/SKY-website-v2',
     featured: true,
-    stats: { stars: 124, forks: 42, score: 88 }
   },
   {
     id: 'moneypal',
@@ -54,36 +53,34 @@ const projects: Project[] = [
     tags: ['Kotlin', 'Jetpack Compose', 'Android SDK', 'Room Database', 'Wear OS', 'Git'],
     githubUrl: 'https://github.com/sachit1751-art/MoneyPal',
     featured: true,
-    stats: { stars: 85, forks: 18, score: 72 }
   },
   {
     id: 'audify',
     title: 'Audify',
-    category: 'Web Audio',
-    filterCategories: ['WEB'],
+    category: 'Android Music Player',
+    filterCategories: ['ANDROID', 'MOBILE'],
     year: '2025',
     description:
-      'Developed Audify as a feature-rich, responsive web audio streaming and music player application with fluid playlist controls, Web Audio API hooks, and local caching.',
+      'Native Android music player focused on discovering and organizing YouTube Music, with background playback, queue management, lyrics, audio controls, caching, and library features.',
     longDescription:
-      'Developed Audify as a feature-rich, responsive web audio streaming and music player application with fluid playlist controls and real-time track searching.\n\nImplemented custom audio playback hooks utilizing the Web Audio API for smooth track handling, volume management, and dynamic progress bar scrubbing.\n\nConfigured local storage caching and responsive UI styling to maintain user listening preferences and seamless layout adaptation across desktop and mobile devices.',
-    tags: ['React', 'TypeScript', 'Tailwind CSS', 'Web Audio API', 'Vite', 'Git'],
+      'Audify is a native Android music player built with Kotlin and Jetpack Compose. Its documented feature set includes background playback, queue and playlist management, synced lyrics, audio controls, caching, music discovery, and library tools.\n\nThe repository includes build configuration, screenshots, release information, and setup guidance. Review the README and release notes for the current feature set and platform requirements.',
+    tags: ['Kotlin', 'Jetpack Compose', 'Android SDK', 'Hilt', 'Gradle'],
     githubUrl: 'https://github.com/sachit1751-art/Audify',
     featured: true,
-    stats: { stars: 96, forks: 24, score: 79 }
   },
   {
-    id: 'mcp-tool',
-    title: 'AI-Powered Model Context Protocol (MCP) Tool',
-    category: 'AI Tool',
-    filterCategories: ['AI', 'AUTOMATION'],
-    year: '2025',
+    id: 'zns-nexus',
+    title: 'ZNS Nexus',
+    category: 'Interactive Frontend',
+    filterCategories: ['WEB', 'DESIGN'],
+    year: '2026',
     description:
-      'MCP server endpoints and JSON-RPC messaging handlers enabling LLMs to securely query local resources.',
+      'Motion-focused web experience built around animated navigation, interactive cards, and scroll-driven transitions.',
     longDescription:
-      'Configured Model Context Protocol (MCP) server endpoints to allow large language models to securely query local resources and system datasets.\n\nImplemented clean JSON-RPC messaging handlers to streamline communication between client interfaces and modular backend tools.\n\nDeveloped structured context-injection pipelines that give AI assistants direct, real-time access to file systems and development workspaces.',
-    tags: ['Python', 'Claude API', 'MCP Servers', 'JSON-RPC', 'Context Injection'],
+      'ZNS Nexus explores frontend interaction design through animated navigation, scroll-based motion, and responsive interactive components. The public repository provides the source for reviewing implementation choices and the actual feature set.',
+    tags: ['React', 'TypeScript', 'GSAP', 'Frontend Animation'],
+    githubUrl: 'https://github.com/sachit1751-art/zns-nexuso',
     featured: true,
-    stats: { stars: 154, forks: 36, score: 92 }
   },
   {
     id: 'tic-tac-toe',
@@ -97,7 +94,6 @@ const projects: Project[] = [
       'Built a standalone browser game with a polished launcher, responsive board, restart controls, difficulty selector, result messages, and clean modern UI.\n\nImplemented Easy and Hard AI modes; Hard mode evaluates open moves with minimax recursion to choose stronger opponent moves. Managed board state, turn locking, delayed AI responses, win/draw detection, reset behavior, and UI feedback so players cannot interrupt the opponent turn.\n\nTech: HTML, CSS, JavaScript, Minimax Algorithm, Browser Game Logic',
     tags: ['HTML', 'CSS', 'JavaScript', 'Minimax', 'Game Logic'],
     featured: false,
-    stats: { stars: 32, forks: 7, score: 45 }
   },
 ];
 
