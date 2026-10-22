@@ -10,6 +10,13 @@
 
 Sachit is an independent developer building web applications, Android apps, and practical AI integrations. The main focus is React, TypeScript, Next.js, and product-oriented full-stack development, with additional Android project experience.
 
+## Currently Building
+
+### OutreachOS
+- **Status:** In development; generated code still needs local setup, runtime checks, and workflow validation.
+- **Purpose:** Personal CRM for startup research, contacts, outreach history, and follow-up tracking.
+- **Note:** Not yet presented as production-ready.
+
 ## Selected Projects
 
 ### Community Management Platform
