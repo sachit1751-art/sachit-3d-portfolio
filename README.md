@@ -10,6 +10,10 @@ Personal portfolio built with React, TypeScript, Vite, Tailwind CSS, and interac
 
 The site presents selected web, Android, and AI-integration projects, plus technical focus and contact links. Its visual direction uses a paper-inspired interface with motion and Three.js/WebGL effects.
 
+## Currently building
+
+**OutreachOS** — a personal CRM for startup research, contacts, outreach history, and follow-ups. It is still in development; the generated code needs local setup and runtime/workflow validation before it should be treated as ready to use.
+
 ## Selected projects
 
 - **Community Management Platform** — a full-stack project focused on resident communication, announcements, chat, and role-aware access. Source code is private.
