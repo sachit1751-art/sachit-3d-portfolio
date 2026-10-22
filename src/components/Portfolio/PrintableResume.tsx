@@ -14,8 +14,12 @@ export const PrintableResume: React.FC = () => {
           {resumeData.personalInfo.title} | {resumeData.personalInfo.educationSummary}
         </p>
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 text-xs text-black font-mono">
-          <span>{resumeData.personalInfo.phone}</span>
-          <span>•</span>
+          {resumeData.personalInfo.phone && (
+            <>
+              <span>{resumeData.personalInfo.phone}</span>
+              <span>•</span>
+            </>
+          )}
           <span>{resumeData.personalInfo.email}</span>
           <span>•</span>
           <span>{resumeData.personalInfo.github}</span>
@@ -57,9 +61,12 @@ export const PrintableResume: React.FC = () => {
         <div className="space-y-4">
           {resumeData.projects.map((p) => (
             <div key={p.id} className="space-y-1">
-              <div className="flex justify-between items-baseline">
+              <div className="flex flex-wrap justify-between items-baseline gap-2">
                 <h3 className="font-bold text-sm text-black">{p.title}</h3>
-                {p.liveUrl && <span className="text-[10px] font-mono text-black">({p.liveUrl})</span>}
+                <div className="flex flex-wrap gap-2 text-[10px] font-mono text-black">
+                  {p.liveUrl && <span>Live: {p.liveUrl}</span>}
+                  {p.sourceUrl && <span>Source: {p.sourceUrl}</span>}
+                </div>
               </div>
               <p className="text-[11px] font-mono text-black">
                 <strong>Tech:</strong> {p.technologies}
@@ -74,21 +81,27 @@ export const PrintableResume: React.FC = () => {
         </div>
       </section>
 
-      {/* Education & Certifications */}
+      {/* Learning & Development */}
       <section className="mb-6 page-break-before">
         <h2 className="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 mb-2 text-black">
-          Education & Certifications
+          Learning & Development
         </h2>
-        <div className="grid grid-cols-2 gap-4 text-xs">
+        <div className="grid grid-cols-1 gap-4 text-xs">
           <div>
             <h3 className="font-bold text-black">{resumeData.education.institution}</h3>
             <p className="text-black">{resumeData.education.degree} | {resumeData.education.stream}</p>
             <p className="text-black">{resumeData.education.graduationYear}</p>
           </div>
-          <div>
-            <h3 className="font-bold text-black">Anthropic Skill Jar</h3>
-            <p className="text-black">{resumeData.certifications[0]}</p>
-          </div>
+          {resumeData.certifications.length > 0 && (
+            <div>
+              <h3 className="font-bold text-black">Certifications</h3>
+              <ul className="list-disc pl-4 space-y-1 text-black">
+                {resumeData.certifications.map((certification) => (
+                  <li key={certification}>{certification}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </section>
 
@@ -105,16 +118,18 @@ export const PrintableResume: React.FC = () => {
       </section>
 
       {/* Leadership & Activities */}
-      <section className="mb-6">
-        <h2 className="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 mb-2 text-black">
-          Leadership & Extracurricular Activities
-        </h2>
-        <ul className="list-disc pl-4 space-y-1 text-xs text-black">
-          {resumeData.leadershipAndActivities.map((act, idx) => (
-            <li key={idx}>{act}</li>
-          ))}
-        </ul>
-      </section>
+      {resumeData.leadershipAndActivities.length > 0 && (
+        <section className="mb-6">
+          <h2 className="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 mb-2 text-black">
+            Leadership & Extracurricular Activities
+          </h2>
+          <ul className="list-disc pl-4 space-y-1 text-xs text-black">
+            {resumeData.leadershipAndActivities.map((act) => (
+              <li key={act}>{act}</li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Footer */}
       <footer className="mt-8 pt-4 border-t border-black text-center text-[10px] text-black font-mono">
